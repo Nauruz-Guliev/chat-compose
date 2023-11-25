@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
+apply(from = "$rootDir/ktlint.gradle")
+
 android {
     namespace = "ru.kpfu.itis.gnt"
     compileSdk = 34

@@ -1,0 +1,18 @@
+configurations {
+    ktlint
+}
+dependencies {
+    ktlint libs.ktlint
+}
+tasks.register('verifyFormatting', JavaExec) {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "src/**/*.kt"
+}
+tasks.register('applyFormatting', JavaExec) {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "src/**/*.kt"
+}
