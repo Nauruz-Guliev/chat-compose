@@ -9,6 +9,12 @@ espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.2"
 activity-compose = "1.8.1"
 compose-bom = "2023.10.01"
+mockk = "1.12.4"
+koin = "3.5.0"
+retrofit = "2.9.0"
+coil = "2.4.0"
+kotest = "5.7.0"
+orbit = "6.1.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -26,10 +32,29 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
+# mockk
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+# koin
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref="koin" }
+# retrofit
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref="retrofit" }
+# coil
+coil = { module = "io.coil-kt:coil-compose", version.ref="coil" }
+# kotest
+kotest-framework = { module = "io.kotest:kotest-framework-datatest", version.ref="kotest" }
+kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref="kotest" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref="kotest" }
+# orbit
+orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref="orbit" }
+orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref="orbit" }
+orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref="orbit" }
+orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref="orbit" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
 
 [bundles]
-
+kotest = ["kotest-assertions", "kotest-framework", "kotest-runner"]
+orbit = ["orbit-compose", "orbit-core", "orbit-viewmodel", "orbit-test"]
