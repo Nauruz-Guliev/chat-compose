@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "chat-compose"
 include(":app")
- 
+include(":feature:authentication")
