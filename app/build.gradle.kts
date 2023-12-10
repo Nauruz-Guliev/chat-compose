@@ -3,7 +3,10 @@ plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.kotlin.android)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")}
+    id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
+    id("kotlin-parcelize")
+}
 
 apply(from = "$rootDir/ktlint.gradle")
 
@@ -41,12 +44,15 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.6"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
 }
 
@@ -66,8 +72,13 @@ dependencies {
     implementation(libs.material3)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-
+    implementation(libs.kotlin.reflect)
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    // firebase
+    implementation(libs.modo.compose)
+    implementation(project(":feature:authentication"))
+
+    implementation(libs.androidx.navigation.compose)
 }

@@ -1,14 +1,27 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlin.android)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id("kotlin-parcelize")
     kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 apply {
     from("${rootProject.projectDir}/gradle/shared_build.gradle")
 }
 apply {
     from("${rootProject.projectDir}/gradle/feature_dependency.gradle")
+}
+
+android {
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -25,7 +38,18 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // kotest
     testImplementation(libs.bundles.kotest)
+    // mockk
     testImplementation(libs.mockk)
+    //firebase
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebaseAnalytics)
+    implementation(libs.firebaseAuth)
+    implementation(libs.google.services)
+    implementation(libs.modo.compose)
+
+    implementation(project(":core"))
+    implementation(libs.androidx.navigation.compose)
 }
