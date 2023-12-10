@@ -1,8 +1,8 @@
 [versions]
 agp = "8.2.0"
-hilt-android = "2.44"
+hilt-android = "2.48"
+kotlinReflect = "1.9.10"
 ktlint = "0.40.0"
-org-jetbrains-kotlin-android = "1.8.10"
 core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
@@ -12,26 +12,34 @@ activity-compose = "1.8.1"
 compose-bom = "2023.10.01"
 mockk = "1.13.8"
 koin = "3.5.0"
+modoCompose = "0.7.1"
+navigationCompose = "2.7.5"
 retrofit = "2.9.0"
 coil = "2.4.0"
-kotest = "5.7.0"
+kotest = "5.8.0"
 orbit = "6.1.0"
 appcompat = "1.6.1"
 material = "1.10.0"
-kotlinDsl = "4.1.0"
-kotlin = "1.8.20"
+kotlin = "1.9.21"
+#firebase
+firebase = "32.7.0"
+googleServices = "4.4.0"
+firebaseAuth = "22.3.0"
 
 [libraries]
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinReflect" }
 ktlint = { module = "com.pinterest:ktlint", version.ref = "ktlint" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+modo-compose = { module = "com.github.terrakok:modo-compose", version.ref = "modoCompose" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -58,14 +66,25 @@ orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref="orbit" }
 orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref="orbit" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+# firebase
+firebaseBom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
+firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
+firebaseCrashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+firebaseFirestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+firebaseMessaging = { module = "com.google.firebase:firebase-messaging-ktx" }
+firebaseInstallations = { module = "com.google.firebase:firebase-installations-ktx" }
+firebaseAuth = { module = "com.google.firebase:firebase-auth-ktx" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+firebaseAuthKtx = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuth" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-kotlin-dsl = { id = "org.gradle.kotlin.kotlin-dsl", version.ref = "kotlinDsl" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 [bundles]
 kotest = ["kotest-assertions", "kotest-framework", "kotest-runner"]
 orbit = ["orbit-compose", "orbit-core", "orbit-viewmodel", "orbit-test"]
+firebase = ["firebaseAuthKtx", "firebaseAnalytics", "firebaseCrashlytics", "firebaseFirestore", "firebaseMessaging", "firebaseInstallations", "firebaseAuth"]

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "519056345250",
+    "project_id": "chat-compose-4dcd3",
+    "storage_bucket": "chat-compose-4dcd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519056345250:android:231afc5597e0dfe3cdaffb",
+        "android_client_info": {
+          "package_name": "ru.kpfu.itis.gnt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtKpauF6BOSXHOTOih66uarqZFjny86ck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

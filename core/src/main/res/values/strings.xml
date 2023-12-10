@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_login">Failed to login</string>
+    <string name="error_registration">Failed to register</string>
+    <string name="error_validation_empty">%1s can not be empty</string>
+    <string name="error_validation_not_email">Invalid email format</string>
+    <string name="error_short_field_length">%1s should contain more characters </string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+</resources>
