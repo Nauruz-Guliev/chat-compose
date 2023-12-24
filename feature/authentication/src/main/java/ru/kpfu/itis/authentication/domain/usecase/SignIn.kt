@@ -4,10 +4,10 @@ import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.repository.AuthRepository
 import javax.inject.Inject
 
-class Login @Inject constructor(
+class SignIn @Inject constructor(
     private val repository: AuthRepository<User>
 ) {
-    suspend operator fun invoke(email: String, password: String): Result<User> {
-        return repository.login(email, password)
+    suspend operator fun invoke(email: String, password: String): User {
+        return repository.signIn(email, password)
     }
 }

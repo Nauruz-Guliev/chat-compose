@@ -1,0 +1,51 @@
+package ru.kpfu.itis.authentication.presentation.screen.signin
+
+import androidx.navigation.NavHostController
+import dagger.hilt.android.lifecycle.HiltViewModel
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
+import org.orbitmvi.orbit.syntax.simple.reduce
+import org.orbitmvi.orbit.viewmodel.container
+import ru.kpfu.itis.authentication.domain.usecase.SignIn
+import ru.kpfu.itis.authentication.presentation.validator.EmailValidator
+import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
+import ru.kpfu.itis.authentication_api.AuthenticationDestinations
+import ru.kpfu.itis.core.base.BaseViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val signIn: SignIn,
+    private val emailValidator: EmailValidator,
+    private val passwordValidator: PasswordValidator,
+    private val navController: NavHostController
+) : BaseViewModel<SignInState, SignInSideEffect>() {
+
+    override val container: Container<SignInState, SignInSideEffect> =
+        container(SignInState())
+
+    fun signIn(email: String, password: String) = intent {
+        postSideEffect(SignInSideEffect.ShowLoading)
+        validate(email, password)
+        try {
+            signIn.invoke(email, password)
+            navController.navigate("MAIN")
+        } catch (ex: Exception) {
+            postSideEffect(SignInSideEffect.ExceptionHappened(ex))
+        }
+    }
+
+    fun navigateSignUp() {
+        navController.navigate(AuthenticationDestinations.SIGNUP.name)
+    }
+
+    private fun validate(email: String, password: String) = intent {
+        reduce {
+            state.copy(
+                emailValidationResult = emailValidator(email),
+                passwordValidationResult = passwordValidator(password)
+            )
+        }
+    }
+}

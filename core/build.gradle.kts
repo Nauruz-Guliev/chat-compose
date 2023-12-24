@@ -28,6 +28,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.6"
+    }
 }
 
 dependencies {
@@ -39,6 +45,8 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    // kotest
+    implementation(libs.bundles.kotest)
 
     implementation(libs.bundles.orbit)
 }

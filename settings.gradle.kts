@@ -18,3 +18,5 @@ rootProject.name = "chat-compose"
 include(":app")
 include(":feature:authentication")
 include(":core")
+include(":navigation")
+include(":feature:authentication-api")

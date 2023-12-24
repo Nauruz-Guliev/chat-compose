@@ -9,25 +9,19 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-): AuthRepository<User> {
+) : AuthRepository<User> {
 
     override val currentUser: FirebaseUser?
         get() = firebaseAuth.currentUser
 
-    override suspend fun login(email: String, password: String): Result<User> {
-        return try {
-            val task = firebaseAuth.signInWithEmailAndPassword(email, password)
-            Tasks.await(task)
-            with(task.result.user) {
-                Result.success(
-                    User(
-                        name = this?.displayName,
-                        email = email
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
+    override suspend fun signIn(email: String, password: String): User {
+        val task = firebaseAuth.signInWithEmailAndPassword(email, password)
+        Tasks.await(task)
+        return with(task.result.user) {
+            User(
+                name = this?.displayName,
+                email = email,
+            )
         }
     }
 
@@ -35,20 +29,14 @@ class AuthRepositoryImpl @Inject constructor(
         name: String,
         email: String,
         password: String
-    ): Result<User> {
-        return try {
-            val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
-            Tasks.await(task)
-            with(task.result.user) {
-                Result.success(
-                    User(
-                        name = this?.displayName,
-                        email = email
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
+    ): User {
+        val task = firebaseAuth.createUserWithEmailAndPassword(email, password)
+        Tasks.await(task)
+        return with(task.result.user) {
+             User(
+                name = this?.displayName,
+                email = email
+            )
         }
     }
 

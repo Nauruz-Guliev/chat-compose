@@ -7,4 +7,5 @@ data class SignUpState(
     val nameValidationResult: ValidationResult<Resource.String>? = null,
     val emailValidationResult: ValidationResult<Resource.String>? = null,
     val passwordValidationResult: ValidationResult<Resource.String>? = null,
+    val passwordRepeatValidationResult: ValidationResult<Resource.String>? = null,
 )

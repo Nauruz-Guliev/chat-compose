@@ -3,6 +3,8 @@ package ru.kpfu.itis.core.resource
 import android.content.Context
 import androidx.annotation.AnyRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 
 sealed class Resource(
     @AnyRes open val id: Int
@@ -14,7 +16,7 @@ sealed class Resource(
         @StringRes override var id: Int,
         private vararg val arg: Int
     ) : Resource(id) {
-        fun getValue(context: Context): kotlin.String {
+        fun getStringValue(context: Context): kotlin.String {
             val arguments = mutableListOf<kotlin.String>()
             arg.forEach {
                 kotlin.runCatching {
@@ -22,6 +24,11 @@ sealed class Resource(
                 }
             }
             return context.resources.getString(id, arguments)
+        }
+
+        @Composable
+        fun getStringValue(): kotlin.String {
+            return stringResource(id, arg)
         }
     }
 }

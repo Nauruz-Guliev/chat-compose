@@ -11,7 +11,9 @@ import ru.kpfu.itis.authentication.domain.usecase.SignUp
 import ru.kpfu.itis.authentication.presentation.validator.EmailValidator
 import ru.kpfu.itis.authentication.presentation.validator.NameValidator
 import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
+import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.core.base.BaseViewModel
+import ru.kpfu.itis.core.validation.ValidationResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +21,8 @@ class SignUpViewModel @Inject constructor(
     private val signUp: SignUp,
     private val nameValidator: NameValidator,
     private val passwordValidator: PasswordValidator,
-    private val emailValidator: EmailValidator
+    private val emailValidator: EmailValidator,
+    private val navController: NavHostController
 ) : BaseViewModel<SignUpState, SignUpSideEffect>() {
     override val container: Container<SignUpState, SignUpSideEffect> =
         container(SignUpState())
@@ -27,16 +30,33 @@ class SignUpViewModel @Inject constructor(
     fun signUp(name: String, email: String, password: String) = intent {
         postSideEffect(SignUpSideEffect.ShowLoading)
         validate(name, email, password)
-        signUp.invoke(name, email, password)
-            .onSuccess {
-                postSideEffect(SignUpSideEffect.NavigateToMainFragment)
-            }.onFailure {
-                postSideEffect(SignUpSideEffect.ExceptionHappened(it.cause))
+        if (state.emailValidationResult is ValidationResult.Success &&
+            state.nameValidationResult is ValidationResult.Success &&
+            state.passwordValidationResult is ValidationResult.Success
+        ) {
+            try {
+                signUp.invoke(name, email, password)
+                navController.navigate("main")
+            } catch (ex: Exception) {
+                postSideEffect(SignUpSideEffect.ExceptionHappened(ex))
             }
+        } else {
+            postSideEffect(SignUpSideEffect.ValidationFailure)
+        }
     }
 
-    fun navigateToSignIn(navController: NavHostController) {
-        navController.navigate("signin")
+    fun resetState() = intent {
+        reduce {
+            state.copy(
+                nameValidationResult = null,
+                emailValidationResult = null,
+                passwordValidationResult = null,
+            )
+        }
+    }
+
+    fun navigateSignIn() {
+        navController.navigate(AuthenticationDestinations.SIGNIN.name)
     }
 
     private fun validate(name: String, email: String, password: String) = intent {

@@ -1,6 +1,7 @@
 [versions]
 agp = "8.2.0"
 hilt-android = "2.48"
+hiltNavigationCompose = "1.1.0"
 kotlinReflect = "1.9.10"
 ktlint = "0.40.0"
 core-ktx = "1.12.0"
@@ -27,6 +28,7 @@ googleServices = "4.4.0"
 firebaseAuth = "22.3.0"
 
 [libraries]
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
