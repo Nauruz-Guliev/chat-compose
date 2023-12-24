@@ -49,4 +49,5 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
+    implementation(project(":core-testing"))
 }
