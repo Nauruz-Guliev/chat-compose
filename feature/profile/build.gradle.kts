@@ -29,20 +29,25 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-    implementation(libs.androidx.compose.material.material)
+    // orbit
+    implementation(libs.bundles.orbit)
+    // hilt
+    implementation(libs.hilt.android)
+    implementation(libs.firebase.database.ktx)
+    kapt(libs.hilt.android.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // kotest
     testImplementation(libs.bundles.kotest)
     // mockk
     testImplementation(libs.mockk)
+    //firebase
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebaseAnalytics)
+    implementation(libs.firebaseAuth)
+    implementation(libs.google.services)
+    implementation(libs.modo.compose)
     implementation(libs.androidx.navigation.compose)
-    // hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+
     implementation(project(":core-ui"))
-    implementation(project(":feature:authentication"))
-    implementation(project(":feature:authentication-api"))
-    implementation(project(":feature:chat"))
-    implementation(project(":feature:chat-api"))
-    implementation(project(":feature:profile"))
-    implementation(project(":feature:profile-api"))
+    implementation(project(":core-data"))
 }
