@@ -1,5 +1,6 @@
 [versions]
 agp = "8.2.0"
+androidx-compose-material-material = "1.5.4"
 hilt-android = "2.48"
 hiltNavigationCompose = "1.1.0"
 kotlinReflect = "1.9.10"
@@ -28,6 +29,7 @@ googleServices = "4.4.0"
 firebaseAuth = "22.3.0"
 
 [libraries]
+androidx-compose-material-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose-material-material" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }

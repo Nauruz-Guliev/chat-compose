@@ -1,7 +1,10 @@
 package ru.kpfu.itis.authentication.presentation.screen.signin
 
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -11,6 +14,7 @@ import ru.kpfu.itis.authentication.domain.usecase.SignIn
 import ru.kpfu.itis.authentication.presentation.validator.EmailValidator
 import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
+import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.core.base.BaseViewModel
 import javax.inject.Inject
 
@@ -30,7 +34,7 @@ class SignInViewModel @Inject constructor(
         validate(email, password)
         try {
             signIn.invoke(email, password)
-            navController.navigate("MAIN")
+            navigateToMainScreen()
         } catch (ex: Exception) {
             postSideEffect(SignInSideEffect.ExceptionHappened(ex))
         }
@@ -55,6 +59,14 @@ class SignInViewModel @Inject constructor(
                 emailValidationResult = emailValidator(email),
                 passwordValidationResult = passwordValidator(password)
             )
+        }
+    }
+
+    private fun navigateToMainScreen() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navController.navigate(ChatDestinations.AUTH_SUCCESS.name) {
+                popUpTo(0)
+            }
         }
     }
 }

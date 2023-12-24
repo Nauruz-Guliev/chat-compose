@@ -29,15 +29,19 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.androidx.compose.material.material)
     // kotest
     testImplementation(libs.bundles.kotest)
     // mockk
     testImplementation(libs.mockk)
     implementation(libs.androidx.navigation.compose)
-    implementation(project(":feature:authentication"))
-    implementation(project(":feature:authentication-api"))
-
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    implementation(project(":core"))
+    implementation(project(":feature:authentication"))
+    implementation(project(":feature:authentication-api"))
+    implementation(project(":feature:chat"))
+    implementation(project(":feature:chat-api"))
 }

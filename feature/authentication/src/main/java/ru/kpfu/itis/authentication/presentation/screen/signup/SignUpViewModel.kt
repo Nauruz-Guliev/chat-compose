@@ -1,7 +1,10 @@
 package ru.kpfu.itis.authentication.presentation.screen.signup
 
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -13,6 +16,7 @@ import ru.kpfu.itis.authentication.presentation.validator.NameValidator
 import ru.kpfu.itis.authentication.presentation.validator.PasswordRepeatValidator
 import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
+import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.core.base.BaseViewModel
 import ru.kpfu.itis.core.validation.ValidationResult
 import javax.inject.Inject
@@ -26,6 +30,7 @@ class SignUpViewModel @Inject constructor(
     private val passwordRepeatValidator: PasswordRepeatValidator,
     private val navController: NavHostController
 ) : BaseViewModel<SignUpState, SignUpSideEffect>() {
+
     override val container: Container<SignUpState, SignUpSideEffect> =
         container(SignUpState())
 
@@ -39,7 +44,7 @@ class SignUpViewModel @Inject constructor(
         ) {
             try {
                 signUp.invoke(name, email, password)
-                navController.navigate("main")
+                navigateToMainScreen()
             } catch (ex: Exception) {
                 postSideEffect(SignUpSideEffect.ExceptionHappened(ex))
             }
@@ -69,8 +74,16 @@ class SignUpViewModel @Inject constructor(
                 nameValidationResult = nameValidator(name),
                 emailValidationResult = emailValidator(email),
                 passwordValidationResult = passwordValidator(password),
-                passwordRepeatValidationResult = passwordRepeatValidator(passwordRepeat)
+                passwordRepeatValidationResult = passwordRepeatValidator(password, passwordRepeat)
             )
+        }
+    }
+
+    private fun navigateToMainScreen() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navController.navigate(ChatDestinations.AUTH_SUCCESS.name) {
+                popUpTo(0)
+            }
         }
     }
 }

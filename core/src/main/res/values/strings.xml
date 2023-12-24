@@ -20,4 +20,8 @@
     <string name="welcome_back">Welcome back!</string>
     <string name="create_account">Create Account</string>
 
+    <string name="search">Search</string>
+    <string name="chat">Chat</string>
+    <string name="profile">Profile</string>
+
 </resources>
