@@ -38,8 +38,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-
-    implementation(project(":core"))
+    implementation(project(":core-ui"))
     implementation(project(":feature:authentication"))
     implementation(project(":feature:authentication-api"))
     implementation(project(":feature:chat"))

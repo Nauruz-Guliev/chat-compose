@@ -1,7 +1,7 @@
 package ru.kpfu.itis.authentication.presentation.screen.signup
 
-import ru.kpfu.itis.core.resource.Resource
-import ru.kpfu.itis.core.validation.ValidationResult
+import ru.kpfu.itis.core_ui.resource.Resource
+import ru.kpfu.itis.core_ui.validation.ValidationResult
 
 data class SignUpState(
     val nameValidationResult: ValidationResult<Resource.String>? = null,

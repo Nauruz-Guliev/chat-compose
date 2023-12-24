@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kpfu.itis.core.composable.ErrorAlertDialog
-import ru.kpfu.itis.core.composable.HeaderText
-import ru.kpfu.itis.core.composable.ProgressButton
-import ru.kpfu.itis.core.composable.TextFieldWithErrorState
+import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
+import ru.kpfu.itis.core_ui.composable.HeaderText
+import ru.kpfu.itis.core_ui.composable.ProgressButton
+import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
 import ru.kpfu.itis.core.R as CoreR
 
 @Composable

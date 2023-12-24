@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.bundles.orbit)
     // hilt
     implementation(libs.hilt.android)
+    implementation(libs.firebase.database.ktx)
     kapt(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // kotest
@@ -46,6 +47,6 @@ dependencies {
     implementation(libs.google.services)
     implementation(libs.modo.compose)
     implementation(libs.androidx.navigation.compose)
-
-    implementation(project(":core"))
+    implementation(project(":core-ui"))
+    implementation(project(":core-data"))
 }

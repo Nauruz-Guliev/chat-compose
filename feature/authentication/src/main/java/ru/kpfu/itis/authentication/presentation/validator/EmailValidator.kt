@@ -1,9 +1,9 @@
 package ru.kpfu.itis.authentication.presentation.validator
 
 import android.util.Patterns
-import ru.kpfu.itis.core.resource.Resource
-import ru.kpfu.itis.core.validation.ValidationResult
-import ru.kpfu.itis.core.validation.Validator
+import ru.kpfu.itis.core_ui.resource.Resource
+import ru.kpfu.itis.core_ui.validation.ValidationResult
+import ru.kpfu.itis.core_ui.validation.Validator
 import javax.inject.Inject
 import ru.kpfu.itis.core.R as CoreR
 

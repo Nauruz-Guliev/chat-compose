@@ -17,8 +17,8 @@ import ru.kpfu.itis.authentication.presentation.validator.PasswordRepeatValidato
 import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat_api.ChatDestinations
-import ru.kpfu.itis.core.base.BaseViewModel
-import ru.kpfu.itis.core.validation.ValidationResult
+import ru.kpfu.itis.core_ui.base.BaseViewModel
+import ru.kpfu.itis.core_ui.validation.ValidationResult
 import javax.inject.Inject
 
 @HiltViewModel

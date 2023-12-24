@@ -86,5 +86,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(project(":feature:authentication"))
+    implementation(project(":core-data"))
     implementation(project(":navigation"))
 }

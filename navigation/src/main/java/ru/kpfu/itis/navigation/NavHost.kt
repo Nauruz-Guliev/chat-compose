@@ -3,9 +3,8 @@ package ru.kpfu.itis.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,12 +21,19 @@ import androidx.navigation.compose.rememberNavController
 import ru.kpfu.itis.authentication.presentation.screen.signin.SignInScreen
 import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
-import ru.kpfu.itis.chat.presentation.ChatMainScreen
+import ru.kpfu.itis.chat.presentation.screen.ChatListScreen
 import ru.kpfu.itis.chat_api.ChatDestinations
 
 @Composable
-fun NavigationHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AuthenticationDestinations.SIGNIN.name) {
+fun NavigationHost(navController: NavHostController, isAuthenticated: Boolean) {
+
+    val startDestination = if (isAuthenticated) {
+        ChatDestinations.AUTH_SUCCESS.name
+    } else {
+        AuthenticationDestinations.SIGNIN.name
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
         composable(AuthenticationDestinations.SIGNUP.name) {
             SignUpScreen()
         }
@@ -50,7 +56,15 @@ private fun MainScreen() {
                 val currentDestination = navBackStackEntry?.destination
                 items.forEach { screen ->
                     BottomNavigationItem(
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                imageVector = screen.icon,
+                                contentDescription = screen.route,
+                                tint = if (currentDestination?.route == screen.route)
+                                    MaterialTheme.colorScheme.surfaceTint
+                                else MaterialTheme.colorScheme.onBackground
+                            )
+                        },
                         label = { Text(stringResource(screen.resourceId)) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
@@ -68,7 +82,7 @@ private fun MainScreen() {
         }
     ) { innerPadding ->
         NavHost(navController, startDestination = MainScreen.Chat.route, Modifier.padding(innerPadding)) {
-            composable(MainScreen.Chat.route) { ChatMainScreen() }
+            composable(MainScreen.Chat.route) { ChatListScreen() }
             composable(MainScreen.Search.route) { }
             composable(MainScreen.Profile.route) { }
         }

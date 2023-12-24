@@ -46,8 +46,8 @@ dependencies {
     implementation(libs.google.services)
     implementation(libs.modo.compose)
     implementation(libs.androidx.navigation.compose)
-
-    implementation(project(":core"))
+    implementation(project(":core-ui"))
+    implementation(project(":core-data"))
     implementation(project(":feature:authentication-api"))
     implementation(project(":feature:chat-api"))
 }
