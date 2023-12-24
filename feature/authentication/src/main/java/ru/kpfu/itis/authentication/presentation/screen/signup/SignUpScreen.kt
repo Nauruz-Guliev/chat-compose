@@ -100,7 +100,7 @@ fun SignUpScreen(
             text = stringResource(id = CoreR.string.signup),
             isLoading = isLoading
         ) {
-            viewModel.signUp(name, email, password)
+            viewModel.signUp(name, email, password, passwordRepeat)
         }
         TextButton(
             modifier = Modifier.padding(top = 16.dp),

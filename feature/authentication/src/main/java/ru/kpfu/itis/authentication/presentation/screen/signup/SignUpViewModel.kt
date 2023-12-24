@@ -10,6 +10,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.authentication.domain.usecase.SignUp
 import ru.kpfu.itis.authentication.presentation.validator.EmailValidator
 import ru.kpfu.itis.authentication.presentation.validator.NameValidator
+import ru.kpfu.itis.authentication.presentation.validator.PasswordRepeatValidator
 import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.core.base.BaseViewModel
@@ -22,17 +23,19 @@ class SignUpViewModel @Inject constructor(
     private val nameValidator: NameValidator,
     private val passwordValidator: PasswordValidator,
     private val emailValidator: EmailValidator,
+    private val passwordRepeatValidator: PasswordRepeatValidator,
     private val navController: NavHostController
 ) : BaseViewModel<SignUpState, SignUpSideEffect>() {
     override val container: Container<SignUpState, SignUpSideEffect> =
         container(SignUpState())
 
-    fun signUp(name: String, email: String, password: String) = intent {
+    fun signUp(name: String, email: String, password: String, passwordRepeat: String) = intent {
         postSideEffect(SignUpSideEffect.ShowLoading)
-        validate(name, email, password)
+        validate(name, email, password, passwordRepeat)
         if (state.emailValidationResult is ValidationResult.Success &&
             state.nameValidationResult is ValidationResult.Success &&
-            state.passwordValidationResult is ValidationResult.Success
+            state.passwordValidationResult is ValidationResult.Success &&
+            state.passwordRepeatValidationResult is ValidationResult.Success
         ) {
             try {
                 signUp.invoke(name, email, password)
@@ -59,12 +62,13 @@ class SignUpViewModel @Inject constructor(
         navController.navigate(AuthenticationDestinations.SIGNIN.name)
     }
 
-    private fun validate(name: String, email: String, password: String) = intent {
+    private fun validate(name: String, email: String, password: String, passwordRepeat: String) = intent {
         reduce {
             state.copy(
                 nameValidationResult = nameValidator(name),
                 emailValidationResult = emailValidator(email),
-                passwordValidationResult = passwordValidator(password)
+                passwordValidationResult = passwordValidator(password),
+                passwordRepeatValidationResult = passwordRepeatValidator(passwordRepeat)
             )
         }
     }
