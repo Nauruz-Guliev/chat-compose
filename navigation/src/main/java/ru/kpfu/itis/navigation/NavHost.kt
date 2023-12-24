@@ -23,16 +23,15 @@ import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat.presentation.screen.ChatListScreen
 import ru.kpfu.itis.chat_api.ChatDestinations
+import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
 
 @Composable
 fun NavigationHost(navController: NavHostController, isAuthenticated: Boolean) {
-
     val startDestination = if (isAuthenticated) {
         ChatDestinations.AUTH_SUCCESS.name
     } else {
         AuthenticationDestinations.SIGNIN.name
     }
-
     NavHost(navController = navController, startDestination = startDestination) {
         composable(AuthenticationDestinations.SIGNUP.name) {
             SignUpScreen()
@@ -84,7 +83,7 @@ private fun MainScreen() {
         NavHost(navController, startDestination = MainScreen.Chat.route, Modifier.padding(innerPadding)) {
             composable(MainScreen.Chat.route) { ChatListScreen() }
             composable(MainScreen.Search.route) { }
-            composable(MainScreen.Profile.route) { }
+            composable(MainScreen.Profile.route) { ProfileScreen() }
         }
     }
 }
