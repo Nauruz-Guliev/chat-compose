@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.kpfu.itis.core"
+    namespace = "ru.kpfu.itis.core_testing"
     compileSdk = 34
 
     defaultConfig {
@@ -28,23 +28,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
-    }
 }
 
 dependencies {
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-
-    implementation(libs.bundles.orbit)
+    testImplementation(libs.junit)
+    implementation(libs.bundles.kotest)
+    testImplementation(libs.mockk)
 }

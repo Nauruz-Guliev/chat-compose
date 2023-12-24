@@ -1,4 +1,4 @@
-package ru.kpfu.itis.core_ui.testing
+package ru.kpfu.itis.core_testing
 
 import io.kotest.core.spec.style.scopes.BehaviorSpecGivenContainerScope
 import io.kotest.core.spec.style.scopes.BehaviorSpecWhenContainerScope

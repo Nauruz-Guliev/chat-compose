@@ -9,8 +9,8 @@ import io.mockk.mockk
 import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.repository.AuthRepository
 import ru.kpfu.itis.authentication.domain.usecase.SignUp
-import ru.kpfu.itis.core_ui.testing.Then
-import ru.kpfu.itis.core_ui.testing.When
+import ru.kpfu.itis.core_testing.Then
+import ru.kpfu.itis.core_testing.When
 
 class SignUpTest : BehaviorSpec( {
 
