@@ -43,7 +43,7 @@ fun SignUpScreen(
     HandleSideEffects(
         viewModel = viewModel,
         isLoading = { isLoading = it },
-        resetFields = {
+        resetFieldsAction = {
             name = ""
             email = ""
             passwordRepeat = ""
@@ -63,6 +63,7 @@ fun SignUpScreen(
         HeaderText(CoreR.string.create_account)
 
         viewModel.collectAsState().apply {
+
             TextFieldWithErrorState(
                 value = name,
                 onValueChange = { name = it },
@@ -102,6 +103,7 @@ fun SignUpScreen(
         ) {
             viewModel.signUp(name, email, password, passwordRepeat)
         }
+
         TextButton(
             modifier = Modifier.padding(top = 16.dp),
             onClick = {
@@ -110,6 +112,7 @@ fun SignUpScreen(
         ) {
             Text(text = stringResource(id = CoreR.string.message_sign_in))
         }
+
         LaunchedEffect(Unit) {
             showSignUpButton = true
         }
@@ -120,10 +123,11 @@ fun SignUpScreen(
 fun HandleSideEffects(
     viewModel: SignUpViewModel,
     isLoading: (Boolean) -> Unit,
-    resetFields: () -> Unit
+    resetFieldsAction: () -> Unit
 ) {
     var alert by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<Throwable?>(null) }
+
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is SignUpSideEffect.ExceptionHappened -> {
@@ -139,10 +143,11 @@ fun HandleSideEffects(
             }
         }
     }
+
     if (alert) {
         ErrorAlertDialog(
-            onConfirmation = resetFields,
-            onDismissRequest = resetFields,
+            onConfirmation = resetFieldsAction,
+            onDismissRequest = resetFieldsAction,
             dialogTitle = (error ?: Exception())::class.simpleName.toString(),
             dialogText = error?.message ?: stringResource(id = CoreR.string.error_unknown),
             icon = CoreR.drawable.baseline_error_24,

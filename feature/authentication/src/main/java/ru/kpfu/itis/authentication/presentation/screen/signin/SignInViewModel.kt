@@ -36,6 +36,15 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    fun resetState() = intent {
+        reduce {
+            state.copy(
+                emailValidationResult = null,
+                passwordValidationResult = null,
+            )
+        }
+    }
+
     fun navigateSignUp() {
         navController.navigate(AuthenticationDestinations.SIGNUP.name)
     }

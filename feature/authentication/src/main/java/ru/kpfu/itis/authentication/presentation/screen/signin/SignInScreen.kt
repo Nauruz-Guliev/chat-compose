@@ -32,23 +32,38 @@ import ru.kpfu.itis.core.R as CoreR
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel()
 ) {
+
     var showSignInButton by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+
+    HandleSideEffects(
+        viewModel = viewModel,
+        isLoading = { isLoading = it },
+        resetFieldsAction = {
+            email = ""
+            password = ""
+            viewModel.resetState()
+        }
+    )
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             HeaderText(text = stringResource(id = CoreR.string.welcome_back))
 
             Spacer(modifier = Modifier.height(16.dp))
 
             viewModel.collectAsState().apply {
+
                 TextFieldWithErrorState(
                     value = email,
                     onValueChange = { email = it },
@@ -71,6 +86,7 @@ fun SignInScreen(
             ) {
                 viewModel.signIn(email, password)
             }
+
             TextButton(
                 modifier = Modifier.padding(top = 16.dp),
                 onClick = {
@@ -79,6 +95,7 @@ fun SignInScreen(
             ) {
                 Text(text = stringResource(id = CoreR.string.message_sign_up))
             }
+
             LaunchedEffect(Unit) {
                 showSignInButton = true
             }
@@ -90,10 +107,11 @@ fun SignInScreen(
 fun HandleSideEffects(
     viewModel: SignInViewModel,
     isLoading: (Boolean) -> Unit,
-    resetFields: () -> Unit
+    resetFieldsAction: () -> Unit
 ) {
     var alert by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<Throwable?>(null) }
+
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is SignInSideEffect.ExceptionHappened -> {
@@ -109,10 +127,11 @@ fun HandleSideEffects(
             }
         }
     }
+
     if (alert) {
         ErrorAlertDialog(
-            onConfirmation = resetFields,
-            onDismissRequest = resetFields,
+            onConfirmation = resetFieldsAction,
+            onDismissRequest = resetFieldsAction,
             dialogTitle = (error ?: Exception())::class.simpleName.toString(),
             dialogText = error?.message ?: stringResource(id = CoreR.string.error_unknown),
             icon = CoreR.drawable.baseline_error_24,

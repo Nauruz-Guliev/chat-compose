@@ -54,6 +54,7 @@ class SignUpViewModel @Inject constructor(
                 nameValidationResult = null,
                 emailValidationResult = null,
                 passwordValidationResult = null,
+                passwordRepeatValidationResult = null
             )
         }
     }
