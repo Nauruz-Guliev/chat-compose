@@ -17,4 +17,9 @@ dependencyResolutionManagement {
 rootProject.name = "chat-compose"
 include(":app")
 include(":feature:authentication")
-include(":core")
+include(":core-ui")
+include(":navigation")
+include(":feature:authentication-api")
+include(":feature:chat")
+include(":feature:chat-api")
+include(":core-data")

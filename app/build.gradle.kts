@@ -48,7 +48,12 @@ android {
     }
     packaging {
         resources {
+            excludes += "META-INF/*"
+            pickFirsts += "lib/armeabi-v7a/libassmidi.so"
+            pickFirsts += "lib/x86/libassmidi.so"
+            excludes += "**/attach_hotspot_windows.dll"
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/licenses/ASM"
         }
     }
     tasks.withType<Test> {
@@ -78,7 +83,9 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     // firebase
     implementation(libs.modo.compose)
-    implementation(project(":feature:authentication"))
-
     implementation(libs.androidx.navigation.compose)
+
+    implementation(project(":feature:authentication"))
+    implementation(project(":core-data"))
+    implementation(project(":navigation"))
 }

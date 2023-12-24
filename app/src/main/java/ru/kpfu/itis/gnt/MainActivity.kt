@@ -3,41 +3,32 @@ package ru.kpfu.itis.gnt
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.AndroidEntryPoint
-import ru.kpfu.itis.gnt.ui.navigation.NavigationHost
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import ru.kpfu.itis.core_data.UserStore
 import ru.kpfu.itis.gnt.ui.theme.ChatcomposeTheme
+import ru.kpfu.itis.navigation.NavigationHost
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject lateinit var navHostController: NavHostController
+    @Inject lateinit var userStore: UserStore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            val navController = rememberNavController()
-            ChatcomposeTheme {
-                NavigationHost(navController = navController)
+        lifecycleScope.launch(Dispatchers.Main) {
+            val userId = lifecycleScope.async(Dispatchers.IO) { userStore.getUserId() }.await()
+            setContent {
+                ChatcomposeTheme {
+                    NavigationHost(navController = navHostController, isAuthenticated = userId != null)
+                }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ChatcomposeTheme {
-        Greeting("Android")
     }
 }

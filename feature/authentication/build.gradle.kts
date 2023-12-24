@@ -9,9 +9,6 @@ plugins {
 apply {
     from("${rootProject.projectDir}/gradle/shared_build.gradle")
 }
-apply {
-    from("${rootProject.projectDir}/gradle/feature_dependency.gradle")
-}
 
 android {
     tasks.withType<Test> {
@@ -19,7 +16,6 @@ android {
     }
 }
 
-// Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
@@ -49,7 +45,9 @@ dependencies {
     implementation(libs.firebaseAuth)
     implementation(libs.google.services)
     implementation(libs.modo.compose)
-
-    implementation(project(":core"))
     implementation(libs.androidx.navigation.compose)
+    implementation(project(":core-ui"))
+    implementation(project(":core-data"))
+    implementation(project(":feature:authentication-api"))
+    implementation(project(":feature:chat-api"))
 }
