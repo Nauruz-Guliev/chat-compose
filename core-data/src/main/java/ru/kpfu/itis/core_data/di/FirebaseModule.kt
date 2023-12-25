@@ -15,7 +15,7 @@ object FirebaseModule {
     @Provides
     @UsersDatabase
     fun provideUsersDatabaseReference() : DatabaseReference {
-        return FirebaseDatabase.getInstance().getReference("Users")
+        return FirebaseDatabase.getInstance().reference.child("Users")
     }
 }
 

@@ -27,15 +27,17 @@ fun TextFieldWithErrorState(
     onValueChange: (String) -> Unit,
     labelValue: String,
     validationResult: ValidationResult<Resource.String>? = null,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    isEnabled: Boolean = true,
 ) {
     TextField(
+        enabled = isEnabled,
         value = value,
         onValueChange = onValueChange,
         label = { Text(labelValue) },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 32.dp),
+            .padding(horizontal = 28.dp),
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,
