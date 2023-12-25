@@ -1,4 +1,4 @@
-package ru.kpfu.itis.gnt.ui.theme
+package ru.kpfu.itis.core_ui.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

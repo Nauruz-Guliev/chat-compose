@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +36,16 @@ fun TextFieldWithErrorState(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
+            focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.DarkGray
+        ),
+        shape = RoundedCornerShape(8.dp),
         isError = validationResult is ValidationResult.Failure,
-        visualTransformation = if(isPassword) PasswordVisualTransformation() else VisualTransformation.None
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
     )
     if (validationResult is ValidationResult.Failure) {
         Text(

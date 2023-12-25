@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.kpfu.itis.core_data.UserStore
-import ru.kpfu.itis.gnt.ui.theme.ChatcomposeTheme
+import ru.kpfu.itis.core_ui.ui.theme.ChatcomposeTheme
 import ru.kpfu.itis.navigation.NavigationHost
 import javax.inject.Inject
 
@@ -26,7 +26,10 @@ class MainActivity : ComponentActivity() {
             val userId = lifecycleScope.async(Dispatchers.IO) { userStore.getUserId() }.await()
             setContent {
                 ChatcomposeTheme {
-                    NavigationHost(navController = navHostController, isAuthenticated = userId != null)
+                    NavigationHost(
+                        navController = navHostController,
+                        isAuthenticated = userId != null
+                    )
                 }
             }
         }
