@@ -23,5 +23,8 @@
     <string name="search">Search</string>
     <string name="chat">Chat</string>
     <string name="profile">Profile</string>
+    <string name="exit_account">Exit from account</string>
+    <string name="edit_mode">Enter edit mode</string>
+    <string name="save_profile">Save account changes</string>
 
 </resources>

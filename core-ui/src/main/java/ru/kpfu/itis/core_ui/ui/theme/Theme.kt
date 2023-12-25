@@ -1,4 +1,4 @@
-package ru.kpfu.itis.gnt.ui.theme
+package ru.kpfu.itis.core_ui.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -37,6 +37,15 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val LightColorChatScheme = darkColorScheme(
+    primary = Denim,
+    secondary = Nyanza,
+    tertiary = PowderBlue,
+    background = AliceBlue,
+    onSurface = FrenchGray,
+    onPrimary = Nyanza
+)
+
 @Composable
 fun ChatcomposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -51,7 +60,7 @@ fun ChatcomposeTheme(
         }
 
         darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        else -> LightColorChatScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {

@@ -29,6 +29,7 @@ firebase = "32.7.0"
 googleServices = "4.4.0"
 firebaseAuth = "22.3.0"
 firebaseDatabaseKtx = "20.3.0"
+volley = "1.2.1"
 
 [libraries]
 androidx-compose-material-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose-material-material" }
@@ -84,6 +85,7 @@ firebaseAuth = { module = "com.google.firebase:firebase-auth-ktx" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 firebaseAuthKtx = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuth" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

@@ -18,6 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -38,7 +40,11 @@ fun ProgressButton(
                 .wrapContentWidth()
                 .padding(16.dp)
         ) {
-            Text(text = text)
+            Text(
+                text = text,
+                fontSize = TextUnit(20f, TextUnitType.Sp),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
 
         AnimatedVisibility(

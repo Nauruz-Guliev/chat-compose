@@ -11,11 +11,11 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.authentication.domain.usecase.SignIn
-import ru.kpfu.itis.authentication.presentation.validator.EmailValidator
-import ru.kpfu.itis.authentication.presentation.validator.PasswordValidator
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.core_ui.base.BaseViewModel
+import ru.kpfu.itis.core_ui.validation.EmailValidator
+import ru.kpfu.itis.core_ui.validation.PasswordValidator
 import javax.inject.Inject
 
 @HiltViewModel

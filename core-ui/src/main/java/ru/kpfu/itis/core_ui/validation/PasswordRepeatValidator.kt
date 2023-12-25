@@ -1,10 +1,8 @@
-package ru.kpfu.itis.authentication.presentation.validator
+package ru.kpfu.itis.core_ui.validation
 
+import ru.kpfu.itis.core.R
 import ru.kpfu.itis.core_ui.resource.Resource
-import ru.kpfu.itis.core_ui.validation.ValidationResult
-import ru.kpfu.itis.core_ui.validation.Validator
 import javax.inject.Inject
-import ru.kpfu.itis.core.R as CoreR
 
 class PasswordRepeatValidator @Inject constructor() : Validator<String> {
     override fun invoke(field: String, secondField: String?): ValidationResult<Resource.String> {
@@ -12,7 +10,7 @@ class PasswordRepeatValidator @Inject constructor() : Validator<String> {
             ValidationResult.Success
         } else {
             ValidationResult.Failure(
-                Resource.String(CoreR.string.error_different_passwords)
+                Resource.String(R.string.error_different_passwords)
             )
         }
     }
