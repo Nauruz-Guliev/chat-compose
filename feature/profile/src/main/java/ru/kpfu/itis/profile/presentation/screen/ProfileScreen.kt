@@ -20,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
 import ru.kpfu.itis.core_ui.ui.theme.Persimmon
 import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
@@ -34,36 +36,45 @@ fun ProfileScreen(
     var email by remember { mutableStateOf("") }
     var isEditing by remember { mutableStateOf(false) }
 
+    HandleSideEffects(
+        viewModel = viewModel,
+        resetFieldsAction = {
+            email = ""
+            name = ""
+        }
+    )
+
     Column(
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
 
+
+
         viewModel.collectAsState().apply {
 
             TextFieldWithErrorState(
+                isEnabled = isEditing,
                 value = name,
                 onValueChange = { name = it },
                 labelValue = stringResource(id = CoreR.string.name),
                 validationResult = this.value.emailValidationResult,
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             TextFieldWithErrorState(
+                isEnabled = isEditing,
                 value = email,
                 onValueChange = { email = it },
                 labelValue = stringResource(id = CoreR.string.email),
                 validationResult = this.value.emailValidationResult,
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = { isEditing = !isEditing },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
                 colors = if (isEditing) ButtonDefaults.buttonColors(SeaGreen)
                 else ButtonDefaults.buttonColors()
             ) {
@@ -77,12 +88,45 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth(),
+                onClick = { if(isEditing) viewModel.updateProfile(name, email) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, end = 20.dp, bottom = 20.dp),
                 colors = ButtonDefaults.buttonColors(Persimmon)
             ) {
                 Text(text = stringResource(id = CoreR.string.exit_account))
             }
         }
+    }
+}
+
+@Composable
+fun HandleSideEffects(
+    viewModel: ProfileViewModel,
+    resetFieldsAction: () -> Unit
+) {
+    var alert by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<Throwable?>(null) }
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is ProfileSideEffect.ExceptionHappened -> {
+                error = sideEffect.throwable
+                alert = true
+            }
+            is ProfileSideEffect.ValidationFailure -> {
+
+            }
+        }
+    }
+
+    if (alert) {
+        ErrorAlertDialog(
+            onConfirmation = resetFieldsAction,
+            onDismissRequest = resetFieldsAction,
+            dialogTitle = (error ?: Exception())::class.simpleName.toString(),
+            dialogText = error?.message ?: stringResource(id = CoreR.string.error_unknown),
+            icon = CoreR.drawable.baseline_error_24,
+        )
     }
 }

@@ -12,8 +12,8 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val usersService: UserService,
-    private val userStore: UserStore
+    private val userService: UserService,
+    private val userStore: UserStore,
 ) : AuthRepository<User> {
 
     override val currentUser: FirebaseUser?
@@ -22,6 +22,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun signIn(email: String, password: String): User {
         val userSignInTask = firebaseAuth.signInWithEmailAndPassword(email, password)
         Tasks.await(userSignInTask)
+        userStore.saveUserId(currentUser?.uid)
         return with(userSignInTask.result.user) {
             User(
                 name = this?.displayName,
@@ -37,10 +38,12 @@ class AuthRepositoryImpl @Inject constructor(
     ): User {
         val userCreationTask = firebaseAuth.createUserWithEmailAndPassword(email, password)
         Tasks.await(userCreationTask)
-        val id = usersService.saveUser(ChatUser(name = name))
-        userStore.saveUserId(id)
+        userCreationTask.result.user?.uid?.let { userUid ->
+            userService.saveUser(ChatUser(name = name, email = email), userUid)
+            userStore.saveUserId(userUid)
+        }
         return with(userCreationTask.result.user) {
-             User(
+            User(
                 name = this?.displayName,
                 email = email
             )

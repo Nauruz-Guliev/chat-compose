@@ -11,27 +11,43 @@ import ru.kpfu.itis.core_ui.base.BaseViewModel
 import ru.kpfu.itis.core_ui.validation.EmailValidator
 import ru.kpfu.itis.core_ui.validation.NameValidator
 import ru.kpfu.itis.core_ui.validation.ValidationResult
+import ru.kpfu.itis.profile.domain.usecase.GetChatUser
+import ru.kpfu.itis.profile.domain.usecase.UpdateUser
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val nameValidator: NameValidator,
     private val emailValidator: EmailValidator,
-    private val navController: NavHostController
+    private val navController: NavHostController,
+    private val getChatUser: GetChatUser,
+    private val updateUser: UpdateUser
 ) : BaseViewModel<ProfileState, ProfileSideEffect>() {
 
     override val container: Container<ProfileState, ProfileSideEffect> =
         container(ProfileState())
 
-    fun signUp(name: String, email: String, password: String, passwordRepeat: String) = intent {
-        postSideEffect(ProfileSideEffect.ShowLoading)
-        validate(name, email, password, passwordRepeat)
+    init {
+        getUser()
+    }
+
+    fun updateProfile(name: String, email: String) = intent {
+        validate(name, email)
         if (state.emailValidationResult is ValidationResult.Success &&
             state.nameValidationResult is ValidationResult.Success
         ) {
-
+            updateUser(email, name)
         } else {
             postSideEffect(ProfileSideEffect.ValidationFailure)
+        }
+    }
+
+    fun getUser() = intent {
+        try {
+            val user = getChatUser()
+            reduce { state.copy(user = user) }
+        } catch (ex: Exception) {
+            postSideEffect(ProfileSideEffect.ExceptionHappened(ex))
         }
     }
 
@@ -39,12 +55,13 @@ class ProfileViewModel @Inject constructor(
         reduce {
             state.copy(
                 nameValidationResult = null,
-                emailValidationResult = null
+                emailValidationResult = null,
+                user = null
             )
         }
     }
 
-    private fun validate(name: String, email: String, password: String, passwordRepeat: String) = intent {
+    private fun validate(name: String, email: String) = intent {
         reduce {
             state.copy(
                 nameValidationResult = nameValidator(name),
