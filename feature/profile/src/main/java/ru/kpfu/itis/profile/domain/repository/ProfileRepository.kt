@@ -6,4 +6,5 @@ interface ProfileRepository {
 
     suspend fun updateProfile(newEmail: String, name: String)
     suspend fun getUser(): ChatUser?
+    suspend fun clearUserId()
 }

@@ -29,4 +29,10 @@ class UserStore @Inject constructor(
             preferences[idKey]
         }.first()
     }
+
+    suspend fun clearId() {
+        dataStore.edit { preferences ->
+            preferences.remove(idKey)
+        }
+    }
 }

@@ -37,7 +37,7 @@ fun TextFieldWithErrorState(
         label = { Text(labelValue) },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 28.dp),
+            .padding(horizontal = 24.dp),
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,

@@ -1,10 +1,7 @@
 package ru.kpfu.itis.authentication.presentation.screen.signup
 
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -44,7 +41,7 @@ class SignUpViewModel @Inject constructor(
         ) {
             try {
                 signUp.invoke(name, email, password)
-                navigateToMainScreen()
+                navigateMainScreen()
             } catch (ex: Exception) {
                 postSideEffect(SignUpSideEffect.ExceptionHappened(ex))
             }
@@ -65,25 +62,19 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun navigateSignIn() {
-        navController.navigate(AuthenticationDestinations.SIGNIN.name)
+        navController.navigateSavingBackStack(AuthenticationDestinations.SIGNIN.name)
     }
 
-    private fun validate(name: String, email: String, password: String, passwordRepeat: String) = intent {
-        reduce {
-            state.copy(
-                nameValidationResult = nameValidator(name),
-                emailValidationResult = emailValidator(email),
-                passwordValidationResult = passwordValidator(password),
-                passwordRepeatValidationResult = passwordRepeatValidator(password, passwordRepeat)
-            )
+    private fun validate(name: String, email: String, password: String, passwordRepeat: String) {
+        container.stateFlow.value.apply {
+            nameValidationResult = nameValidator(name)
+            emailValidationResult = emailValidator(email)
+            passwordValidationResult = passwordValidator(password)
+            passwordRepeatValidationResult = passwordRepeatValidator(password, passwordRepeat)
         }
     }
 
-    private fun navigateToMainScreen() {
-        viewModelScope.launch(Dispatchers.Main) {
-            navController.navigate(ChatDestinations.AUTH_SUCCESS.name) {
-                popUpTo(0)
-            }
-        }
+    private fun navigateMainScreen() {
+        navController.navigateLosingBackStack(ChatDestinations.AUTH_SUCCESS.name)
     }
 }

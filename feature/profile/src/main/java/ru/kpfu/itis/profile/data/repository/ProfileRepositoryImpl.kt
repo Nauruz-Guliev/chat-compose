@@ -1,6 +1,5 @@
 package ru.kpfu.itis.profile.data.repository
 
-import android.util.Log
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -28,16 +27,17 @@ class ProfileRepositoryImpl @Inject constructor(
         val userId = userStore.getUserId()
         userTask?.let { task ->
             Tasks.await(task)
-            userService.updateUser(ChatUser(name), userId)
+            userService.updateUser(ChatUser(name = name, email = newEmail), userId)
         } ?: throw NotAuthenticatedException()
     }
 
     override suspend fun getUser(): ChatUser? {
         return userStore.getUserId()?.let {
-            Log.e("ID", it.toString())
-            userService.getUserById(it).apply {
-                Log.e("USER", this.toString())
-            }
+            userService.getUserById(it)
         }
+    }
+
+    override suspend fun clearUserId() {
+        userStore.clearId()
     }
 }

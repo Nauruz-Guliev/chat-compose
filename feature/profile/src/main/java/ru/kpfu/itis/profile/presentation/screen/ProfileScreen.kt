@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kpfu.itis.core_data.ChatUser
 import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
 import ru.kpfu.itis.core_ui.ui.theme.Persimmon
@@ -32,15 +34,20 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
 
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var isEditing by remember { mutableStateOf(false) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var isEditing by rememberSaveable { mutableStateOf(false) }
 
     HandleSideEffects(
         viewModel = viewModel,
         resetFieldsAction = {
             email = ""
             name = ""
+            viewModel.loadUser()
+        },
+        setupProfileInitialValuesAction = { chatUser: ChatUser? ->
+            name = chatUser?.name ?: name
+            email = chatUser?.email ?: email
         }
     )
 
@@ -50,8 +57,6 @@ fun ProfileScreen(
         verticalArrangement = Arrangement.Bottom
     ) {
 
-
-
         viewModel.collectAsState().apply {
 
             TextFieldWithErrorState(
@@ -59,7 +64,7 @@ fun ProfileScreen(
                 value = name,
                 onValueChange = { name = it },
                 labelValue = stringResource(id = CoreR.string.name),
-                validationResult = this.value.emailValidationResult,
+                validationResult = this.value.nameValidationResult,
             )
 
             TextFieldWithErrorState(
@@ -71,7 +76,13 @@ fun ProfileScreen(
             )
 
             Button(
-                onClick = { isEditing = !isEditing },
+                onClick = {
+                    if (isEditing) viewModel.apply {
+                        updateProfile(name, email)
+                        loadUser()
+                    }
+                    isEditing = !isEditing
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
@@ -88,7 +99,7 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             Button(
-                onClick = { if(isEditing) viewModel.updateProfile(name, email) },
+                onClick = { viewModel.exitProfile() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 24.dp, end = 20.dp, bottom = 20.dp),
@@ -103,7 +114,8 @@ fun ProfileScreen(
 @Composable
 fun HandleSideEffects(
     viewModel: ProfileViewModel,
-    resetFieldsAction: () -> Unit
+    resetFieldsAction: () -> Unit,
+    setupProfileInitialValuesAction: (ChatUser?) -> Unit
 ) {
     var alert by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<Throwable?>(null) }
@@ -114,8 +126,14 @@ fun HandleSideEffects(
                 error = sideEffect.throwable
                 alert = true
             }
-            is ProfileSideEffect.ValidationFailure -> {
 
+            is ProfileSideEffect.ValidationFailure -> {
+                error = Exception("Shiiiit")
+                alert = true
+            }
+
+            is ProfileSideEffect.UserLoaded -> {
+                setupProfileInitialValuesAction(sideEffect.user)
             }
         }
     }
