@@ -50,5 +50,6 @@ dependencies {
     implementation(libs.bundles.orbit)
     // hilt
     implementation(libs.hilt.android)
+    implementation(libs.androidx.navigation.runtime.ktx)
     kapt(libs.hilt.android.compiler)
 }

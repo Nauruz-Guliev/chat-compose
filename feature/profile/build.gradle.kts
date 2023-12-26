@@ -51,4 +51,5 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
     implementation(project(":core-testing"))
+    implementation(project(":feature:authentication-api"))
 }
