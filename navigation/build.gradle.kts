@@ -38,6 +38,7 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
     implementation(project(":core-ui"))
     implementation(project(":feature:authentication"))
     implementation(project(":feature:authentication-api"))
@@ -45,4 +46,6 @@ dependencies {
     implementation(project(":feature:chat-api"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:profile-api"))
+    implementation(project(":feature:image-picker"))
+    implementation(project(":feature:image-picker-api"))
 }

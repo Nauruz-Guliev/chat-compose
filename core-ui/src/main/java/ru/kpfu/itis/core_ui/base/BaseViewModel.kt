@@ -11,7 +11,9 @@ import org.orbitmvi.orbit.ContainerHost
 abstract class BaseViewModel<STATE : Any, SIDE_EFFECT : Any> :
     ContainerHost<STATE, SIDE_EFFECT>,
     ViewModel() {
+
     abstract override val container: Container<STATE, SIDE_EFFECT>
+
 
     fun runOnMainThread(block: () -> Unit) {
         viewModelScope.launch(Dispatchers.Main) {
