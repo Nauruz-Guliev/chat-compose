@@ -1,0 +1,8 @@
+package ru.kpfu.itis.image_picker.presentation.screen.image_picker
+
+import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
+
+data class ImagePickerState (
+    val imageList: List<ImageUrlListModel> = emptyList(),
+    val selectedImage: ImageUrlListModel? = null
+)

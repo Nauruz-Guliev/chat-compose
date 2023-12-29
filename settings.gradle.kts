@@ -3,7 +3,10 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url = uri("https://www.jitpack.io") }
+        maven {
+            url = uri("https://www.jitpack.io")
+            url = uri("https://kotlin.bintray.com/kotlinx")
+        }
     }
 }
 dependencyResolutionManagement {
@@ -28,3 +31,5 @@ include(":feature:profile-api")
 include(":core-testing")
 include(":feature:user-search")
 include(":feature:user-search-api")
+include(":feature:image-picker")
+include(":feature:image-picker-api")

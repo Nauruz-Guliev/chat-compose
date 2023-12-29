@@ -24,6 +24,8 @@ import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat.presentation.screen.ChatListScreen
 import ru.kpfu.itis.chat_api.ChatDestinations
+import ru.kpfu.itis.image_picker.presentation.screen.image_picker.ImagePickerScreen
+import ru.kpfu.itis.image_picker_api.ImagePickerDestinations
 import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
 
 @Composable
@@ -42,6 +44,9 @@ fun NavigationHost(navController: NavHostController, isAuthenticated: Boolean) {
         }
         composable(ChatDestinations.AUTH_SUCCESS.name) {
             MainScreen()
+        }
+        composable(ImagePickerDestinations.IMAGE_PICKER.name) {
+            ImagePickerScreen()
         }
     }
 }

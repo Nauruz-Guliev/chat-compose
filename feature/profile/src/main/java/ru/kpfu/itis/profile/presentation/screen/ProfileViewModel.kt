@@ -61,6 +61,10 @@ class ProfileViewModel @Inject constructor(
         navigateSignInScreen()
     }
 
+    fun openImagePickerForResult() = intent {
+     //   navController.navigateSavingBackStack(ImagePickerDestinations.IMAGE_PICKER.name)
+    }
+
     private fun resetState() = intent {
         reduce {
             state.copy(
