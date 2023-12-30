@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -27,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,8 +37,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kpfu.itis.core_data.ChatUser
+import ru.kpfu.itis.core_ui.composable.DisappearingText
 import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
+import ru.kpfu.itis.core_ui.ui.theme.AliceBlue
 import ru.kpfu.itis.core_ui.ui.theme.Persimmon
 import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
 import ru.kpfu.itis.image_picker.presentation.screen.image_picker.ImagePickerScreen
@@ -66,39 +71,48 @@ fun ProfileScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top
     ) {
 
         viewModel.collectAsState().apply {
 
             var showImagePickerDialog by remember { mutableStateOf(false) }
-            var selectedImageUri by remember { mutableStateOf(null) }
+            var selectedImageUrl by remember { mutableStateOf("") }
 
             Column(
-                modifier = Modifier.size(120.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
             ) {
-
                 Card(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(60.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface,
                     ),
                     onClick = {
                         showImagePickerDialog = true
-                        //   viewModel.openImagePickerForResult()
                     }
                 ) {
-                    Image(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(120.dp)
-                    )
+                    if (selectedImageUrl.isBlank()) {
+                        Image(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(AliceBlue),
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .size(120.dp)
+                        )
+                    }
                 }
+                DisappearingText(
+                    text = stringResource(id = CoreR.string.change_profile_image_text),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 8.dp)
+                )
             }
 
             TextFieldWithErrorState(

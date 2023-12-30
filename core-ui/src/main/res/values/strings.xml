@@ -27,4 +27,6 @@
     <string name="edit_mode">Enter edit mode</string>
     <string name="save_profile">Save account changes</string>
 
+    <string name="change_profile_image_text">You can click on image to change it</string>
+
 </resources>

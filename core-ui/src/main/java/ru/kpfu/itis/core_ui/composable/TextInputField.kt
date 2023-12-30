@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.kpfu.itis.core_ui.resource.Resource
+import ru.kpfu.itis.core_ui.ui.theme.AliceBlue
 import ru.kpfu.itis.core_ui.validation.ValidationResult
 
 @Composable
@@ -57,7 +58,11 @@ fun TextFieldWithErrorState(
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.DarkGray,
             focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledContainerColor = AliceBlue,
+            disabledTextColor = MaterialTheme.colorScheme.primary,
+            disabledPlaceholderColor = Color.Transparent,
+            disabledLabelColor = Color.DarkGray
         ),
         shape = RoundedCornerShape(8.dp),
         isError = validationResult is ValidationResult.Failure,
