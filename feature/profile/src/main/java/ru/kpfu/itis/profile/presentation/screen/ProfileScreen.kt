@@ -88,7 +88,7 @@ fun ProfileScreen(
                     ),
                     onClick = {
                         showImagePickerDialog = true
-                     //   viewModel.openImagePickerForResult()
+                        //   viewModel.openImagePickerForResult()
                     }
                 ) {
                     Image(
@@ -150,9 +150,12 @@ fun ProfileScreen(
                 Text(text = stringResource(id = CoreR.string.exit_account))
             }
 
-            if(showImagePickerDialog) {
-                ImagePickerScreen()
-            }
+            ImagePickerScreen(
+                isShown = showImagePickerDialog,
+                onDismissRequest = {
+                    showImagePickerDialog = false
+                }
+            )
         }
     }
 }

@@ -39,6 +39,7 @@ object NetworkModule {
             }
             install(ContentNegotiation) {
                 json(Json {
+                    prettyPrint = true
                     ignoreUnknownKeys = true
                 })
             }
