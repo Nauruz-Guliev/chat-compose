@@ -46,5 +46,7 @@ dependencies {
     implementation(project(":feature:chat-api"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:profile-api"))
+    implementation(project(":feature:user-search"))
+    implementation(project(":feature:user-search-api"))
     implementation(project(":feature:image-picker"))
 }
