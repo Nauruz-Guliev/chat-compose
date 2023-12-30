@@ -24,6 +24,7 @@ class ImagePickerViewModel @Inject constructor(
         container(ImagePickerState())
 
     fun searchForAnImage(query: String) = intent {
+        if (query.isBlank()) return@intent
         postSideEffect(ImagePickerSideEffect.ShowLoading)
         runCatching {
             loadImage.invoke(query)
@@ -31,9 +32,17 @@ class ImagePickerViewModel @Inject constructor(
             postSideEffect(ImagePickerSideEffect.ExceptionHappened(exception))
         }.onSuccess { imageList ->
             reduce {
-                state.copy(
-                    imageList = imageList.mapToListModel()
-                )
+                if(imageList.isNotEmpty()) {
+                    state.copy(
+                        imageList = imageList.mapToListModel(),
+                        isImageFound = true
+                    )
+                } else {
+                    state.copy(
+                        isImageFound = false,
+                        searchedQuery = query
+                    )
+                }
             }
         }
     }
