@@ -52,4 +52,5 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.runtime.ktx)
     kapt(libs.hilt.android.compiler)
+    implementation(kotlin("reflect"))
 }

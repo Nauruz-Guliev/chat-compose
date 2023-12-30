@@ -47,5 +47,4 @@ dependencies {
     implementation(project(":feature:profile"))
     implementation(project(":feature:profile-api"))
     implementation(project(":feature:image-picker"))
-    implementation(project(":feature:image-picker-api"))
 }

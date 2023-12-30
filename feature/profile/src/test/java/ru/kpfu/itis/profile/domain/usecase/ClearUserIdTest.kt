@@ -17,7 +17,7 @@ class ClearUserIdTest : BehaviorSpec({
     val clearUserId = ClearUserId(repository)
 
     Given("should call repository when clear used id called") {
-        coJustRun { repository.getUser() }
+        coJustRun { repository.clearUserId() }
         When {
             clearUserId.invoke()
             Then {

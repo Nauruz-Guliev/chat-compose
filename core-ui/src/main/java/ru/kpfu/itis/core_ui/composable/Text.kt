@@ -69,7 +69,7 @@ fun ErrorText(@StringRes res: Int) {
 @Composable
 fun DisappearingText(
     text: String,
-    delayMillis: Long = 4000L,
+    delayMillis: Long = 5000L,
     modifier: Modifier = Modifier
 ) {
     var visible by remember { mutableStateOf(true) }

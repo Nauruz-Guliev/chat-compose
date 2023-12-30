@@ -7,6 +7,7 @@ import ru.kpfu.itis.core_data.ChatUser
 import ru.kpfu.itis.core_data.UserService
 import ru.kpfu.itis.core_data.UserStore
 import ru.kpfu.itis.profile.domain.exception.NotAuthenticatedException
+import ru.kpfu.itis.profile.domain.model.UpdateProfileModel
 import ru.kpfu.itis.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 
@@ -16,18 +17,26 @@ class ProfileRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : ProfileRepository {
 
-    override suspend fun updateProfile(newEmail: String, name: String) {
+    override suspend fun updateProfile(
+        userModel: UpdateProfileModel
+    ) {
         val updateRequest = UserProfileChangeRequest.Builder()
-            .setDisplayName(name)
+            .setDisplayName(userModel.name)
             .build()
         val userTask = firebaseAuth.currentUser?.let { firebaseUser ->
-            firebaseUser.updateEmail(newEmail)
-            firebaseUser.updateProfile(updateRequest)
+            firebaseUser.run {
+                updatePassword(userModel.password)
+                updateEmail(userModel.email)
+                updateProfile(updateRequest)
+            }
         }
         val userId = userStore.getUserId()
         userTask?.let { task ->
             Tasks.await(task)
-            userService.updateUser(ChatUser(name = name, email = newEmail), userId)
+            userService.updateUser(
+                ChatUser(name = userModel.name, email = userModel.email, profileImage = userModel.profileImage),
+                userId
+            )
         } ?: throw NotAuthenticatedException()
     }
 

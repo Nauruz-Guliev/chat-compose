@@ -7,6 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
+import ru.kpfu.itis.core_ui.validation.ValidationResult
+import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel<STATE : Any, SIDE_EFFECT : Any> :
     ContainerHost<STATE, SIDE_EFFECT>,
@@ -14,9 +17,27 @@ abstract class BaseViewModel<STATE : Any, SIDE_EFFECT : Any> :
 
     abstract override val container: Container<STATE, SIDE_EFFECT>
 
+    fun SimpleSyntax<STATE, SIDE_EFFECT>.runReadWriteTask(block: suspend () -> Unit) {
+        runCoroutine(Dispatchers.IO, block)
+    }
 
-    fun runOnMainThread(block: () -> Unit) {
-        viewModelScope.launch(Dispatchers.Main) {
+    fun SimpleSyntax<STATE, SIDE_EFFECT>.runOnMainThread(block: suspend () -> Unit) {
+        runCoroutine(Dispatchers.Main, block)
+    }
+
+    fun SimpleSyntax<STATE, SIDE_EFFECT>.runComputationTask(block: suspend () -> Unit) {
+        runCoroutine(Dispatchers.Default, block)
+    }
+
+    fun SimpleSyntax<STATE, SIDE_EFFECT>.isValidationSuccessful(state: STATE): Boolean {
+        return !state::class.java.declaredFields.any { field ->
+            field.isAccessible = true
+            ValidationResult.Failure::class == field.get(state)::class
+        }
+    }
+
+    private fun runCoroutine(dispatcher: CoroutineContext, block: suspend () -> Unit) {
+        viewModelScope.launch(dispatcher) {
             block.invoke()
         }
     }
