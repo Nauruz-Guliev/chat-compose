@@ -1,6 +1,5 @@
 package ru.kpfu.itis.image_picker.presentation.screen.image_picker
 
-import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -11,13 +10,11 @@ import ru.kpfu.itis.core_ui.base.BaseViewModel
 import ru.kpfu.itis.image_picker.domain.usecase.LoadImage
 import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
 import ru.kpfu.itis.image_picker.presentation.screen.mapToListModel
-import ru.kpfu.itis.image_picker_api.IMAGE_URL_KEY
 import javax.inject.Inject
 
 @HiltViewModel
 class ImagePickerViewModel @Inject constructor(
-    private val loadImage: LoadImage,
-    private val navController: NavHostController
+    private val loadImage: LoadImage
 ) : BaseViewModel<ImagePickerState, ImagePickerSideEffect>() {
 
     override val container: Container<ImagePickerState, ImagePickerSideEffect> =
@@ -73,15 +70,5 @@ class ImagePickerViewModel @Inject constructor(
                 image.copy(isSelected = false)
             }
         }
-    }
-
-    fun returnBackResult() {
-        navController.run {
-            previousBackStackEntry
-                ?.savedStateHandle
-                ?.set(IMAGE_URL_KEY, container.stateFlow.value.selectedImage?.url)
-            popBackStack()
-        }
-        resetState()
     }
 }

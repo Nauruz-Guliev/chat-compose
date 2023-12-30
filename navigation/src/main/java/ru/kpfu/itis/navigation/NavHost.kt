@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import ru.kpfu.itis.authentication.presentation.screen.signin.SignInScreen
 import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
@@ -29,19 +30,29 @@ import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
 @Composable
 fun NavigationHost(navController: NavHostController, isAuthenticated: Boolean) {
     val startDestination = if (isAuthenticated) {
-        ChatDestinations.AUTH_SUCCESS.name
+        NavigationFeatures.CHAT.name
     } else {
-        AuthenticationDestinations.SIGNIN.name
+        NavigationFeatures.AUTH.name
     }
     NavHost(navController = navController, startDestination = startDestination) {
-        composable(AuthenticationDestinations.SIGNUP.name) {
-            SignUpScreen()
+        navigation(
+            route = NavigationFeatures.AUTH.name,
+            startDestination = ChatDestinations.AUTH_SUCCESS.name
+        ) {
+            composable(AuthenticationDestinations.SIGNUP.name) {
+                SignUpScreen()
+            }
+            composable(AuthenticationDestinations.SIGNIN.name) {
+                SignInScreen()
+            }
         }
-        composable(AuthenticationDestinations.SIGNIN.name) {
-            SignInScreen()
-        }
-        composable(ChatDestinations.AUTH_SUCCESS.name) {
-            MainScreen()
+        navigation(
+            route = NavigationFeatures.CHAT.name,
+            startDestination = ChatDestinations.AUTH_SUCCESS.name
+        ) {
+            composable(ChatDestinations.AUTH_SUCCESS.name) {
+                MainScreen()
+            }
         }
     }
 }
@@ -81,7 +92,11 @@ private fun MainScreen() {
             }
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = MainScreen.Chat.route, Modifier.padding(innerPadding)) {
+        NavHost(
+            navController,
+            startDestination = MainScreen.Chat.route,
+            Modifier.padding(innerPadding)
+        ) {
             composable(MainScreen.Chat.route) { ChatListScreen() }
             composable(MainScreen.Search.route) { }
             composable(MainScreen.Profile.route) { ProfileScreen() }

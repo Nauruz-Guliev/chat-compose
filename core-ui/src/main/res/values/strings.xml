@@ -7,6 +7,7 @@
     <string name="error_short_field_length">%1s should contain more characters </string>
     <string name="error_different_passwords">Passwords don\'t match</string>
     <string name="error_unknown">Unknown error occurred</string>
+    <string name="error_profile_validation_error">Profile update failed.</string>
 
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -14,7 +15,6 @@
     <string name="name">Name</string>
     <string name="signin">Login</string>
     <string name="signup">Register</string>
-    <string name="close">Close</string>
     <string name="message_sign_in">Already have an account? Sign In!</string>
     <string name="message_sign_up">You have no account? Sign Up!</string>
     <string name="welcome_back">Welcome back!</string>
@@ -26,5 +26,8 @@
     <string name="exit_account">Exit from account</string>
     <string name="edit_mode">Enter edit mode</string>
     <string name="save_profile">Save account changes</string>
+
+    <string name="change_profile_image_text">You can click on image to change it</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

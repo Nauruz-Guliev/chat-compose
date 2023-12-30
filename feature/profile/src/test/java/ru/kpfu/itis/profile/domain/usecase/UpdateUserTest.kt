@@ -17,12 +17,12 @@ class UpdateUserTest : BehaviorSpec({
     val updateUser = UpdateUser(repository)
 
     Given("should call repository when UpdateUser() called") {
-        coJustRun { repository.updateProfile(EMAIL, NAME) }
+        coJustRun { repository.updateProfile(updateProfileModel) }
         When {
-            updateUser.invoke(EMAIL, NAME)
+            updateUser.invoke(updateProfileModel)
             Then {
                 coVerifySequence {
-                    repository.updateProfile(EMAIL, NAME)
+                    repository.updateProfile(updateProfileModel)
                 }
             }
         }
@@ -30,10 +30,10 @@ class UpdateUserTest : BehaviorSpec({
 
     Given("should throw exception when UpdateUser() called and repository throws exception") {
         val exception = Exception()
-        coEvery { repository.updateProfile(EMAIL, NAME) } throws exception
+        coEvery { repository.updateProfile(updateProfileModel) } throws exception
         When {
             val actualException = shouldThrow<Exception> {
-                repository.updateProfile(EMAIL, NAME)
+                repository.updateProfile(updateProfileModel)
             }
             Then {
                 actualException shouldBe exception

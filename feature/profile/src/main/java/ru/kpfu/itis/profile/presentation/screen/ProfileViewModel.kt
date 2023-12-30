@@ -11,7 +11,9 @@ import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.core_ui.base.BaseViewModel
 import ru.kpfu.itis.core_ui.validation.EmailValidator
 import ru.kpfu.itis.core_ui.validation.NameValidator
-import ru.kpfu.itis.core_ui.validation.ValidationResult
+import ru.kpfu.itis.core_ui.validation.PasswordRepeatValidator
+import ru.kpfu.itis.core_ui.validation.PasswordValidator
+import ru.kpfu.itis.profile.domain.model.UpdateProfileModel
 import ru.kpfu.itis.profile.domain.usecase.ClearUserId
 import ru.kpfu.itis.profile.domain.usecase.GetChatUser
 import ru.kpfu.itis.profile.domain.usecase.UpdateUser
@@ -21,6 +23,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val nameValidator: NameValidator,
     private val emailValidator: EmailValidator,
+    private val passwordValidator: PasswordValidator,
+    private val passwordRepeatValidator: PasswordRepeatValidator,
     private val navController: NavHostController,
     private val getChatUser: GetChatUser,
     private val updateUser: UpdateUser,
@@ -34,24 +38,49 @@ class ProfileViewModel @Inject constructor(
         loadUser()
     }
 
-    fun updateProfile(name: String, email: String) = intent {
-        validate(name, email)
-        if (state.emailValidationResult is ValidationResult.Success &&
-            state.nameValidationResult is ValidationResult.Success
-        ) {
-            updateUser(email, name)
-        } else {
-            postSideEffect(ProfileSideEffect.ValidationFailure)
+    fun loadUser() = intent {
+        runCatching {
+            getChatUser()
+        }.onSuccess { user ->
+            postSideEffect(ProfileSideEffect.UserLoaded(user))
+            reduce { state.copy(user = user) }
+        }.onFailure { exception ->
+            postSideEffect(ProfileSideEffect.ExceptionHappened(exception))
         }
     }
 
-    fun loadUser() = intent {
-        try {
-            val user = getChatUser()
-            reduce { state.copy(user = user) }
-            postSideEffect(ProfileSideEffect.UserLoaded(user))
-        } catch (ex: Exception) {
-            postSideEffect(ProfileSideEffect.ExceptionHappened(ex))
+    fun updateProfile(
+        name: String,
+        email: String,
+        imageUrl: String?,
+        password: String,
+        passwordRepeat: String
+    ) = intent {
+        validate(name, email, password, passwordRepeat)
+        if (isValidationSuccessful(state)) {
+            runCatching {
+                updateUser(
+                    UpdateProfileModel(
+                        name = name,
+                        email = email,
+                        password = password,
+                        profileImage = imageUrl
+                    )
+                )
+            }.onFailure { exception ->
+                postSideEffect(ProfileSideEffect.ExceptionHappened(exception))
+            }
+        } else {
+            reduce { state.copy(isValidationSuccessful = false) }
+        }
+    }
+
+    private fun validate(name: String, email: String, password: String, passwordRepeat: String) {
+        container.stateFlow.value.apply {
+            nameValidationResult = nameValidator(name)
+            emailValidationResult = emailValidator(email)
+            passwordValidationResult = passwordValidator(password)
+            passwordRepeatValidationResult = passwordRepeatValidator(passwordRepeat, password)
         }
     }
 
@@ -61,28 +90,20 @@ class ProfileViewModel @Inject constructor(
         navigateSignInScreen()
     }
 
-    fun openImagePickerForResult() = intent {
-     //   navController.navigateSavingBackStack(ImagePickerDestinations.IMAGE_PICKER.name)
-    }
-
     private fun resetState() = intent {
         reduce {
             state.copy(
                 nameValidationResult = null,
                 emailValidationResult = null,
-                user = null
+                user = null,
+                isValidationSuccessful = true,
+                passwordValidationResult = null,
+                passwordRepeatValidationResult = null
             )
         }
     }
 
     private fun navigateSignInScreen() {
         navController.navigateLosingBackStack(AuthenticationDestinations.SIGNIN.name)
-    }
-
-    private fun validate(name: String, email: String) {
-        container.stateFlow.value.apply {
-            nameValidationResult = nameValidator(name)
-            emailValidationResult = emailValidator(email)
-        }
     }
 }

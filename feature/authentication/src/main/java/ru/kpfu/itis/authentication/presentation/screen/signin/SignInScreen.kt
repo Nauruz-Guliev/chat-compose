@@ -51,7 +51,8 @@ fun SignInScreen(
     )
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
@@ -112,7 +113,7 @@ fun HandleSideEffects(
     isLoading: (Boolean) -> Unit,
     resetFieldsAction: () -> Unit
 ) {
-    var alert by remember { mutableStateOf(false) }
+    var sbowAlert by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<Throwable?>(null) }
 
     viewModel.collectSideEffect { sideEffect ->
@@ -120,24 +121,27 @@ fun HandleSideEffects(
             is SignInSideEffect.ExceptionHappened -> {
                 isLoading(false)
                 error = sideEffect.throwable
-                alert = true
+                sbowAlert = true
             }
+
             is SignInSideEffect.ShowLoading -> {
                 isLoading(true)
             }
+
             is SignInSideEffect.ValidationFailure -> {
                 isLoading(false)
             }
         }
     }
 
-    if (alert) {
-        ErrorAlertDialog(
-            onConfirmation = resetFieldsAction,
-            onDismissRequest = resetFieldsAction,
-            dialogTitle = (error ?: Exception())::class.simpleName.toString(),
-            dialogText = error?.message ?: stringResource(id = CoreR.string.error_unknown),
-            icon = CoreR.drawable.baseline_error_24,
-        )
-    }
+    ErrorAlertDialog(
+        onDismissRequest = {
+            sbowAlert = false
+            resetFieldsAction()
+        },
+        title = (error ?: Exception())::class.simpleName.toString(),
+        description = error?.message ?: stringResource(id = CoreR.string.error_unknown),
+        showDialog = sbowAlert
+    )
+
 }

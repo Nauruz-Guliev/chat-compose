@@ -50,9 +50,10 @@ import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
 private const val TEXT_FIELD_DEBOUNCE_TIME_MILLIS = 800L
 
 @Composable
-fun ImagePickerScreen(
+fun ImagePickerDialog(
     isShown: Boolean,
     onDismissRequest: () -> Unit,
+    onImagePicked: (imageUrl: String?) -> Unit,
     viewModel: ImagePickerViewModel = hiltViewModel()
 ) {
     var imageQuery by rememberSaveable { mutableStateOf("") }
@@ -114,7 +115,7 @@ fun ImagePickerScreen(
                         Button(
                             onClick = {
                                 imageQuery = ""
-                                viewModel.returnBackResult()
+                                onImagePicked(this@apply.value.selectedImage?.url)
                                 onDismissRequest()
                             },
                             colors = ButtonDefaults.buttonColors(SeaGreen),

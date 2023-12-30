@@ -5,6 +5,5 @@ import ru.kpfu.itis.core_data.ChatUser
 sealed interface ProfileSideEffect {
 
     data class ExceptionHappened(val throwable: Throwable?) : ProfileSideEffect
-    data object ValidationFailure: ProfileSideEffect
     data class UserLoaded(val user: ChatUser?): ProfileSideEffect
 }

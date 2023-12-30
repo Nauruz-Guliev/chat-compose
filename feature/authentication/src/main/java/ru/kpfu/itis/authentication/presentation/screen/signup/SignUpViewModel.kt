@@ -23,8 +23,8 @@ class SignUpViewModel @Inject constructor(
     private val signUp: SignUp,
     private val nameValidator: NameValidator,
     private val passwordValidator: PasswordValidator,
-    private val emailValidator: EmailValidator,
     private val passwordRepeatValidator: PasswordRepeatValidator,
+    private val emailValidator: EmailValidator,
     private val navController: NavHostController
 ) : BaseViewModel<SignUpState, SignUpSideEffect>() {
 

@@ -125,7 +125,7 @@ fun HandleSideEffects(
     isLoading: (Boolean) -> Unit,
     resetFieldsAction: () -> Unit
 ) {
-    var alert by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<Throwable?>(null) }
 
     viewModel.collectSideEffect { sideEffect ->
@@ -133,7 +133,7 @@ fun HandleSideEffects(
             is SignUpSideEffect.ExceptionHappened -> {
                 isLoading(false)
                 error = sideEffect.throwable
-                alert = true
+                showDialog = true
             }
             is SignUpSideEffect.ShowLoading -> {
                 isLoading(true)
@@ -144,13 +144,15 @@ fun HandleSideEffects(
         }
     }
 
-    if (alert) {
+    if (showDialog) {
         ErrorAlertDialog(
-            onConfirmation = resetFieldsAction,
-            onDismissRequest = resetFieldsAction,
-            dialogTitle = (error ?: Exception())::class.simpleName.toString(),
-            dialogText = error?.message ?: stringResource(id = CoreR.string.error_unknown),
-            icon = CoreR.drawable.baseline_error_24,
+            onDismissRequest = {
+                showDialog = false
+                resetFieldsAction()
+            },
+            title = (error ?: Exception())::class.simpleName.toString(),
+            description = error?.message ?: stringResource(id = CoreR.string.error_unknown),
+            showDialog = showDialog
         )
     }
 }
