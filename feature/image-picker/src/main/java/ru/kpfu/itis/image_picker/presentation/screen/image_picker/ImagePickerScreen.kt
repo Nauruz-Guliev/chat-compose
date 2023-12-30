@@ -47,7 +47,7 @@ import ru.kpfu.itis.core_ui.ui.theme.Persimmon
 import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
 import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
 
-private const val TEXT_FIELD_DEBOUNCE_TIME_MILLIS = 300L
+private const val TEXT_FIELD_DEBOUNCE_TIME_MILLIS = 800L
 
 @Composable
 fun ImagePickerScreen(
@@ -113,6 +113,7 @@ fun ImagePickerScreen(
 
                         Button(
                             onClick = {
+                                imageQuery = ""
                                 viewModel.returnBackResult()
                                 onDismissRequest()
                             },
@@ -129,7 +130,11 @@ fun ImagePickerScreen(
                         }
 
                         Button(
-                            onClick = { onDismissRequest() },
+                            onClick = {
+                                imageQuery = ""
+                                viewModel.resetState()
+                                onDismissRequest()
+                            },
                             colors = ButtonDefaults.buttonColors(Persimmon),
                             modifier = Modifier
                                 .padding(16.dp)

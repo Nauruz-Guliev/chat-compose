@@ -32,7 +32,7 @@ class ImagePickerViewModel @Inject constructor(
             postSideEffect(ImagePickerSideEffect.ExceptionHappened(exception))
         }.onSuccess { imageList ->
             reduce {
-                if(imageList.isNotEmpty()) {
+                if (imageList.isNotEmpty()) {
                     state.copy(
                         imageList = imageList.mapToListModel(),
                         isImageFound = true
@@ -44,6 +44,17 @@ class ImagePickerViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun resetState() = intent {
+        reduce {
+            state.copy(
+                imageList = emptyList(),
+                selectedImage = null,
+                isImageFound = true,
+                searchedQuery = ""
+            )
         }
     }
 
@@ -71,5 +82,6 @@ class ImagePickerViewModel @Inject constructor(
                 ?.set(IMAGE_URL_KEY, container.stateFlow.value.selectedImage?.url)
             popBackStack()
         }
+        resetState()
     }
 }
