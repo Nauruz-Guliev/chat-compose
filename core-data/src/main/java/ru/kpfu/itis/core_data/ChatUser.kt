@@ -5,5 +5,4 @@ data class ChatUser(
     val profileImage: String? = null,
     val email: String? = null,
     val friendsList: List<Int> = emptyList()
-) {
-}
+)
