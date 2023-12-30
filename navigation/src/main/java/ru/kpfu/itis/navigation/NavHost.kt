@@ -26,6 +26,7 @@ import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat.presentation.screen.ChatListScreen
 import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
+import ru.kpfu.itis.user_search.presentation.screen.SearchScreen
 
 @Composable
 fun NavigationHost(navController: NavHostController, isAuthenticated: Boolean) {
@@ -98,7 +99,7 @@ private fun MainScreen() {
             Modifier.padding(innerPadding)
         ) {
             composable(MainScreen.Chat.route) { ChatListScreen() }
-            composable(MainScreen.Search.route) { }
+            composable(MainScreen.Search.route) { SearchScreen() }
             composable(MainScreen.Profile.route) { ProfileScreen() }
         }
     }

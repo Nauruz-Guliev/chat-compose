@@ -27,7 +27,7 @@ fun TextFieldWithErrorState(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    labelValue: String,
+    labelValue: String? = null,
     validationResult: ValidationResult<Resource.String>? = null,
     isPassword: Boolean = false,
     isEnabled: Boolean = true,
@@ -37,7 +37,11 @@ fun TextFieldWithErrorState(
         enabled = isEnabled,
         value = value,
         onValueChange = onValueChange,
-        label = { Text(labelValue) },
+        label = {
+            if (labelValue != null) {
+                Text(labelValue)
+            }
+        },
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = horizontalPadding.dp),
