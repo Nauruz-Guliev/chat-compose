@@ -18,49 +18,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import ru.kpfu.itis.authentication.presentation.screen.signin.SignInScreen
 import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
-import ru.kpfu.itis.chat.presentation.screen.ChatListScreen
+import ru.kpfu.itis.chat.presentation.screen.chat.ChatScreen
+import ru.kpfu.itis.chat.presentation.screen.chat_list.ChatListScreen
 import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
 import ru.kpfu.itis.user_search.presentation.screen.SearchScreen
 
-@Composable
-fun NavigationHost(navController: NavHostController, isAuthenticated: Boolean) {
-    val startDestination = if (isAuthenticated) {
-        NavigationFeatures.CHAT.name
-    } else {
-        NavigationFeatures.AUTH.name
-    }
-    NavHost(navController = navController, startDestination = startDestination) {
-        navigation(
-            route = NavigationFeatures.AUTH.name,
-            startDestination = ChatDestinations.AUTH_SUCCESS.name
-        ) {
-            composable(AuthenticationDestinations.SIGNUP.name) {
-                SignUpScreen()
-            }
-            composable(AuthenticationDestinations.SIGNIN.name) {
-                SignInScreen()
-            }
-        }
-        navigation(
-            route = NavigationFeatures.CHAT.name,
-            startDestination = ChatDestinations.AUTH_SUCCESS.name
-        ) {
-            composable(ChatDestinations.AUTH_SUCCESS.name) {
-                MainScreen()
-            }
-        }
-    }
-}
 
 @Composable
-private fun MainScreen() {
-    val navController = rememberNavController()
+fun MainNavHost(navController: NavHostController, isAuthenticated: Boolean = false) {
     Scaffold(
         bottomBar = {
             BottomNavigation(backgroundColor = Color(0xFF487AC5)) {
@@ -93,14 +63,45 @@ private fun MainScreen() {
             }
         }
     ) { innerPadding ->
+
+        val startDestination = if (isAuthenticated) {
+            NavigationFeatures.CHAT.name
+        } else {
+            NavigationFeatures.AUTH.name
+        }
+
         NavHost(
             navController,
-            startDestination = MainScreen.Chat.route,
+            startDestination = startDestination,
             Modifier.padding(innerPadding)
         ) {
-            composable(MainScreen.Chat.route) { ChatListScreen() }
-            composable(MainScreen.Search.route) { SearchScreen() }
-            composable(MainScreen.Profile.route) { ProfileScreen() }
+
+            navigation(
+                route = NavigationFeatures.AUTH.name,
+                startDestination = AuthenticationDestinations.SIGNIN.name
+            ) {
+                composable(AuthenticationDestinations.SIGNUP.name) {
+                    SignUpScreen()
+                }
+                composable(AuthenticationDestinations.SIGNIN.name) {
+                    SignInScreen()
+                }
+            }
+
+            navigation(
+                route = NavigationFeatures.CHAT.name,
+                startDestination = ChatDestinations.CHAT_LIST_SCREEN.name
+            ) {
+                composable(MainScreen.Chat.route) { ChatListScreen() }
+                composable(MainScreen.Search.route) { SearchScreen() }
+                composable(MainScreen.Profile.route) { ProfileScreen() }
+                composable(ChatDestinations.CHAT_LIST_SCREEN.name) {
+                    ChatListScreen()
+                }
+                composable(ChatDestinations.CHAT_SCREEN.name) {
+                    ChatScreen()
+                }
+            }
         }
     }
 }

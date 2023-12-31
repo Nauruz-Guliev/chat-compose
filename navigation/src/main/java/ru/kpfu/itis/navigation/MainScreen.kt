@@ -17,8 +17,17 @@ sealed class MainScreen(
     val icon: ImageVector
 ) {
 
-    data object Chat : MainScreen(ChatDestinations.MAIN_SCREEN.name, CoreR.string.chat, Icons.Filled.MailOutline)
-    data object Search : MainScreen(UserSearchDestinations.SEARCH_SCREEN.name, CoreR.string.search, Icons.Filled.Search)
+    data object Chat : MainScreen(
+        ChatDestinations.CHAT_LIST_SCREEN.name,
+        CoreR.string.chat,
+        Icons.Filled.MailOutline
+    )
+
+    data object Search : MainScreen(
+        UserSearchDestinations.SEARCH_SCREEN.name,
+        CoreR.string.search,
+        Icons.Filled.Search
+    )
     data object Profile : MainScreen(ProfileDestinations.PROFILE_SCREEN.name, CoreR.string.profile, Icons.Filled.Person)
 }
 

@@ -1,11 +1,8 @@
 package ru.kpfu.itis.chat_api
 
 data class ChatRoom(
-    val timeCreated: Long,
-    val messages: List<ChatMessage>
+    val timeCreated: Long = System.currentTimeMillis(),
+    val messages: List<ChatMessage> = emptyList()
 )
 
-val emptyChatRoom = ChatRoom(
-    System.currentTimeMillis(),
-    emptyList()
-)
+val emptyChatRoom = ChatRoom()

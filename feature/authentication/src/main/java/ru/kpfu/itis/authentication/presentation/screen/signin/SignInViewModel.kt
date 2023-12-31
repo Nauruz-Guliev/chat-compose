@@ -64,7 +64,7 @@ class SignInViewModel @Inject constructor(
 
     private fun navigateToMainScreen() {
         viewModelScope.launch(Dispatchers.Main) {
-            navController.navigate(ChatDestinations.AUTH_SUCCESS.name) {
+            navController.navigate(ChatDestinations.CHAT_LIST_SCREEN.name) {
                 popUpTo(0)
             }
         }
