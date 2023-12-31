@@ -5,5 +5,6 @@ import ru.kpfu.itis.core_data.ChatUser
 
 interface UserSearchRepository {
 
-    fun findUser(name: String) : Flow<List<ChatUser>>
+    fun findUser(name: String): Flow<List<ChatUser>>
+    suspend fun startChatting(userId: String)
 }

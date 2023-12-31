@@ -12,12 +12,14 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.core_ui.base.BaseViewModel
+import ru.kpfu.itis.user_search.domain.usecase.CreateChat
 import ru.kpfu.itis.user_search.domain.usecase.FindUser
 import javax.inject.Inject
 
 @HiltViewModel
 class UserSearchViewModel @Inject constructor(
-    private val findUser: FindUser
+    private val findUser: FindUser,
+    private val createChat: CreateChat
 ) : BaseViewModel<UserSearchState, UserSearchSideEffect>() {
 
     override val container: Container<UserSearchState, UserSearchSideEffect> =
@@ -41,6 +43,16 @@ class UserSearchViewModel @Inject constructor(
             .collect { listOfChatUsers ->
                 reduce { state.copy(users = listOfChatUsers) }
             }
+    }
+
+    fun startChatting(friendId: String) = intent {
+        runReadWriteTask {
+            runCatching {
+                createChat.invoke(friendId)
+            }.onFailure { exception ->
+                postSideEffect(UserSearchSideEffect.ExceptionHappened(exception))
+            }
+        }
     }
 
     private fun isProfileImageValid(profileImageUrl: String?): Boolean {
