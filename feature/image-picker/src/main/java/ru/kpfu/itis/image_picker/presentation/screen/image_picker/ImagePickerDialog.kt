@@ -97,7 +97,7 @@ fun ImagePickerDialog(
                         value = imageQuery,
                         onValueChange = { imageQuery = it },
                         labelValue = "Image",
-                        horizontalPadding = 0
+                        horizontalPaddingInDp = 0
                     )
 
                     if (!this@apply.value.isImageFound) {

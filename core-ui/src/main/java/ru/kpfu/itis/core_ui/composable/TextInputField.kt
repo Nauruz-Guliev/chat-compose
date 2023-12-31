@@ -31,9 +31,11 @@ fun TextFieldWithErrorState(
     validationResult: ValidationResult<Resource.String>? = null,
     isPassword: Boolean = false,
     isEnabled: Boolean = true,
-    horizontalPadding: Int = 24
+    horizontalPaddingInDp: Int = 24,
+    verticalPaddingInDp: Int = 0,
 ) {
     TextField(
+        maxLines = 1,
         enabled = isEnabled,
         value = value,
         onValueChange = onValueChange,
@@ -44,7 +46,10 @@ fun TextFieldWithErrorState(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = horizontalPadding.dp),
+            .padding(
+                horizontal = horizontalPaddingInDp.dp,
+                vertical = verticalPaddingInDp.dp
+            ),
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,
@@ -69,7 +74,7 @@ fun TextFieldWithErrorState(
                 color = Color.Red,
                 fontSize = 12.sp
             ),
-            modifier = Modifier.padding(start = horizontalPadding.dp)
+            modifier = Modifier.padding(horizontal = horizontalPaddingInDp.dp)
         )
     }
     Spacer(Modifier.height(16.dp))

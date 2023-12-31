@@ -1,22 +1,26 @@
 package ru.kpfu.itis.user_search.presentation.screen
 
-import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,16 +29,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
-import ru.kpfu.itis.core_data.ChatUser
-import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
 import ru.kpfu.itis.core_ui.extension.useDebounce
+import ru.kpfu.itis.core_ui.ui.theme.AliceBlue
+import ru.kpfu.itis.core_ui.ui.theme.PowderBlue
 
 @Composable
 fun SearchScreen(
@@ -53,68 +60,93 @@ fun SearchScreen(
             viewModel.findUser(searchValue)
         }
 
-        TextFieldWithErrorState(
+        OutlinedTextField(
+            shape = RoundedCornerShape(12.dp),
             value = searchValue,
-            onValueChange = {
-                searchValue = it
-            },
+            onValueChange = { searchValue = it },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = PowderBlue,
+                focusedContainerColor = PowderBlue,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+            ),
+            maxLines = 1
         )
 
         viewModel.collectAsState().let { userSearchState ->
-            Log.d("USER", userSearchState.value.users.toString())
             UserList(userSearchState.value.users)
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UserList(users: List<ChatUser>) {
-    LazyVerticalGrid(GridCells.Fixed(2)) {
+fun UserList(users: List<ChatUserSearchModel>) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items(users) { user ->
-            UserItem(user)
+            Box(modifier = Modifier.animateItemPlacement()) {
+                UserItem(user)
+            }
         }
     }
 }
 
 @Composable
-fun UserItem(user: ChatUser) {
+fun UserItem(model: ChatUserSearchModel) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
-            .padding(8.dp)
+            .padding(top = 16.dp)
             .fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AsyncImage(
-                contentScale = ContentScale.Crop,
-                model = user.profileImage,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(60.dp))
-                    .size(120.dp)
-            )
-
-            user.name?.let {
-                Text(
-                    text = it,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+            if (!model.isProfileImageValid) {
+                Image(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(AliceBlue),
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(120.dp)
+                )
+            } else {
+                AsyncImage(
+                    contentScale = ContentScale.Crop,
+                    model = model.user.profileImage,
+                    contentDescription = null,
+                    alignment = Alignment.Center,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(60.dp))
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            model.user.name?.let {
+                Text(
+                    text = it,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
 
             Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth()
+                onClick = {},
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
-                Text(text = "Send Message")
+                Text(
+                    text = "Start chatting",
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

@@ -1,10 +1,14 @@
 package ru.kpfu.itis.user_search.presentation.screen
 
+import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.core_ui.base.BaseViewModel
@@ -21,12 +25,25 @@ class UserSearchViewModel @Inject constructor(
 
     fun findUser(name: String) = intent {
         if (name.isBlank()) return@intent
-        runCatching {
-            findUser.invoke(name)
-                .stateIn(viewModelScope)
-                .collect { users ->
-                    reduce { state.copy(users = users) }
+        findUser.invoke(name)
+            .stateIn(viewModelScope)
+            .catch {
+                postSideEffect(UserSearchSideEffect.ExceptionHappened(it))
+            }
+            .map { users ->
+                users.map { chatUser ->
+                    ChatUserSearchModel(
+                        chatUser,
+                        isProfileImageValid(chatUser.profileImage)
+                    )
                 }
-        }
+            }
+            .collect { listOfChatUsers ->
+                reduce { state.copy(users = listOfChatUsers) }
+            }
+    }
+
+    private fun isProfileImageValid(profileImageUrl: String?): Boolean {
+        return profileImageUrl?.let { Patterns.WEB_URL.matcher(it).matches() } ?: false
     }
 }

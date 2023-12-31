@@ -8,8 +8,6 @@ plugins {
     id("kotlin-parcelize")
 }
 
-apply(from = "$rootDir/ktlint.gradle")
-
 android {
     namespace = "ru.kpfu.itis.gnt"
     compileSdk = 34
