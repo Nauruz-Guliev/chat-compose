@@ -14,11 +14,21 @@ object FirebaseModule {
 
     @Provides
     @UsersDatabase
-    fun provideUsersDatabaseReference() : DatabaseReference {
+    fun provideUsersDatabaseReference(): DatabaseReference {
         return FirebaseDatabase.getInstance().reference.child("Users")
+    }
+
+    @Provides
+    @ChatsDatabase
+    fun provideChatsDatabaseReference(): DatabaseReference {
+        return FirebaseDatabase.getInstance().reference.child("Chats")
     }
 }
 
-@Retention(AnnotationRetention.SOURCE)
 @Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ChatsDatabase
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
 annotation class UsersDatabase

@@ -75,28 +75,38 @@ fun SearchScreen(
         )
 
         viewModel.collectAsState().let { userSearchState ->
-            UserList(userSearchState.value.users)
+            UserList(userSearchState.value.users, viewModel)
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UserList(users: List<ChatUserSearchModel>) {
+fun UserList(
+    users: List<ChatUserSearchModel>,
+    viewModel: UserSearchViewModel
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(users) { user ->
             Box(modifier = Modifier.animateItemPlacement()) {
-                UserItem(user)
+                UserItem(user) { model ->
+                    model.user.id?.let { id ->
+                        viewModel.startChatting(id)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun UserItem(model: ChatUserSearchModel) {
+fun UserItem(
+    model: ChatUserSearchModel,
+    onItemClicked: (ChatUserSearchModel) -> Unit
+) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(8.dp),
@@ -140,7 +150,7 @@ fun UserItem(model: ChatUserSearchModel) {
             }
 
             Button(
-                onClick = {},
+                onClick = { onItemClicked(model) },
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
                 Text(

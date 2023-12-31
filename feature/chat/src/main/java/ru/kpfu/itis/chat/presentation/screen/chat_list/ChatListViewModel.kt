@@ -1,4 +1,4 @@
-package ru.kpfu.itis.chat.presentation.screen
+package ru.kpfu.itis.chat.presentation.screen.chat_list
 
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController

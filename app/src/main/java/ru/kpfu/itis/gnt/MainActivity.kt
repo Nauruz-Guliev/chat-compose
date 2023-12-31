@@ -11,7 +11,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.kpfu.itis.core_data.UserStore
 import ru.kpfu.itis.core_ui.ui.theme.ChatcomposeTheme
-import ru.kpfu.itis.navigation.NavigationHost
+import ru.kpfu.itis.navigation.MainNavHost
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
             val userId = lifecycleScope.async(Dispatchers.IO) { userStore.getUserId() }.await()
             setContent {
                 ChatcomposeTheme {
-                    NavigationHost(
+                    MainNavHost(
                         navController = navHostController,
                         isAuthenticated = userId != null
                     )

@@ -75,6 +75,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun navigateMainScreen() {
-        navController.navigateLosingBackStack(ChatDestinations.AUTH_SUCCESS.name)
+        navController.navigateLosingBackStack(ChatDestinations.CHAT_LIST_SCREEN.name)
     }
 }

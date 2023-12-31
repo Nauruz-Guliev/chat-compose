@@ -1,4 +1,4 @@
-package ru.kpfu.itis.chat.presentation.screen
+package ru.kpfu.itis.chat.presentation.screen.chat_list
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -34,7 +34,7 @@ fun ChatListScreen(
         User("Mark Anderson", "UI/UX Developer", null),
         // Add more users as needed
     ),
-    viewModel: ChatListViewModel  = hiltViewModel()
+    viewModel: ChatListViewModel = hiltViewModel()
 ) {
     viewModel.load()
     LazyColumn {
