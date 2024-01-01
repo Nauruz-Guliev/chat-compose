@@ -2,5 +2,6 @@ package ru.kpfu.itis.user_search.presentation.screen
 
 
 data class UserSearchState(
-    val users: List<ChatUserSearchModel> = emptyList()
+    val users: List<ChatUserSearchModel> = emptyList(),
+    val existingChats: List<String> = emptyList()
 )

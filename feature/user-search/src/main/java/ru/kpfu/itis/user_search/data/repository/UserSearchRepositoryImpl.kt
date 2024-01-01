@@ -15,6 +15,8 @@ import ru.kpfu.itis.core_data.di.UsersDatabase
 import ru.kpfu.itis.user_search.domain.repository.UserSearchRepository
 import javax.inject.Inject
 
+private const val CHATS_PATH_KEY = "chats"
+
 class UserSearchRepositoryImpl @Inject constructor(
     @UsersDatabase
     private val userDatabase: DatabaseReference,
@@ -39,12 +41,36 @@ class UserSearchRepositoryImpl @Inject constructor(
             .also { emit(it) }
     }
 
+
     override suspend fun startChatting(userId: String) {
-        val currentUserId = userStore.getUserId() ?: throw UserNotAuthenticatedException()
+        val currentUserId = getCurrentUserId()
         val chatId = currentUserId + userId
         createChatReferenceForEachUser(userId, currentUserId, chatId)
         createChatReferenceForEachUser(currentUserId, userId, chatId)
         createChatRoom(chatId)
+    }
+
+    private suspend fun getCurrentUserId(): String {
+        return userStore.getUserId() ?: throw UserNotAuthenticatedException()
+    }
+
+    override suspend fun loadExistingChats(): Flow<List<String>> = flow {
+        val currentUserId = getCurrentUserId()
+        val chatList = userDatabase.child(currentUserId).get().also {
+            it.await()
+        }
+        val userIds = mutableListOf<String>()
+        chatList.result.children.mapNotNull { snapshot ->
+            userIds.clear()
+            snapshot
+        }.forEach { snapShot ->
+            snapShot.children.mapNotNull {
+                it.getValue(ChatReference::class.java)?.friendId
+            }.forEach {
+                userIds.add(it)
+            }
+        }
+        emit(userIds)
     }
 
     private suspend fun createChatReferenceForEachUser(
@@ -53,7 +79,7 @@ class UserSearchRepositoryImpl @Inject constructor(
         chatId: String
     ) {
         userDatabase.child(firstUserId)
-            .child("chats")
+            .child(CHATS_PATH_KEY)
             .child(chatId)
             .setValue(ChatReference(secondUserId))
             .await()
@@ -71,4 +97,5 @@ class UserSearchRepositoryImpl @Inject constructor(
                 .await()
         }
     }
+
 }

@@ -31,8 +31,12 @@ abstract class BaseViewModel<STATE : Any, SIDE_EFFECT : Any> :
 
     fun SimpleSyntax<STATE, SIDE_EFFECT>.isValidationSuccessful(state: STATE): Boolean {
         return !state::class.java.declaredFields.any { field ->
-            field.isAccessible = true
-            ValidationResult.Failure::class == field.get(state)::class
+            field.run {
+                isAccessible = true
+                get(state)?.let {
+                    ValidationResult.Failure::class == field.get(state)::class
+                } ?: false
+            }
         }
     }
 
