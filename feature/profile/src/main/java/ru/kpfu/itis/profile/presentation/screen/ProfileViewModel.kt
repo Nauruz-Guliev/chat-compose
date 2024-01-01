@@ -69,6 +69,8 @@ class ProfileViewModel @Inject constructor(
                 )
             }.onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ExceptionHappened(exception))
+            }.onSuccess {
+                loadUser()
             }
         } else {
             reduce {
