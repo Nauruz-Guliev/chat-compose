@@ -47,7 +47,10 @@ dependencies {
     implementation(libs.google.services)
     implementation(libs.modo.compose)
     implementation(libs.androidx.navigation.compose)
+    //coil
+    implementation(libs.coil)
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
     implementation(project(":core-testing"))
+    implementation(project(":feature:chat-api"))
 }

@@ -1,6 +1,5 @@
 package ru.kpfu.itis.core_data
 
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.tasks.await
 import ru.kpfu.itis.core_data.di.UsersDatabase
@@ -17,9 +16,10 @@ class UserService @Inject constructor(
         }.isSuccessful
     }
 
-    fun getUserById(uid: String): ChatUser? {
+    fun getUserById(uid: String?): ChatUser? {
+        if (uid == null) return null
         val task = databaseReference.child(uid).get()
-        Tasks.await(task)
+        awaitTask(task)
         return task.result.getValue(ChatUser::class.java)
     }
 
@@ -27,7 +27,7 @@ class UserService @Inject constructor(
         return userUid?.let {
             val user = databaseReference.child(it)
             val userUpdateTask = user.setValue(chatUser)
-            Tasks.await(userUpdateTask)
+            awaitTask(userUpdateTask)
             userUpdateTask.isSuccessful
         } ?: false
     }
