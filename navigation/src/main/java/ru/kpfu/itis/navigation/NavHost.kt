@@ -9,9 +9,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -30,35 +34,48 @@ import ru.kpfu.itis.user_search.presentation.screen.SearchScreen
 
 
 @Composable
-fun MainNavHost(navController: NavHostController, isAuthenticated: Boolean = false) {
+fun MainNavHost(
+    navController: NavHostController,
+    isAuthenticated: Boolean = false
+) {
+    var isBottomBarVisible by rememberSaveable { (mutableStateOf(true)) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    checkBottomBarVisibility(navBackStackEntry?.destination) { isVisible ->
+        isBottomBarVisible = isVisible
+    }
+
     Scaffold(
         bottomBar = {
-            BottomNavigation(backgroundColor = Color(0xFF487AC5)) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                items.forEach { screen ->
-                    BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                imageVector = screen.icon,
-                                contentDescription = screen.route,
-                                tint = if (currentDestination?.route == screen.route)
-                                    MaterialTheme.colorScheme.surfaceTint
-                                else MaterialTheme.colorScheme.onBackground
-                            )
-                        },
-                        label = { Text(stringResource(screen.resourceId)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+            if (isBottomBarVisible) {
+                BottomNavigation(
+                    backgroundColor = Color(0xFF487AC5)
+                ) {
+                    items.forEach { screen ->
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(
+                                    imageVector = screen.icon,
+                                    contentDescription = screen.route,
+                                    tint = if (currentDestination?.route == screen.route)
+                                        MaterialTheme.colorScheme.surfaceTint
+                                    else MaterialTheme.colorScheme.onBackground
+                                )
+                            },
+                            label = { Text(stringResource(screen.resourceId)) },
+                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                            onClick = {
+                                navController.navigate(screen.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
@@ -103,5 +120,19 @@ fun MainNavHost(navController: NavHostController, isAuthenticated: Boolean = fal
                 }
             }
         }
+    }
+}
+
+private fun checkBottomBarVisibility(
+    destination: NavDestination?,
+    isBottomBarVisibleCallback: (Boolean) -> Unit
+) {
+    when (destination?.route) {
+        NavigationFeatures.AUTH.name, AuthenticationDestinations.SIGNIN.name, AuthenticationDestinations.SIGNUP.name ->
+            isBottomBarVisibleCallback(false)
+
+        else ->
+            isBottomBarVisibleCallback(true)
+
     }
 }
