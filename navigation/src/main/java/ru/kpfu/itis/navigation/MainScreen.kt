@@ -28,7 +28,12 @@ sealed class MainScreen(
         CoreR.string.search,
         Icons.Filled.Search
     )
-    data object Profile : MainScreen(ProfileDestinations.PROFILE_SCREEN.name, CoreR.string.profile, Icons.Filled.Person)
+
+    data object Profile : MainScreen(
+        ProfileDestinations.PROFILE_SCREEN.name,
+        CoreR.string.profile,
+        Icons.Filled.Person
+    )
 }
 
 val items = listOf(
