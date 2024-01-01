@@ -3,7 +3,10 @@ package ru.kpfu.itis.chat.presentation.screen.chat
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.orbitmvi.orbit.Container
@@ -42,6 +45,7 @@ class ChatViewModel @Inject constructor(
     }
 
     fun loadMessages(chatId: String) = intent {
+        delay(200)
         setChatId(chatId)
         getMessages(chatId).stateIn(viewModelScope)
             .map { listOfMessages ->
@@ -49,11 +53,17 @@ class ChatViewModel @Inject constructor(
                     chatModel.mapFromModel(isMyMessage = chatModel.sender?.id == state.currentUserId)
                 }
             }
+            .flowOn(Dispatchers.IO)
             .catch { exception ->
                 postSideEffect(ChatSideEffect.ExceptionHappened(exception))
             }
             .collect { listOfMappedMessages ->
-                reduce { state.copy(messages = listOfMappedMessages) }
+                reduce {
+                    state.copy(
+                        messages = listOfMappedMessages,
+                        isLoading = false
+                    )
+                }
             }
     }
 

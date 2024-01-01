@@ -30,25 +30,27 @@ class UserSearchRepositoryImpl @Inject constructor(
 ) : UserSearchRepository {
 
     override fun findUser(name: String): Flow<List<ChatUser>> = callbackFlow {
-        userDatabase.addValueEventListener(object : ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val currentUserId = getCurrentUserId()
-                snapshot.children
-                    .mapNotNull { dataSnapshot ->
-                        dataSnapshot.getValue(ChatUser::class.java)?.apply {
-                            id = dataSnapshot.key
+        userDatabase.addValueEventListener(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val currentUserId = getCurrentUserId()
+                    snapshot.children
+                        .mapNotNull { dataSnapshot ->
+                            dataSnapshot.child("profile")
+                                .getValue(ChatUser::class.java)?.apply {
+                                    id = dataSnapshot.key
+                                }
                         }
-                    }
-                    .filter { it.id != currentUserId }
-                    .filter { it.name?.contains(name, ignoreCase = true) == true }
-                    .also { trySend(it) }
-            }
+                        .filter { it.id != currentUserId }
+                        .filter { it.name?.contains(name, ignoreCase = true) == true }
+                        .also { trySend(it) }
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                close(error.toException())
+                override fun onCancelled(error: DatabaseError) {
+                    close(error.toException())
+                }
             }
-        })
+        )
         awaitClose()
     }
 
@@ -66,26 +68,30 @@ class UserSearchRepositoryImpl @Inject constructor(
 
     override fun loadExistingChats(): Flow<List<String>> = callbackFlow {
         val currentUserId = getCurrentUserId()
-        userDatabase.child(currentUserId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val userIds = mutableListOf<String>()
-                snapshot.children.mapNotNull { result ->
-                    userIds.clear()
-                    result
-                }.forEach { snapShot ->
-                    snapShot.children.mapNotNull {
-                        it.getValue(ChatReference::class.java)?.friendId
-                    }.forEach {
-                        userIds.add(it)
+        userDatabase.child(currentUserId)
+            .child("profile")
+            .addValueEventListener(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val userIds = mutableListOf<String>()
+                        snapshot.children.mapNotNull { result ->
+                            userIds.clear()
+                            result
+                        }.forEach { snapShot ->
+                            snapShot.children.mapNotNull {
+                                it.getValue(ChatReference::class.java)?.friendId
+                            }.forEach {
+                                userIds.add(it)
+                            }
+                        }
+                        trySend(userIds)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        close(error.toException())
                     }
                 }
-                trySend(userIds)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                close(error.toException())
-            }
-        })
+            )
         awaitClose()
     }
 

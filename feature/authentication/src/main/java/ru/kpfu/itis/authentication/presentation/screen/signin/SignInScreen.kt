@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -70,6 +71,7 @@ fun SignInScreen(
 
                 TextFieldWithErrorState(
                     value = email,
+                    modifier = Modifier.fillMaxWidth(),
                     onValueChange = { email = it },
                     labelValue = stringResource(id = CoreR.string.email),
                     validationResult = this.value.emailValidationResult,
@@ -77,6 +79,7 @@ fun SignInScreen(
 
                 TextFieldWithErrorState(
                     value = password,
+                    modifier = Modifier.fillMaxWidth(),
                     onValueChange = { password = it },
                     labelValue = stringResource(id = CoreR.string.password),
                     validationResult = this.value.passwordValidationResult,

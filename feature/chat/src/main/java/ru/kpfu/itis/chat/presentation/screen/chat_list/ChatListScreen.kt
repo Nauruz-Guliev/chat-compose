@@ -1,8 +1,10 @@
 package ru.kpfu.itis.chat.presentation.screen.chat_list
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,11 +36,30 @@ fun ChatListScreen(
     viewModel: ChatListViewModel = hiltViewModel()
 ) {
     viewModel.collectAsState().also { chatListState ->
-        LazyColumn {
-            items(chatListState.value.chatList) { user ->
-                UserListItem(user) {
-                    viewModel.onChatClicked(it)
+        if (chatListState.value.chatList.isNotEmpty()) {
+            LazyColumn {
+                items(chatListState.value.chatList) { user ->
+                    UserListItem(user) {
+                        viewModel.onChatClicked(it)
+                    }
                 }
+            }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = CoreR.string.emoji_sad_face),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    fontSize = TextUnit(80f, TextUnitType.Sp),
+                )
+                Text(
+                    text = stringResource(id = CoreR.string.message_no_chats),
+                    fontSize = TextUnit(24f, TextUnitType.Sp),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                )
             }
         }
     }
@@ -60,7 +84,7 @@ private fun UserListItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            listModel.friend?.profileImage?.let { url ->
+            listModel.friend.profileImage?.let { url ->
                 AsyncImage(
                     contentScale = ContentScale.Crop,
                     model = url,

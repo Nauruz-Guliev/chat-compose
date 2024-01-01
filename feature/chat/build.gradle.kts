@@ -34,6 +34,10 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.database.ktx)
+    implementation(libs.appcompat)
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
     kapt(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // kotest

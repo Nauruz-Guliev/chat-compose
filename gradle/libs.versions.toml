@@ -31,6 +31,7 @@ firebaseAuth = "22.3.0"
 firebaseDatabaseKtx = "20.3.0"
 navigationRuntimeKtx = "2.7.6"
 ktorVersion = "2.3.2"
+constraintlayout = "2.1.4"
 
 [libraries]
 androidx-compose-material-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose-material-material" }
@@ -91,6 +92,7 @@ ktor-client-content-negotiation = { group = "io.ktor", version.ref = "ktorVersio
 ktor-serialization-kotlinx-json = { group = "io.ktor", version.ref = "ktorVersion", name = "ktor-serialization-kotlinx-json" }
 ktor-client-android = { group = "io.ktor", version.ref = "ktorVersion", name = "ktor-client-android" }
 ktor-client-logging = { group = "io.ktor", version.ref = "ktorVersion", name = "ktor-client-logging" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

@@ -60,7 +60,10 @@ fun SearchScreen(
             value = searchValue,
             onValueChange = { searchValue = it },
             modifier = Modifier.fillMaxWidth(),
-            maxLines = 1
+            maxLines = 1,
+            placeholder = {
+                Text(text = "Find a user")
+            }
         )
 
         viewModel.collectAsState().let { userSearchState ->
