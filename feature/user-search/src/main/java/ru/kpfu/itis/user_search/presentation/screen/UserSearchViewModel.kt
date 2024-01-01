@@ -2,7 +2,6 @@ package ru.kpfu.itis.user_search.presentation.screen
 
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -22,7 +21,6 @@ import javax.inject.Inject
 class UserSearchViewModel @Inject constructor(
     private val findUser: FindUser,
     private val createChat: CreateChat,
-    private val navController: NavHostController,
     private val loadExistingChats: LoadExistingChats
 ) : BaseViewModel<UserSearchState, UserSearchSideEffect>() {
 
@@ -60,8 +58,6 @@ class UserSearchViewModel @Inject constructor(
                 createChat.invoke(friendId)
             }.onFailure { exception ->
                 postSideEffect(UserSearchSideEffect.ExceptionHappened(exception))
-            }.onSuccess {
-                loadExistingChats()
             }
         }
     }

@@ -4,9 +4,8 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +25,6 @@ import kotlinx.coroutines.delay
 fun HeaderText(
     text: String,
     modifier: Modifier = Modifier,
-    fontColor: Color = Color.DarkGray,
     fontSize: Int = 24
 ) {
     Text(
@@ -37,9 +34,8 @@ fun HeaderText(
             fontSize = fontSize.sp,
             fontWeight = FontWeight.Bold
         ),
-        color = fontColor
+        color = MaterialTheme.colorScheme.onPrimary
     )
-    Spacer(modifier = Modifier.size(20.dp))
 }
 
 @Composable
@@ -55,7 +51,7 @@ fun ErrorText(
 ) {
     Text(
         text = text,
-        color = Color.Red,
+        color = MaterialTheme.colorScheme.error,
         fontSize = fontSizeInSp.sp,
         modifier = modifier.padding(16.dp)
     )
@@ -87,7 +83,6 @@ fun DisappearingText(
             text = text,
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
-            color = Color.DarkGray
         )
     }
 }

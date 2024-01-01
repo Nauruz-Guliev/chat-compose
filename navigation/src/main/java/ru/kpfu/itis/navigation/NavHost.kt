@@ -122,7 +122,7 @@ fun MainNavHost(
                     route = ChatDestinations.CHAT_SCREEN.route,
                     arguments = listOf(navArgument(CHAT_ID_KEY) { type = NavType.StringType })
                 ) { backStackEntry ->
-                    ChatScreen(backStackEntry.arguments?.getString(CHAT_ID_KEY))
+                    backStackEntry.arguments?.getString(CHAT_ID_KEY)?.let { ChatScreen(it) }
                 }
             }
         }

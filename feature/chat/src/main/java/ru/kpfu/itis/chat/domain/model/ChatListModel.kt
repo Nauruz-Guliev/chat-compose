@@ -1,8 +1,7 @@
 package ru.kpfu.itis.chat.domain.model
 
-import ru.kpfu.itis.core_data.ChatUser
-
 data class ChatListModel(
-    val friend: ChatUser? = null,
-    val chatId: String? = null,
+    val friend: ChatFriendModel,
+    val chatId: String?,
+    val lastUpdated: Long
 )

@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
-import ru.kpfu.itis.chat.domain.model.ChatListModel
 import ru.kpfu.itis.core.R as CoreR
 
 @Composable
@@ -43,8 +42,8 @@ fun ChatListScreen(
 }
 
 @Composable
-fun UserListItem(
-    listModel: ChatListModel,
+private fun UserListItem(
+    listModel: ChatItem,
     onChatClicked: (chatId: String?) -> Unit
 ) {
     Card(
@@ -77,7 +76,7 @@ fun UserListItem(
                     .weight(1f)
             ) {
                 Text(
-                    text = listModel.friend?.name ?: stringResource(id = CoreR.string.unknown_user),
+                    text = listModel.friend.name ?: stringResource(id = CoreR.string.unknown_user),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )

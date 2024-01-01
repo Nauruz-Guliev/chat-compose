@@ -11,6 +11,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.chat.domain.usecase.GetChatList
+import ru.kpfu.itis.chat.presentation.mapper.mapToItem
 import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.core_ui.base.BaseViewModel
 import javax.inject.Inject
@@ -35,7 +36,7 @@ class ChatListViewModel @Inject constructor(
                 postSideEffect(ChatListSideEffect.ExceptionHappened(exception))
             }
             .collect { chatList ->
-                reduce { state.copy(chatList = chatList) }
+                reduce { state.copy(chatList = chatList.mapToItem()) }
             }
     }
 

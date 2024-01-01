@@ -17,10 +17,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,10 +40,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kpfu.itis.core_ui.composable.AnimatedDialog
 import ru.kpfu.itis.core_ui.composable.ErrorText
 import ru.kpfu.itis.core_ui.composable.HeaderText
-import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
 import ru.kpfu.itis.core_ui.extension.useDebounce
-import ru.kpfu.itis.core_ui.ui.theme.Persimmon
-import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
 import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
 
 private const val TEXT_FIELD_DEBOUNCE_TIME_MILLIS = 800L
@@ -92,12 +88,16 @@ fun ImagePickerDialog(
                         modifier = Modifier.padding(PaddingValues(vertical = 20.dp))
                     )
 
-                    TextFieldWithErrorState(
-                        modifier = Modifier.fillMaxWidth(),
+                    TextField(
                         value = imageQuery,
-                        onValueChange = { imageQuery = it },
-                        labelValue = "Image",
-                        horizontalPaddingInDp = 0
+                        onValueChange = { newText ->
+                            imageQuery = newText
+                        },
+                        maxLines = 1,
+                        shape = RoundedCornerShape(8.dp),
+                        placeholder = {
+                            Text(text = "Type in image name")
+                        }
                     )
 
                     if (!this@apply.value.isImageFound) {
@@ -118,15 +118,12 @@ fun ImagePickerDialog(
                                 onImagePicked(this@apply.value.selectedImage?.url)
                                 onDismissRequest()
                             },
-                            colors = ButtonDefaults.buttonColors(SeaGreen),
                             modifier = Modifier
                                 .padding(16.dp)
                         ) {
                             Text(
                                 text = "Confirm",
-                                color = Color.White,
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
                             )
                         }
 
@@ -136,15 +133,12 @@ fun ImagePickerDialog(
                                 viewModel.resetState()
                                 onDismissRequest()
                             },
-                            colors = ButtonDefaults.buttonColors(Persimmon),
                             modifier = Modifier
                                 .padding(16.dp)
                         ) {
                             Text(
                                 text = "Dismiss",
-                                color = Color.White,
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -188,8 +182,9 @@ fun ImageList(
                         }
                         .border(
                             border = BorderStroke(
-                                4.dp, color = if (imageData.isSelected) {
-                                    SeaGreen
+                                4.dp,
+                                color = if (imageData.isSelected) {
+                                    MaterialTheme.colorScheme.onPrimary
                                 } else {
                                     Color.Transparent
                                 }
