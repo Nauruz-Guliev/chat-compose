@@ -8,4 +8,5 @@ interface ProfileRepository {
     suspend fun updateProfile(model: UpdateProfileModel)
     suspend fun getUser(): ChatUser?
     suspend fun clearUserId()
+    suspend fun signOut()
 }

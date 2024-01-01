@@ -4,5 +4,6 @@ import ru.kpfu.itis.core_data.ChatUser
 
 data class ChatUserSearchModel(
     val user: ChatUser,
-    val isProfileImageValid: Boolean
+    val isProfileImageValid: Boolean,
+    val isInFriendList: Boolean
 )

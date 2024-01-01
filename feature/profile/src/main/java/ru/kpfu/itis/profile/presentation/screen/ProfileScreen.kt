@@ -38,7 +38,6 @@ import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.kpfu.itis.core_data.ChatUser
-import ru.kpfu.itis.core_ui.composable.DisappearingText
 import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core_ui.composable.ErrorText
 import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
@@ -55,9 +54,6 @@ fun ProfileScreen(
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordRepeat by rememberSaveable { mutableStateOf("") }
-    var pickedProfileImage by rememberSaveable { mutableStateOf<String?>(null) }
     var isEditing by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by remember { mutableStateOf(false) }
     var showErrorAlert by remember { mutableStateOf(false) }
@@ -105,40 +101,38 @@ fun ProfileScreen(
                     },
                     enabled = isEditing
                 ) {
-                    if (pickedProfileImage.isNullOrBlank() && profileState.value.user?.profileImage.isNullOrBlank()) {
-                        Image(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(AliceBlue),
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .size(120.dp)
-                        )
-                    } else if (!pickedProfileImage.isNullOrBlank()) {
-                        AsyncImage(
-                            contentScale = ContentScale.Crop,
-                            model = pickedProfileImage,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(120.dp)
-                        )
-                    } else {
-                        AsyncImage(
-                            contentScale = ContentScale.Crop,
-                            model = profileState.value.user?.profileImage,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(120.dp)
-                        )
+                    when (profileState.value.profileImage) {
+                        ProfileImage.PICKED -> {
+                            AsyncImage(
+                                contentScale = ContentScale.Crop,
+                                model = profileState.value.pickedProfileImage,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(120.dp)
+                            )
+                        }
+
+                        ProfileImage.CURRENT -> {
+                            AsyncImage(
+                                contentScale = ContentScale.Crop,
+                                model = profileState.value.user?.profileImage,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(120.dp)
+                            )
+                        }
+
+                        ProfileImage.DEFAULT -> {
+                            Image(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(AliceBlue),
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .size(120.dp)
+                            )
+                        }
                     }
-                }
-                if (isEditing) {
-                    DisappearingText(
-                        text = stringResource(id = CoreR.string.change_profile_image_text),
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(top = 8.dp)
-                    )
                 }
             }
 
@@ -158,25 +152,7 @@ fun ProfileScreen(
                 validationResult = profileState.value.emailValidationResult,
             )
 
-            TextFieldWithErrorState(
-                isPassword = true,
-                isEnabled = isEditing,
-                value = password,
-                onValueChange = { password = it },
-                labelValue = stringResource(id = CoreR.string.password),
-                validationResult = profileState.value.passwordValidationResult,
-            )
-
-            TextFieldWithErrorState(
-                isPassword = true,
-                isEnabled = isEditing,
-                value = passwordRepeat,
-                onValueChange = { passwordRepeat = it },
-                labelValue = stringResource(id = CoreR.string.password_repeat),
-                validationResult = profileState.value.passwordRepeatValidationResult,
-            )
-
-            if(!profileState.value.isValidationSuccessful) {
+            if (!profileState.value.isValidationSuccessful) {
                 ErrorText(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(id = CoreR.string.error_profile_validation_error)
@@ -189,10 +165,6 @@ fun ProfileScreen(
                         updateProfile(
                             name = name,
                             email = email,
-                            imageUrl = pickedProfileImage
-                                ?: profileState.value.user?.profileImage,
-                            password = password,
-                            passwordRepeat = passwordRepeat
                         )
                         loadUser()
                     }
@@ -229,7 +201,7 @@ fun ProfileScreen(
                     showImagePickerDialog = false
                 },
                 onImagePicked = { imageUrl ->
-                    pickedProfileImage = imageUrl
+                    viewModel.profileImagePicked(imageUrl)
                 }
             )
 

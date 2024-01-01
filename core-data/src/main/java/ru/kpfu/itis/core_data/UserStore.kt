@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 private const val USER_ID_KEY = "USER_ID_KEY"
 
+
 class UserStore @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {

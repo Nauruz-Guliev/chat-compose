@@ -7,4 +7,5 @@ interface UserSearchRepository {
 
     fun findUser(name: String): Flow<List<ChatUser>>
     suspend fun startChatting(userId: String)
+    suspend fun loadExistingChats(): Flow<List<String>>
 }

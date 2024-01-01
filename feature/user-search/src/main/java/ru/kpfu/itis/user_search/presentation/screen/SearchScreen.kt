@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
@@ -42,6 +43,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import ru.kpfu.itis.core_ui.extension.useDebounce
 import ru.kpfu.itis.core_ui.ui.theme.AliceBlue
 import ru.kpfu.itis.core_ui.ui.theme.PowderBlue
+import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
 
 @Composable
 fun SearchScreen(
@@ -94,7 +96,7 @@ fun UserList(
             Box(modifier = Modifier.animateItemPlacement()) {
                 UserItem(user) { model ->
                     model.user.id?.let { id ->
-                        viewModel.startChatting(id)
+                        viewModel.createChat(id)
                     }
                 }
             }
@@ -115,7 +117,8 @@ fun UserItem(
             .fillMaxWidth()
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
         ) {
 
             if (!model.isProfileImageValid) {
@@ -148,15 +151,29 @@ fun UserItem(
                     fontWeight = FontWeight.Bold,
                 )
             }
-
-            Button(
-                onClick = { onItemClicked(model) },
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = "Start chatting",
-                    textAlign = TextAlign.Center
-                )
+            if (!model.isInFriendList) {
+                Button(
+                    onClick = { onItemClicked(model) },
+                    modifier = Modifier.padding(vertical = 12.dp)
+                ) {
+                    Text(
+                        text = "Add to chats",
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                Button(
+                    enabled = false,
+                    onClick = { onItemClicked(model) },
+                    colors = ButtonDefaults.buttonColors(disabledContainerColor = SeaGreen),
+                    modifier = Modifier.padding(vertical = 12.dp)
+                ) {
+                    Text(
+                        text = "User added",
+                        textAlign = TextAlign.Center,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
