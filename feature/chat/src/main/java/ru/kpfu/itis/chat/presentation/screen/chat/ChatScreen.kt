@@ -105,7 +105,9 @@ fun ChatScreen(
                             },
                         contentPadding = PaddingValues(16.dp)
                     ) {
-                        items(chatState.value.messages) { item ->
+                        items(
+                            chatState.value.messages
+                        ) { item ->
                             ChatItem(item)
                         }
                     }
@@ -122,40 +124,59 @@ fun ChatScreen(
                 }
             }
         }
-        TODO("should get rid of constraint")
     }
 }
 
 @Composable
 private fun ChatItem(model: ChatMessage) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-    ) {
-        Box(
+    if (model.isMyMessage) {
+        Column(
             modifier = Modifier
-                .align(if (!model.isMyMessage) Alignment.End else Alignment.Start)
-                .clip(
-                    RoundedCornerShape(
-                        topStart = 48f,
-                        topEnd = 48f,
-                        bottomStart = if (model.isMyMessage) 48f else 0f,
-                        bottomEnd = if (model.isMyMessage) 0f else 48f
-                    )
-                )
-                .background(
-                    color = if (model.isMyMessage) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.secondary
-                    }
-                )
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(4.dp),
         ) {
-            Text(text = model.message ?: "")
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 48f,
+                            topEnd = 48f,
+                            bottomStart = 48f,
+                            bottomEnd = 0f
+                        )
+                    )
+                    .background(color = MaterialTheme.colorScheme.primary)
+                    .padding(16.dp)
+            ) {
+                Text(text = model.message ?: "")
+            }
         }
-        TODO("should get rid of if else")
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 48f,
+                            topEnd = 48f,
+                            bottomStart = 0f,
+                            bottomEnd = 48f
+                        )
+                    )
+                    .background(
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                    .padding(16.dp)
+            ) {
+                Text(text = model.message ?: "")
+            }
+        }
     }
 }
 

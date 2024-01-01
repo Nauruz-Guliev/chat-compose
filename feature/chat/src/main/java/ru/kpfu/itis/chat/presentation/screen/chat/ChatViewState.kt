@@ -4,5 +4,5 @@ data class ChatViewState(
     val currentUserId: String = "",
     val chatId: String = "",
     val messages: List<ChatMessage> = emptyList(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = false
 )
