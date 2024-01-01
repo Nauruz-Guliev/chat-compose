@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import ru.kpfu.itis.chat.data.mapper.mapToDto
@@ -42,9 +43,6 @@ class ChatRepositoryImpl @Inject constructor(
                     override fun onDataChange(snapshot: DataSnapshot) {
                         snapshot.children.map { result ->
                             result.getValue(ChatMessageDto::class.java)
-                        }.mapNotNull { messageDto ->
-                            val user = userService.getUserById(messageDto?.senderId)?.mapToModel()
-                            messageDto?.mapToModel(user)
                         }.also { listOfMessages ->
                             trySend(listOfMessages)
                         }
@@ -56,7 +54,14 @@ class ChatRepositoryImpl @Inject constructor(
                 }
             )
         awaitClose()
-    }.flowOn(dispatcher)
+    }.map(::mapUserList).flowOn(dispatcher)
+
+    private fun mapUserList(list: List<ChatMessageDto?>): List<ChatMessageModel> {
+        return list.mapNotNull { messageDto ->
+            val user = userService.getUserById(messageDto?.senderId)?.mapToModel()
+            messageDto?.mapToModel(user)
+        }
+    }
 
     override suspend fun sendMessage(chatId: String, message: ChatMessageModel): Unit =
         withContext(dispatcher) {

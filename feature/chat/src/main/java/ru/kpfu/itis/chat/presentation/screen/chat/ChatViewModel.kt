@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -45,7 +44,6 @@ class ChatViewModel @Inject constructor(
     }
 
     fun loadMessages(chatId: String) = intent {
-        delay(200)
         setChatId(chatId)
         getMessages(chatId).stateIn(viewModelScope)
             .map { listOfMessages ->
@@ -65,6 +63,7 @@ class ChatViewModel @Inject constructor(
                     )
                 }
             }
+
     }
 
     private fun setChatId(chatId: String) = intent {
