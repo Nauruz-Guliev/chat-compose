@@ -34,6 +34,10 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.database.ktx)
+    implementation(libs.appcompat)
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
     kapt(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // kotest
@@ -47,7 +51,10 @@ dependencies {
     implementation(libs.google.services)
     implementation(libs.modo.compose)
     implementation(libs.androidx.navigation.compose)
+    //coil
+    implementation(libs.coil)
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
     implementation(project(":core-testing"))
+    implementation(project(":feature:chat-api"))
 }

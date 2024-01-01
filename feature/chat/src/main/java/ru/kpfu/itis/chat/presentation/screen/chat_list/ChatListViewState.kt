@@ -1,5 +1,5 @@
 package ru.kpfu.itis.chat.presentation.screen.chat_list
 
-class ChatListViewState {
-
-}
+data class ChatListViewState(
+    val chatList: List<ChatItem> = emptyList()
+)

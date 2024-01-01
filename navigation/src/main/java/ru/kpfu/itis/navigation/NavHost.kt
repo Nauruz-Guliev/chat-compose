@@ -19,15 +19,18 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import ru.kpfu.itis.authentication.presentation.screen.signin.SignInScreen
 import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat.presentation.screen.chat.ChatScreen
 import ru.kpfu.itis.chat.presentation.screen.chat_list.ChatListScreen
+import ru.kpfu.itis.chat_api.CHAT_ID_KEY
 import ru.kpfu.itis.chat_api.ChatDestinations
 import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
 import ru.kpfu.itis.user_search.presentation.screen.SearchScreen
@@ -115,8 +118,11 @@ fun MainNavHost(
                 composable(ChatDestinations.CHAT_LIST_SCREEN.name) {
                     ChatListScreen()
                 }
-                composable(ChatDestinations.CHAT_SCREEN.name) {
-                    ChatScreen()
+                composable(
+                    route = ChatDestinations.CHAT_SCREEN.route,
+                    arguments = listOf(navArgument(CHAT_ID_KEY) { type = NavType.StringType })
+                ) { backStackEntry ->
+                    backStackEntry.arguments?.getString(CHAT_ID_KEY)?.let { ChatScreen(it) }
                 }
             }
         }

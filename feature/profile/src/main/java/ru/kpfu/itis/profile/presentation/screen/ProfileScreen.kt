@@ -15,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +28,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,9 +39,6 @@ import ru.kpfu.itis.core_data.ChatUser
 import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core_ui.composable.ErrorText
 import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
-import ru.kpfu.itis.core_ui.ui.theme.AliceBlue
-import ru.kpfu.itis.core_ui.ui.theme.Persimmon
-import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
 import ru.kpfu.itis.image_picker.presentation.screen.image_picker.ImagePickerDialog
 import ru.kpfu.itis.core.R as CoreR
 
@@ -126,7 +121,6 @@ fun ProfileScreen(
                             Image(
                                 imageVector = Icons.Filled.Person,
                                 contentDescription = null,
-                                colorFilter = ColorFilter.tint(AliceBlue),
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .size(120.dp)
@@ -138,6 +132,7 @@ fun ProfileScreen(
 
             TextFieldWithErrorState(
                 isEnabled = isEditing,
+                modifier = Modifier.fillMaxWidth(),
                 value = name,
                 onValueChange = { name = it },
                 labelValue = stringResource(id = CoreR.string.name),
@@ -147,6 +142,7 @@ fun ProfileScreen(
             TextFieldWithErrorState(
                 isEnabled = isEditing,
                 value = email,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = { email = it },
                 labelValue = stringResource(id = CoreR.string.email),
                 validationResult = profileState.value.emailValidationResult,
@@ -173,8 +169,6 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
-                colors = if (isEditing) ButtonDefaults.buttonColors(SeaGreen)
-                else ButtonDefaults.buttonColors()
             ) {
                 Text(
                     text = if (isEditing)
@@ -190,7 +184,6 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 24.dp, end = 20.dp, bottom = 20.dp),
-                colors = ButtonDefaults.buttonColors(Persimmon)
             ) {
                 Text(text = stringResource(id = CoreR.string.exit_account))
             }

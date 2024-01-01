@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -51,9 +49,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import ru.kpfu.itis.core.R
-import ru.kpfu.itis.core_ui.ui.theme.Denim
-import ru.kpfu.itis.core_ui.ui.theme.Persimmon
-import ru.kpfu.itis.core_ui.ui.theme.PowderBlue
 
 @Composable
 fun AnimatedDialog(
@@ -94,7 +89,6 @@ fun AnimatedDialog(
                     Box(
                         modifier = Modifier
                             .pointerInput(Unit) { detectTapGestures { onDismissRequest() } }
-                            .background(Color.Black.copy(alpha = .56f))
                             .fillMaxSize()
                     )
                 }
@@ -150,7 +144,6 @@ fun ErrorAlertDialog(
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
-                .background(PowderBlue)
         ) {
 
             var graphicVisible by remember { mutableStateOf(false) }
@@ -171,9 +164,8 @@ fun ErrorAlertDialog(
                         .background(
                             brush = Brush.linearGradient(
                                 colors = listOf(
-                                    Persimmon,
-                                    Color.Red,
-                                    Persimmon
+                                    MaterialTheme.colorScheme.tertiary,
+                                    MaterialTheme.colorScheme.tertiary,
                                 )
                             )
                         ),
@@ -195,12 +187,10 @@ fun ErrorAlertDialog(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.DarkGray
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = description,
-                    color = Color.DarkGray
                 )
             }
             Column(
@@ -210,14 +200,12 @@ fun ErrorAlertDialog(
                     onClick = {
                         onDismissRequest()
                     },
-                    colors = ButtonDefaults.buttonColors(Denim),
                     modifier = Modifier
                         .padding(16.dp)
                         .align(Alignment.End)
                 ) {
                     Text(
                         text = stringResource(id = R.string.cancel),
-                        color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

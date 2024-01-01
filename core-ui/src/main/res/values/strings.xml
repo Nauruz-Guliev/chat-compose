@@ -29,5 +29,8 @@
 
     <string name="change_profile_image_text">You can click on image to change it</string>
     <string name="cancel">Cancel</string>
+    <string name="unknown_user">Unknown user</string>
+    <string name="emoji_sad_face">🙁</string>
+    <string name="message_no_chats"> You have no chats yet. \n Find a user to start conversation!</string>
 
 </resources>

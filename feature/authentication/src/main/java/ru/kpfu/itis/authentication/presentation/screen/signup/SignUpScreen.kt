@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -66,6 +67,7 @@ fun SignUpScreen(
 
             TextFieldWithErrorState(
                 value = name,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = { name = it },
                 labelValue = stringResource(id = CoreR.string.name),
                 validationResult = this.value.nameValidationResult
@@ -73,6 +75,7 @@ fun SignUpScreen(
 
             TextFieldWithErrorState(
                 value = email,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = { email = it },
                 labelValue = stringResource(id = CoreR.string.email),
                 validationResult = this.value.emailValidationResult
@@ -80,6 +83,7 @@ fun SignUpScreen(
 
             TextFieldWithErrorState(
                 value = password,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = { password = it },
                 labelValue = stringResource(id = CoreR.string.password),
                 validationResult = this.value.passwordValidationResult,
@@ -88,6 +92,7 @@ fun SignUpScreen(
 
             TextFieldWithErrorState(
                 value = passwordRepeat,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = { passwordRepeat = it },
                 labelValue = stringResource(id = CoreR.string.password_repeat),
                 validationResult = this.value.passwordRepeatValidationResult,

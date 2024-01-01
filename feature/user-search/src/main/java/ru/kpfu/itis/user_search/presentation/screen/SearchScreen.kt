@@ -16,12 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,8 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,9 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.kpfu.itis.core_ui.extension.useDebounce
-import ru.kpfu.itis.core_ui.ui.theme.AliceBlue
-import ru.kpfu.itis.core_ui.ui.theme.PowderBlue
-import ru.kpfu.itis.core_ui.ui.theme.SeaGreen
 
 @Composable
 fun SearchScreen(
@@ -67,13 +60,10 @@ fun SearchScreen(
             value = searchValue,
             onValueChange = { searchValue = it },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = PowderBlue,
-                focusedContainerColor = PowderBlue,
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-            ),
-            maxLines = 1
+            maxLines = 1,
+            placeholder = {
+                Text(text = "Find a user")
+            }
         )
 
         viewModel.collectAsState().let { userSearchState ->
@@ -125,7 +115,6 @@ fun UserItem(
                 Image(
                     imageVector = Icons.Filled.Person,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(AliceBlue),
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .padding(16.dp)
@@ -165,13 +154,11 @@ fun UserItem(
                 Button(
                     enabled = false,
                     onClick = { onItemClicked(model) },
-                    colors = ButtonDefaults.buttonColors(disabledContainerColor = SeaGreen),
                     modifier = Modifier.padding(vertical = 12.dp)
                 ) {
                     Text(
                         text = "User added",
                         textAlign = TextAlign.Center,
-                        color = Color.White
                     )
                 }
             }

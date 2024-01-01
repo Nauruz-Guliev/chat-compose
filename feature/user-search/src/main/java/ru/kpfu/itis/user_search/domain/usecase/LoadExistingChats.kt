@@ -7,7 +7,7 @@ import javax.inject.Inject
 class LoadExistingChats @Inject constructor(
     private val repository: UserSearchRepository
 ) {
-    suspend operator fun invoke(): Flow<List<String>> {
+    operator fun invoke(): Flow<List<String>> {
         return repository.loadExistingChats()
     }
 }

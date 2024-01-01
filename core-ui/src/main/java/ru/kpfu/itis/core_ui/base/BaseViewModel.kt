@@ -59,4 +59,10 @@ abstract class BaseViewModel<STATE : Any, SIDE_EFFECT : Any> :
             this@navigateSavingBackStack.navigate(destination)
         }
     }
+
+    fun NavHostController.navigateSavingBackStack(destination: String, argument: String?) {
+        viewModelScope.launch(Dispatchers.Main) {
+            this@navigateSavingBackStack.navigate("$destination/$argument")
+        }
+    }
 }
