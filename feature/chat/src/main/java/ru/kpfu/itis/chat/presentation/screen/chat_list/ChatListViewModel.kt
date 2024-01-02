@@ -40,7 +40,16 @@ class ChatListViewModel @Inject constructor(
                 postSideEffect(ChatListSideEffect.ExceptionHappened(exception))
             }
             .collect { chatList ->
-                reduce { state.copy(chatList = chatList.mapToItem()) }
+                reduce {
+                    state.copy(
+                        chatList = chatList.mapToItem(),
+                        screenState = if (chatList.isNotEmpty()) {
+                            ChatListScreenState.CHATS_LOADED
+                        } else {
+                            ChatListScreenState.NO_CHATS
+                        }
+                    )
+                }
             }
     }
 

@@ -1,19 +1,19 @@
 package ru.kpfu.itis.chat.data.local.mapper
 
-import ru.kpfu.itis.chat.data.local.entity.ChatListEntity
+import ru.kpfu.itis.chat.data.local.entity.ChatListItemEntity
 import ru.kpfu.itis.chat.data.local.entity.ChatUserEntity
 import ru.kpfu.itis.chat.domain.model.ChatListModel
 import ru.kpfu.itis.core_data.ChatUser
 
-fun ChatListModel.mapToChatEntity(): ChatListEntity {
-    return ChatListEntity(
+fun ChatListModel.mapToChatEntity(): ChatListItemEntity {
+    return ChatListItemEntity(
         chatId = chatId!!,
         senderId = this.friend.id,
         lastUpdated = this.lastUpdated
     )
 }
 
-fun List<ChatListModel>.mapToChatEntity(): List<ChatListEntity> {
+fun List<ChatListModel>.mapToChatEntity(): List<ChatListItemEntity> {
     return this.map(ChatListModel::mapToChatEntity)
 }
 

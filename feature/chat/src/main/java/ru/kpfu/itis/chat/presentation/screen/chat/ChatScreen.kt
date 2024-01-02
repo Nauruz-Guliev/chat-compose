@@ -42,6 +42,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -185,6 +187,12 @@ private fun ChatItem(model: ChatMessage) {
             ) {
                 Text(text = model.message ?: "")
             }
+            Text(
+                text = model.time,
+                modifier = Modifier
+                    .align(Alignment.Start),
+                fontSize = TextUnit(10f, TextUnitType.Sp),
+            )
         }
     } else {
         Column(
@@ -210,6 +218,12 @@ private fun ChatItem(model: ChatMessage) {
             ) {
                 Text(text = model.message ?: "")
             }
+            Text(
+                text = model.time,
+                fontSize = TextUnit(10f, TextUnitType.Sp),
+                modifier = Modifier
+                    .align(Alignment.End)
+            )
         }
     }
 }

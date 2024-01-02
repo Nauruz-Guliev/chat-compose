@@ -29,7 +29,7 @@ fun ChatMessageModel.mapFromModel(isMyMessage: Boolean): ChatMessage {
             name = this.sender?.name,
             profileImage = this.sender?.profileImage
         ),
-        time = this.time?.convertLongToTime(),
+        time = this.time.convertLongToTime(),
         isMyMessage = isMyMessage
     )
 }

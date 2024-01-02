@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "chat_list")
-data class ChatListEntity(
+data class ChatListItemEntity(
     @PrimaryKey
     val chatId: String,
     val senderId: String? = null,

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import ru.kpfu.itis.chat.data.local.dao.ChatListDao
-import ru.kpfu.itis.chat.data.local.entity.ChatListEntity
+import ru.kpfu.itis.chat.data.local.entity.ChatListItemEntity
 import ru.kpfu.itis.chat.data.local.entity.ChatRoom
 import ru.kpfu.itis.chat.data.local.mapper.mapToEntity
 import ru.kpfu.itis.chat.data.local.mapper.mapToModel
@@ -63,7 +63,7 @@ class ChatListRepositoryImpl @Inject constructor(
                 chatListDao.run {
                     save(user)
                     save(
-                        ChatListEntity(
+                        ChatListItemEntity(
                             chatId = chatId,
                             senderId = chatReference?.friendId,
                             lastUpdated = System.currentTimeMillis()

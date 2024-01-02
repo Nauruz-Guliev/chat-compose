@@ -5,6 +5,6 @@ import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 data class ChatMessage(
     val sender: ChatFriendModel? = null,
     val message: String? = null,
-    val time: String? = null,
+    val time: String,
     val isMyMessage: Boolean
 )
