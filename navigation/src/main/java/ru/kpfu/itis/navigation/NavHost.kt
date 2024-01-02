@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.google.firebase.analytics.FirebaseAnalytics
 import ru.kpfu.itis.authentication.presentation.screen.signin.SignInScreen
 import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
@@ -39,7 +40,8 @@ import ru.kpfu.itis.user_search.presentation.screen.SearchScreen
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    isAuthenticated: Boolean = false
+    isAuthenticated: Boolean = false,
+    analytics: FirebaseAnalytics
 ) {
     var isBottomBarVisible by rememberSaveable { (mutableStateOf(true)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -112,6 +114,7 @@ fun MainNavHost(
                 route = NavigationFeatures.CHAT.name,
                 startDestination = ChatDestinations.CHAT_LIST_SCREEN.name
             ) {
+                trackAuthSuccessEvent(analytics)
                 composable(MainScreen.Chat.route) { ChatListScreen() }
                 composable(MainScreen.Search.route) { SearchScreen() }
                 composable(MainScreen.Profile.route) { ProfileScreen() }
@@ -139,6 +142,9 @@ private fun checkBottomBarVisibility(
 
         else ->
             isBottomBarVisibleCallback(true)
-
     }
+}
+
+private fun trackAuthSuccessEvent(analytics: FirebaseAnalytics) {
+    analytics.logEvent(FirebaseAnalytics.Event.LOGIN, null)
 }

@@ -6,6 +6,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    id("com.google.firebase.firebase-perf")
 }
 
 android {
@@ -73,6 +74,8 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.play.services.measurement.api)
+    implementation(libs.firebase.perf)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     implementation(libs.kotlin.reflect)

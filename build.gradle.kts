@@ -1,6 +1,8 @@
 buildscript {
     dependencies {
         classpath(libs.google.services)
+        classpath(libs.gradle)
+        classpath(libs.perf.plugin)
     }
 }
 

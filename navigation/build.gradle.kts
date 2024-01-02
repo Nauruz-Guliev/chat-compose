@@ -5,6 +5,7 @@ plugins {
     id("kotlin-parcelize")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 apply {
     from("${rootProject.projectDir}/gradle/shared_build.gradle")
@@ -30,6 +31,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.compose.material.material)
+    implementation(libs.firebaseAnalytics)
     // kotest
     testImplementation(libs.bundles.kotest)
     // mockk
