@@ -1,11 +1,8 @@
 package ru.kpfu.itis.chat.presentation.screen.chat
 
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.orbitmvi.orbit.Container
@@ -17,6 +14,7 @@ import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 import ru.kpfu.itis.chat.domain.model.ChatMessageModel
 import ru.kpfu.itis.chat.domain.usecase.GetCurrentUserId
 import ru.kpfu.itis.chat.domain.usecase.GetMessages
+import ru.kpfu.itis.chat.domain.usecase.GetSenderProfile
 import ru.kpfu.itis.chat.domain.usecase.SendMessage
 import ru.kpfu.itis.chat.presentation.mapper.mapFromModel
 import ru.kpfu.itis.core_ui.base.BaseViewModel
@@ -27,23 +25,26 @@ class ChatViewModel @Inject constructor(
     private val sendMessage: SendMessage,
     private val getMessages: GetMessages,
     private val getCurrentUserId: GetCurrentUserId,
-    private val navController: NavHostController
-) : BaseViewModel<ChatViewState, ChatSideEffect>() {
+    private val getSenderProfile: GetSenderProfile,
+) : BaseViewModel<ChatState, ChatSideEffect>() {
 
-    override val container: Container<ChatViewState, ChatSideEffect> =
-        container(ChatViewState())
+    override val container: Container<ChatState, ChatSideEffect> =
+        container(ChatState())
 
     init {
-        intent {
-            runCatching {
-                getCurrentUserId()
-            }.onSuccess { id ->
-                reduce { state.copy(currentUserId = id) }
-            }
+        setCurrentUserId()
+    }
+
+    private fun setCurrentUserId() = intent {
+        runCatching {
+            getCurrentUserId()
+        }.onSuccess { id ->
+            reduce { state.copy(currentUserId = id) }
         }
     }
 
     fun loadMessages(chatId: String) = intent {
+        setSenderProfile(chatId)
         setChatId(chatId)
         getMessages(chatId).stateIn(viewModelScope)
             .map { listOfMessages ->
@@ -51,7 +52,6 @@ class ChatViewModel @Inject constructor(
                     chatModel.mapFromModel(isMyMessage = chatModel.sender?.id == state.currentUserId)
                 }
             }
-            .flowOn(Dispatchers.IO)
             .catch { exception ->
                 postSideEffect(ChatSideEffect.ExceptionHappened(exception))
             }
@@ -63,7 +63,15 @@ class ChatViewModel @Inject constructor(
                     )
                 }
             }
+    }
 
+    private fun setSenderProfile(chatId: String) = intent {
+        if (state.sender != null) return@intent
+        runCatching {
+            getSenderProfile(chatId)
+        }.onSuccess { user ->
+            reduce { state.copy(sender = user) }
+        }
     }
 
     private fun setChatId(chatId: String) = intent {

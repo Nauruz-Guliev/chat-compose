@@ -17,18 +17,24 @@ import kotlinx.coroutines.withContext
 import ru.kpfu.itis.chat.data.mapper.mapToDto
 import ru.kpfu.itis.chat.data.mapper.mapToModel
 import ru.kpfu.itis.chat.data.model.ChatMessageDto
+import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 import ru.kpfu.itis.chat.domain.model.ChatMessageModel
 import ru.kpfu.itis.chat.domain.repository.ChatRepository
+import ru.kpfu.itis.chat_api.ChatReference
 import ru.kpfu.itis.core_data.UserService
+import ru.kpfu.itis.core_data.awaitTask
 import ru.kpfu.itis.core_data.di.ChatsDatabase
 import ru.kpfu.itis.core_data.di.IoDispatcher
+import ru.kpfu.itis.core_data.di.UsersDatabase
 import javax.inject.Inject
 
 private const val MESSAGES_PATH = "messages"
 
 class ChatRepositoryImpl @Inject constructor(
     @ChatsDatabase
-    private val database: DatabaseReference,
+    private val chatsDatabase: DatabaseReference,
+    @UsersDatabase
+    private val usersDatabase: DatabaseReference,
     private val firebaseAuth: FirebaseAuth,
     private val userService: UserService,
     @IoDispatcher
@@ -36,7 +42,7 @@ class ChatRepositoryImpl @Inject constructor(
 ) : ChatRepository {
 
     override fun loadChat(chatId: String): Flow<List<ChatMessageModel>> = callbackFlow {
-        database.child(chatId)
+        chatsDatabase.child(chatId)
             .child(MESSAGES_PATH)
             .addValueEventListener(
                 object : ValueEventListener {
@@ -54,9 +60,9 @@ class ChatRepositoryImpl @Inject constructor(
                 }
             )
         awaitClose()
-    }.map(::mapUserList).flowOn(dispatcher)
+    }.map(::mapMessages).flowOn(dispatcher)
 
-    private fun mapUserList(list: List<ChatMessageDto?>): List<ChatMessageModel> {
+    private fun mapMessages(list: List<ChatMessageDto?>): List<ChatMessageModel> {
         return list.mapNotNull { messageDto ->
             val user = userService.getUserById(messageDto?.senderId)?.mapToModel()
             messageDto?.mapToModel(user)
@@ -65,7 +71,7 @@ class ChatRepositoryImpl @Inject constructor(
 
     override suspend fun sendMessage(chatId: String, message: ChatMessageModel): Unit =
         withContext(dispatcher) {
-            database.child(chatId)
+            chatsDatabase.child(chatId)
                 .child(MESSAGES_PATH)
                 .child(message.time.toString())
                 .setValue(message.mapToDto())
@@ -74,5 +80,16 @@ class ChatRepositoryImpl @Inject constructor(
 
     override fun getCurrentUserId(): String {
         return firebaseAuth.currentUser?.uid ?: throw UserNotAuthenticatedException()
+    }
+
+    override suspend fun getSenderProfile(chatId: String): ChatFriendModel? {
+        val currentUserId = getCurrentUserId()
+        val userTask = usersDatabase.child(currentUserId)
+            .child("chats")
+            .child(chatId)
+            .get()
+        awaitTask(userTask)
+        val chatReference = userTask.result.getValue(ChatReference::class.java)
+        return userService.getUserById(chatReference?.friendId)?.mapToModel()
     }
 }

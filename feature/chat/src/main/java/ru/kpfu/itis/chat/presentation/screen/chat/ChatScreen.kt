@@ -1,5 +1,6 @@
 package ru.kpfu.itis.chat.presentation.screen.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,11 +40,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -68,14 +73,43 @@ fun ChatScreen(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(100.dp),
+                    modifier = Modifier.size(80.dp),
                     color = MaterialTheme.colorScheme.secondary,
                     strokeWidth = 10.dp
                 )
             }
         } else {
             Scaffold(topBar = {
-                TopAppBar(title = { Text("Hello World") })
+                Row(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.primary)
+                ) {
+                    if (chatState.value.sender?.profileImage != null) {
+                        AsyncImage(
+                            contentScale = ContentScale.Crop,
+                            model = chatState.value.sender?.profileImage,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .padding(12.dp)
+                                .clip(RoundedCornerShape(32.dp))
+                        )
+                    } else {
+                        Image(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .size(40.dp)
+                        )
+                    }
+                    TopAppBar(
+                        title = { chatState.value.sender?.name?.let { Text(it) } },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            titleContentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
             }) {
 
                 ConstraintLayout(
@@ -129,7 +163,7 @@ fun ChatScreen(
 
 @Composable
 private fun ChatItem(model: ChatMessage) {
-    if (model.isMyMessage) {
+    if (!model.isMyMessage) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -142,8 +176,8 @@ private fun ChatItem(model: ChatMessage) {
                         RoundedCornerShape(
                             topStart = 48f,
                             topEnd = 48f,
-                            bottomStart = 48f,
-                            bottomEnd = 0f
+                            bottomStart = 0F,
+                            bottomEnd = 40f
                         )
                     )
                     .background(color = MaterialTheme.colorScheme.primary)
@@ -165,8 +199,8 @@ private fun ChatItem(model: ChatMessage) {
                         RoundedCornerShape(
                             topStart = 48f,
                             topEnd = 48f,
-                            bottomStart = 0f,
-                            bottomEnd = 48f
+                            bottomStart = 40f,
+                            bottomEnd = 8f
                         )
                     )
                     .background(

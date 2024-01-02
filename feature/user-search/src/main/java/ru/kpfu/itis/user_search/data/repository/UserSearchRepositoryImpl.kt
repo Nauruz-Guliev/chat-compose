@@ -3,23 +3,26 @@ package ru.kpfu.itis.user_search.data.repository
 import android.security.keystore.UserNotAuthenticatedException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import ru.kpfu.itis.chat_api.ChatReference
 import ru.kpfu.itis.chat_api.ChatRoom
 import ru.kpfu.itis.chat_api.emptyChatRoom
 import ru.kpfu.itis.core_data.ChatUser
+import ru.kpfu.itis.core_data.addListenerAsFlow
 import ru.kpfu.itis.core_data.di.ChatsDatabase
+import ru.kpfu.itis.core_data.di.IoDispatcher
 import ru.kpfu.itis.core_data.di.UsersDatabase
 import ru.kpfu.itis.user_search.domain.repository.UserSearchRepository
 import javax.inject.Inject
 
 private const val CHATS_PATH_KEY = "chats"
+private const val PROFILE_PATH_KEY = "profile"
 
 class UserSearchRepositoryImpl @Inject constructor(
     @UsersDatabase
@@ -27,31 +30,25 @@ class UserSearchRepositoryImpl @Inject constructor(
     @ChatsDatabase
     private val chatDatabase: DatabaseReference,
     private val firebaseAuth: FirebaseAuth,
+    @IoDispatcher
+    private val dispatcher: CoroutineDispatcher
 ) : UserSearchRepository {
 
     override fun findUser(name: String): Flow<List<ChatUser>> = callbackFlow {
-        userDatabase.addValueEventListener(
-            object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val currentUserId = getCurrentUserId()
-                    snapshot.children
-                        .mapNotNull { dataSnapshot ->
-                            dataSnapshot.child("profile")
-                                .getValue(ChatUser::class.java)?.apply {
-                                    id = dataSnapshot.key
-                                }
-                        }
-                        .filter { it.id != currentUserId }
-                        .filter { it.name?.contains(name, ignoreCase = true) == true }
-                        .also { trySend(it) }
-                }
+        userDatabase.addListenerAsFlow(this)
+    }.map { mapFoundUsers(it, name) }.flowOn(dispatcher)
 
-                override fun onCancelled(error: DatabaseError) {
-                    close(error.toException())
-                }
+    private fun mapFoundUsers(snapshot: DataSnapshot, name: String): List<ChatUser> {
+        val currentUserId = getCurrentUserId()
+        return snapshot.children
+            .mapNotNull { dataSnapshot ->
+                dataSnapshot.child(PROFILE_PATH_KEY)
+                    .getValue(ChatUser::class.java)?.apply {
+                        id = dataSnapshot.key
+                    }
             }
-        )
-        awaitClose()
+            .filter { it.id != currentUserId }
+            .filter { it.name?.contains(name, ignoreCase = true) == true }
     }
 
     override suspend fun startChatting(userId: String) {
@@ -69,30 +66,14 @@ class UserSearchRepositoryImpl @Inject constructor(
     override fun loadExistingChats(): Flow<List<String>> = callbackFlow {
         val currentUserId = getCurrentUserId()
         userDatabase.child(currentUserId)
-            .child("profile")
-            .addValueEventListener(
-                object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val userIds = mutableListOf<String>()
-                        snapshot.children.mapNotNull { result ->
-                            userIds.clear()
-                            result
-                        }.forEach { snapShot ->
-                            snapShot.children.mapNotNull {
-                                it.getValue(ChatReference::class.java)?.friendId
-                            }.forEach {
-                                userIds.add(it)
-                            }
-                        }
-                        trySend(userIds)
-                    }
+            .child(CHATS_PATH_KEY)
+            .addListenerAsFlow(this)
+    }.map(::mapUserIds).flowOn(dispatcher)
 
-                    override fun onCancelled(error: DatabaseError) {
-                        close(error.toException())
-                    }
-                }
-            )
-        awaitClose()
+    private fun mapUserIds(snapshot: DataSnapshot): List<String> {
+        return snapshot.children.mapNotNull { result ->
+            result.getValue(ChatReference::class.java)?.friendId
+        }
     }
 
     private suspend fun createChatReferenceForEachUser(

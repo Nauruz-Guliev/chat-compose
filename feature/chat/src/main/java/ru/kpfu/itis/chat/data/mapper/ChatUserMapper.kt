@@ -5,7 +5,7 @@ import ru.kpfu.itis.core_data.ChatUser
 
 fun ChatUser.mapToModel(): ChatFriendModel {
     return ChatFriendModel(
-        id = this.id,
+        id = id,
         name = name,
         profileImage = this.profileImage
     )

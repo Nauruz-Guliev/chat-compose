@@ -22,7 +22,9 @@ class UserService @Inject constructor(
         if (uid == null) return null
         val task = databaseReference.child(uid).child(PROFILE_PATH).get()
         awaitTask(task)
-        return task.result.getValue(ChatUser::class.java)
+        return task.result.getValue(ChatUser::class.java)?.apply {
+            id = uid
+        }
     }
 
     fun updateUser(chatUser: ChatUser, userUid: String?): Boolean {

@@ -9,7 +9,7 @@ class GetMessages @Inject constructor(
     private val repository: ChatRepository
 ) {
 
-    suspend operator fun invoke(chatId: String): Flow<List<ChatMessageModel>> {
+    operator fun invoke(chatId: String): Flow<List<ChatMessageModel>> {
         return repository.loadChat(chatId)
     }
 }
