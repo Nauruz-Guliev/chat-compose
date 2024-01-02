@@ -1,10 +1,9 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidLibrary)
     id(libs.plugins.kotlin.android.get().pluginId)
-    id("kotlin-parcelize")
+    id(libs.plugins.dagger.hilt.get().pluginId)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
 }
 apply {
     from("${rootProject.projectDir}/gradle/shared_build.gradle")
@@ -31,35 +30,33 @@ dependencies {
     implementation(libs.material3)
     // orbit
     implementation(libs.bundles.orbit)
-    // hilt
-    implementation(libs.hilt.android)
-    implementation(libs.firebase.database.ktx)
     implementation(libs.appcompat)
-
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-
+    implementation(libs.androidx.constraintlayout)
+    // hilt
     kapt(libs.hilt.android.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     // kotest
     testImplementation(libs.bundles.kotest)
     // mockk
     testImplementation(libs.mockk)
     //firebase
     implementation(platform(libs.firebaseBom))
+    implementation(libs.firebase.database.ktx)
     implementation(libs.firebaseAnalytics)
     implementation(libs.firebaseAuth)
     implementation(libs.google.services)
-    implementation(libs.modo.compose)
     implementation(libs.androidx.navigation.compose)
     //coil
     implementation(libs.coil)
-
-    //room
+    // constraint
+    implementation(libs.androidx.constraintlayout.compose)
+    // room
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
-
+    // projects
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
     implementation(project(":core-testing"))

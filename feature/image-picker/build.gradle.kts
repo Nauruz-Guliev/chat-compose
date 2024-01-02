@@ -2,9 +2,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-parcelize")
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.dagger.hilt.get().pluginId)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 apply {
@@ -44,20 +44,20 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.hilt.android)
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     // kotest
     testImplementation(libs.bundles.kotest)
+    // navigation
+    implementation(libs.androidx.navigation.compose)
     // mockk
     testImplementation(libs.mockk)
     // ktor
     implementation(libs.bundles.ktor)
-    implementation ("ch.qos.logback:logback-classic:1.2.3")
+    // logs (needed for ktor)
+    implementation("ch.qos.logback:logback-classic:1.2.3")
     // coil
     implementation(libs.coil)
-
-    implementation(libs.androidx.navigation.compose)
+    // projects
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
     implementation(project(":core-testing"))

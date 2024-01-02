@@ -1,12 +1,12 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidLibrary)
     id(libs.plugins.kotlin.android.get().pluginId)
-    id("kotlin-parcelize")
-    kotlin("kapt")
-    id("com.google.dagger.hilt.android")
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.dagger.hilt.get().pluginId)
     id("com.google.gms.google-services")
+    kotlin("kapt")
 }
+
 apply {
     from("${rootProject.projectDir}/gradle/shared_build.gradle")
 }
@@ -27,20 +27,16 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.compose.material.material)
     implementation(libs.firebaseAnalytics)
-    // kotest
-    testImplementation(libs.bundles.kotest)
     // mockk
     testImplementation(libs.mockk)
     implementation(libs.androidx.navigation.compose)
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-
+    // projects
     implementation(project(":core-ui"))
     implementation(project(":feature:authentication"))
     implementation(project(":feature:authentication-api"))
