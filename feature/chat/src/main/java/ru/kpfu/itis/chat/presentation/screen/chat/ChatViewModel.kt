@@ -10,8 +10,8 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 import ru.kpfu.itis.chat.domain.model.ChatMessageModel
+import ru.kpfu.itis.chat.domain.model.ChatUserModel
 import ru.kpfu.itis.chat.domain.usecase.GetCurrentUserId
 import ru.kpfu.itis.chat.domain.usecase.GetMessages
 import ru.kpfu.itis.chat.domain.usecase.GetSenderProfile
@@ -85,7 +85,7 @@ class ChatViewModel @Inject constructor(
         runCatching {
             sendMessage(
                 state.chatId, ChatMessageModel(
-                    sender = ChatFriendModel(id = state.currentUserId),
+                    sender = ChatUserModel(id = state.currentUserId),
                     message = message,
                     time = System.currentTimeMillis()
                 )

@@ -18,8 +18,8 @@ import ru.kpfu.itis.chat.data.local.mapper.mapToModel
 import ru.kpfu.itis.chat.data.remote.mapper.mapToDto
 import ru.kpfu.itis.chat.data.remote.mapper.mapToModel
 import ru.kpfu.itis.chat.data.remote.model.ChatMessageDto
-import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 import ru.kpfu.itis.chat.domain.model.ChatMessageModel
+import ru.kpfu.itis.chat.domain.model.ChatUserModel
 import ru.kpfu.itis.chat.domain.repository.ChatRepository
 import ru.kpfu.itis.chat_api.ChatReference
 import ru.kpfu.itis.core_data.UserService
@@ -92,7 +92,7 @@ class ChatRepositoryImpl @Inject constructor(
         return firebaseAuth.currentUser?.uid ?: throw UserNotAuthenticatedException()
     }
 
-    override suspend fun getSenderProfile(chatId: String): ChatFriendModel? =
+    override suspend fun getSenderProfile(chatId: String): ChatUserModel? =
         withContext(dispatcher) {
             val currentUserId = getCurrentUserId()
             val userTask = usersDatabase.child(currentUserId)

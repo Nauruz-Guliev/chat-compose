@@ -16,7 +16,7 @@ class ClearUserIdTest : BehaviorSpec({
     val repository = mockk<ProfileRepository>()
     val clearUserId = ClearUserId(repository)
 
-    Given("should call repository when clear used id called") {
+    Given("should call repository when clearUserId() called") {
         coJustRun { repository.clearUserId() }
         When {
             clearUserId.invoke()
@@ -28,7 +28,7 @@ class ClearUserIdTest : BehaviorSpec({
         }
     }
 
-    Given("should throw exception when clear used id called and repository throws exception") {
+    Given("should throw exception when clearUserId() called and repository throws exception") {
         val exception = Exception()
         coEvery { repository.clearUserId() } throws exception
         When {

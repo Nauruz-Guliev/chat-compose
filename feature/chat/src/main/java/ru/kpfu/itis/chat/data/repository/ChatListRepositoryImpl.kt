@@ -74,10 +74,6 @@ class ChatListRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun clearChatListValues() {
-        chatListDao.clearDatabase()
-    }
-
     override fun getChatUser(userId: String?): ChatUser? {
         if (userId == null) return null
         return userService.getUserById(userId)

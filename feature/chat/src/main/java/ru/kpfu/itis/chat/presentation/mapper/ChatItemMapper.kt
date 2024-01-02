@@ -6,7 +6,7 @@ import ru.kpfu.itis.core_ui.extension.convertLongToTime
 
 fun ChatListModel.mapToItem(): ChatItem {
     return ChatItem(
-        friend = this.friend,
+        friend = this.user,
         chatId = this.chatId,
         lastUpdated = this.lastUpdated.convertLongToTime()
     )

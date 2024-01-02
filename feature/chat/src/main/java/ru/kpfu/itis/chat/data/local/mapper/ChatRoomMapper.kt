@@ -5,7 +5,7 @@ import ru.kpfu.itis.chat.domain.model.ChatListModel
 
 fun ChatRoom.mapToModel(): ChatListModel {
     return ChatListModel(
-        friend = this.user.mapToModel(),
+        user = this.user.mapToModel(),
         chatId = this.chatListEntity.chatId,
         lastUpdated = this.chatListEntity.lastUpdated
     )
