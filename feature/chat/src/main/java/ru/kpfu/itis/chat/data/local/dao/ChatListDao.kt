@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import ru.kpfu.itis.chat.data.local.entity.ChatListEntity
+import ru.kpfu.itis.chat.data.local.entity.ChatListItemEntity
 import ru.kpfu.itis.chat.data.local.entity.ChatRoom
 import ru.kpfu.itis.chat.data.local.entity.ChatUserEntity
 
@@ -19,7 +19,7 @@ interface ChatListDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(vararg chat: ChatListEntity)
+    fun save(vararg chat: ChatListItemEntity)
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -8,5 +8,4 @@ interface ChatListRepository {
 
     fun loadChatList(): Flow<List<ChatListModel>>
     fun getChatUser(userId: String?): ChatUser?
-    suspend fun clearChatListValues()
 }

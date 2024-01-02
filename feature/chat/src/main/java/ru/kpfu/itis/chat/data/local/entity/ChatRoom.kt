@@ -9,5 +9,5 @@ data class ChatRoom(
         parentColumn = "userId",
         entityColumn = "senderId"
     )
-    val chatListEntity: ChatListEntity
+    val chatListEntity: ChatListItemEntity
 )
