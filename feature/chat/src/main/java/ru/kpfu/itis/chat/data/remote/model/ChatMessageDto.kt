@@ -1,4 +1,4 @@
-package ru.kpfu.itis.chat.data.model
+package ru.kpfu.itis.chat.data.remote.model
 
 
 data class ChatMessageDto(

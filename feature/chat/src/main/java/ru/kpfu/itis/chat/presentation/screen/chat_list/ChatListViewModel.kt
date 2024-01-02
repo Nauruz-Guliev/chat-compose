@@ -19,14 +19,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatListViewModel @Inject constructor(
     private val getChatList: GetChatList,
-    private val navController: NavHostController
+    private val navController: NavHostController,
 ) : BaseViewModel<ChatListViewState, ChatListSideEffect>() {
 
     override val container: Container<ChatListViewState, ChatListSideEffect> =
         container(ChatListViewState())
 
     init {
-        loadChats()
+        intent {
+            runReadWriteTask {
+                loadChats()
+            }
+        }
     }
 
     private fun loadChats() = intent {

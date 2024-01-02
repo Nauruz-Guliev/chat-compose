@@ -1,6 +1,6 @@
-package ru.kpfu.itis.chat.data.mapper
+package ru.kpfu.itis.chat.data.remote.mapper
 
-import ru.kpfu.itis.chat.data.model.ChatMessageDto
+import ru.kpfu.itis.chat.data.remote.model.ChatMessageDto
 import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 import ru.kpfu.itis.chat.domain.model.ChatMessageModel
 

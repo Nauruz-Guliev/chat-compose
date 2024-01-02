@@ -1,11 +1,11 @@
-package ru.kpfu.itis.chat.data.mapper
+package ru.kpfu.itis.chat.data.remote.mapper
 
 import ru.kpfu.itis.chat.domain.model.ChatFriendModel
 import ru.kpfu.itis.core_data.ChatUser
 
 fun ChatUser.mapToModel(): ChatFriendModel {
     return ChatFriendModel(
-        id = this.id,
+        id = id,
         name = name,
         profileImage = this.profileImage
     )

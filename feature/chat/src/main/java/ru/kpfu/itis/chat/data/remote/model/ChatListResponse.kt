@@ -1,4 +1,4 @@
-package ru.kpfu.itis.chat.data.model
+package ru.kpfu.itis.chat.data.remote.model
 
 import ru.kpfu.itis.core_data.ChatUser
 

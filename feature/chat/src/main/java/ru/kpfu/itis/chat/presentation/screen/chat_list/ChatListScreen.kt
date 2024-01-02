@@ -1,5 +1,6 @@
 package ru.kpfu.itis.chat.presentation.screen.chat_list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -84,14 +87,22 @@ private fun UserListItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            listModel.friend.profileImage?.let { url ->
+            if (listModel.friend.profileImage != null) {
                 AsyncImage(
                     contentScale = ContentScale.Crop,
-                    model = url,
+                    model = listModel.friend.profileImage,
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
                         .clip(RoundedCornerShape(30.dp))
+                )
+            } else {
+                Image(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(30.dp))
+                        .size(60.dp)
                 )
             }
             Column(
