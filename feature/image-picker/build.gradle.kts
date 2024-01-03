@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
@@ -39,14 +38,12 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-    // firebase
-
     // orbit
     implementation(libs.bundles.orbit)
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.androidx.hilt.navigation.compose)
     // kotest
     testImplementation(libs.bundles.kotest)
     // navigation
@@ -61,6 +58,5 @@ dependencies {
     implementation(libs.coil)
     // projects
     implementation(project(":core-ui"))
-    implementation(project(":core-data"))
     implementation(project(":core-testing"))
 }

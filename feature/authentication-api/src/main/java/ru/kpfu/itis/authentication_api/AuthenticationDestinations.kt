@@ -1,6 +1,6 @@
 package ru.kpfu.itis.authentication_api
 
 enum class AuthenticationDestinations {
-    SIGNIN,
-    SIGNUP
+    SIGNIN_SCREEN,
+    SIGNUP_SCREEN
 }

@@ -50,7 +50,7 @@ class SignInViewModel @Inject constructor(
     }
 
     fun navigateSignUp() = intent {
-        navController.navigateSavingBackStack(AuthenticationDestinations.SIGNUP.name)
+        navController.navigateSavingBackStack(AuthenticationDestinations.SIGNUP_SCREEN.name)
     }
 
     private fun validate(email: String, password: String) = intent {

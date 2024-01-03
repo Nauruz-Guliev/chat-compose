@@ -102,12 +102,12 @@ fun MainNavHost(
 
             navigation(
                 route = NavigationFeatures.AUTH.name,
-                startDestination = AuthenticationDestinations.SIGNIN.name
+                startDestination = AuthenticationDestinations.SIGNIN_SCREEN.name
             ) {
-                composable(AuthenticationDestinations.SIGNUP.name) {
+                composable(AuthenticationDestinations.SIGNUP_SCREEN.name) {
                     SignUpScreen()
                 }
-                composable(AuthenticationDestinations.SIGNIN.name) {
+                composable(AuthenticationDestinations.SIGNIN_SCREEN.name) {
                     SignInScreen()
                 }
             }
@@ -157,7 +157,7 @@ private fun checkBottomBarVisibility(
     isBottomBarVisibleCallback: (Boolean) -> Unit
 ) {
     when (destination?.route) {
-        NavigationFeatures.AUTH.name, AuthenticationDestinations.SIGNIN.name, AuthenticationDestinations.SIGNUP.name ->
+        NavigationFeatures.AUTH.name, AuthenticationDestinations.SIGNIN_SCREEN.name, AuthenticationDestinations.SIGNUP_SCREEN.name ->
             isBottomBarVisibleCallback(false)
 
         else ->

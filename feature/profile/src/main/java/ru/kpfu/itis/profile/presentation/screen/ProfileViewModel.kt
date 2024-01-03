@@ -119,6 +119,6 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun navigateSignInScreen() {
-        navController.navigateLosingBackStack(AuthenticationDestinations.SIGNIN.name)
+        navController.navigateLosingBackStack(AuthenticationDestinations.SIGNIN_SCREEN.name)
     }
 }

@@ -37,7 +37,7 @@ fun SignInScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<Throwable?>(null) }
+    var error by remember { mutableStateOf(Throwable()) }
     var showAlert by remember { mutableStateOf(false) }
 
     viewModel.collectSideEffect { sideEffect ->
@@ -116,8 +116,8 @@ fun SignInScreen(
                 showAlert = false
                 viewModel.resetState()
             },
-            title = (error ?: Exception())::class.simpleName.toString(),
-            description = error?.message ?: stringResource(id = CoreR.string.error_unknown),
+            title = error::class.simpleName,
+            description = error.message,
             showDialog = showAlert
         )
     }

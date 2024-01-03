@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -51,6 +52,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
+import ru.kpfu.itis.core.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,11 +61,16 @@ fun ChatScreen(
     chatId: String,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
+    var error by remember { mutableStateOf(Throwable()) }
+    var showAlert by remember { mutableStateOf(false) }
+
     viewModel.loadMessages(chatId)
+
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is ChatSideEffect.ExceptionHappened -> {
-
+                error = sideEffect.throwable
+                showAlert = true
             }
         }
     }
@@ -121,7 +129,6 @@ fun ChatScreen(
                         .fillMaxSize()
                 ) {
                     val (messages, chatBox) = createRefs()
-
                     val listState = rememberLazyListState()
 
                     LaunchedEffect(chatState.value.messages.size) {
@@ -147,6 +154,7 @@ fun ChatScreen(
                             ChatItem(item)
                         }
                     }
+
                     ChatBox(
                         viewModel::onSendClicked,
                         modifier = Modifier
@@ -158,6 +166,15 @@ fun ChatScreen(
                             }
                     )
                 }
+
+                ErrorAlertDialog(
+                    onDismissRequest = {
+                        showAlert = false
+                    },
+                    title = error::class.simpleName.toString(),
+                    description = error.message,
+                    showDialog = showAlert
+                )
             }
         }
     }
@@ -225,6 +242,7 @@ private fun ChatItem(model: ChatMessage) {
                     .align(Alignment.End)
             )
         }
+
     }
 }
 
@@ -250,7 +268,7 @@ private fun ChatBox(
             ),
             shape = RoundedCornerShape(24.dp),
             placeholder = {
-                Text(text = "Type something")
+                Text(text = stringResource(id = CoreR.string.type_something))
             }
         )
         IconButton(
@@ -267,7 +285,7 @@ private fun ChatBox(
         ) {
             Icon(
                 imageVector = Icons.Filled.Send,
-                contentDescription = "Send",
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)

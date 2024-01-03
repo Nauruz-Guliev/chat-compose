@@ -23,6 +23,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,12 +41,25 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core.R as CoreR
 
 @Composable
 fun ChatListScreen(
     viewModel: ChatListViewModel = hiltViewModel()
 ) {
+    var error by remember { mutableStateOf(Throwable()) }
+    var showAlert by remember { mutableStateOf(false) }
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is ChatListSideEffect.ExceptionHappened -> {
+                error = sideEffect.throwable
+            }
+        }
+    }
+
     viewModel.collectAsState().also { chatListState ->
         when (chatListState.value.screenState) {
             ChatListScreenState.LOADING -> {
@@ -87,6 +104,15 @@ fun ChatListScreen(
                 }
             }
         }
+
+        ErrorAlertDialog(
+            onDismissRequest = {
+                showAlert = false
+            },
+            title = error::class.simpleName.toString(),
+            description = error.message,
+            showDialog = showAlert
+        )
     }
 }
 
@@ -146,7 +172,7 @@ private fun UserListItem(
             ) {
                 Text(
                     fontSize = TextUnit(12f, TextUnitType.Sp),
-                    text = "Last Updated: ${listModel.lastUpdated}",
+                    text = stringResource(id = CoreR.string.unknown_user, listModel.lastUpdated),
                 )
             }
         }

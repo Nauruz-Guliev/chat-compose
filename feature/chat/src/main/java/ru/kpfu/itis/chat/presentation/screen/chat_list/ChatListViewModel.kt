@@ -27,9 +27,7 @@ class ChatListViewModel @Inject constructor(
 
     init {
         intent {
-            runReadWriteTask {
-                loadChats()
-            }
+            loadChats()
         }
     }
 
