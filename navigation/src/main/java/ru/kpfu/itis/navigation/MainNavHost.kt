@@ -59,43 +59,29 @@ fun MainNavHost(
                     backgroundColor = MaterialTheme.colorScheme.primary
                 ) {
                     items.forEach { screen ->
-                        if (isItemSelected(currentDestination?.route, screen)) {
-                            BottomNavigationItem(
-                                icon = {
-                                    Icon(
-                                        imageVector = screen.icon,
-                                        contentDescription = screen.route,
-                                        tint = MaterialTheme.colorScheme.onPrimary
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        color = MaterialTheme.colorScheme.onPrimary,
-                                        text = stringResource(screen.resourceId)
-                                    )
-                                },
-                                selected = true,
-                                onClick = { onBottomBarItemClicked(navController, screen) }
-                            )
+                        val isItemSelected = isItemSelected(currentDestination?.route, screen)
+                        val itemColor = if (isItemSelected) {
+                            MaterialTheme.colorScheme.onPrimary
                         } else {
-                            BottomNavigationItem(
-                                icon = {
-                                    Icon(
-                                        imageVector = screen.icon,
-                                        contentDescription = screen.route,
-                                        tint = md_theme_light_inverseSurface
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        color = md_theme_light_inverseSurface,
-                                        text = stringResource(screen.resourceId)
-                                    )
-                                },
-                                selected = false,
-                                onClick = { onBottomBarItemClicked(navController, screen) }
-                            )
+                            md_theme_light_inverseSurface
                         }
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(
+                                    imageVector = screen.icon,
+                                    contentDescription = screen.route,
+                                    tint = itemColor
+                                )
+                            },
+                            label = {
+                                Text(
+                                    color = itemColor,
+                                    text = stringResource(screen.resourceId)
+                                )
+                            },
+                            selected = isItemSelected,
+                            onClick = { onBottomBarItemClicked(navController, screen) }
+                        )
                     }
                 }
             }

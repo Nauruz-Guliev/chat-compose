@@ -6,7 +6,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
 import io.mockk.mockk
-import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.repository.AuthRepository
 import ru.kpfu.itis.authentication.domain.usecase.SignIn
 import ru.kpfu.itis.core_testing.Then
@@ -14,17 +13,17 @@ import ru.kpfu.itis.core_testing.When
 
 class SignInTest : BehaviorSpec( {
 
-    val repository = mockk<AuthRepository<User>>()
+    val repository = mockk<AuthRepository>()
     val signIn = SignIn(repository)
 
-    Given("should call repository when signIn method invoked") {
+    Given("should call repository when signIn()") {
         val expectedUser = user
-        coEvery { repository.signIn(EMAIL, PASSWORD) } returns expectedUser
+        coEvery { repository.signIn(expectedUser) } returns expectedUser
         When {
-            val result = signIn.invoke(EMAIL, PASSWORD)
+            val result = signIn.invoke(expectedUser)
             Then {
                 coVerifySequence {
-                    repository.signIn(EMAIL, PASSWORD)
+                    repository.signIn(expectedUser)
                     result shouldBe expectedUser
                 }
             }
@@ -33,10 +32,10 @@ class SignInTest : BehaviorSpec( {
 
     Given("should call repository and throw error") {
         val expectedException = Exception()
-        coEvery { repository.signIn(EMAIL, PASSWORD) } throws expectedException
+        coEvery { repository.signIn(user) } throws expectedException
         When {
             val exception = shouldThrow<Exception> {
-                repository.signIn(EMAIL, PASSWORD)
+                repository.signIn(user)
             }
             Then {
                 exception shouldBe expectedException

@@ -7,6 +7,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.usecase.SignUp
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat_api.ChatDestinations
@@ -15,7 +16,6 @@ import ru.kpfu.itis.core_ui.validation.EmailValidator
 import ru.kpfu.itis.core_ui.validation.NameValidator
 import ru.kpfu.itis.core_ui.validation.PasswordRepeatValidator
 import ru.kpfu.itis.core_ui.validation.PasswordValidator
-import ru.kpfu.itis.core_ui.validation.ValidationResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,16 +34,18 @@ class SignUpViewModel @Inject constructor(
     fun signUp(name: String, email: String, password: String, passwordRepeat: String) = intent {
         postSideEffect(SignUpSideEffect.ShowLoading)
         validate(name, email, password, passwordRepeat)
-        if (state.emailValidationResult is ValidationResult.Success &&
-            state.nameValidationResult is ValidationResult.Success &&
-            state.passwordValidationResult is ValidationResult.Success &&
-            state.passwordRepeatValidationResult is ValidationResult.Success
-        ) {
-            try {
-                signUp.invoke(name, email, password)
+        if (isValidationSuccessful(state)) {
+            runCatching {
+                val user = User(
+                    name = name,
+                    password = password,
+                    email = email
+                )
+                signUp(user)
+            }.onSuccess {
                 navigateMainScreen()
-            } catch (ex: Exception) {
-                postSideEffect(SignUpSideEffect.ExceptionHappened(ex))
+            }.onFailure { exception ->
+                postSideEffect(SignUpSideEffect.ExceptionHappened(exception))
             }
         } else {
             postSideEffect(SignUpSideEffect.ValidationFailure)
@@ -61,7 +63,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun navigateSignIn() {
+    fun navigateSignIn() = intent {
         navController.navigateSavingBackStack(AuthenticationDestinations.SIGNIN.name)
     }
 
@@ -74,7 +76,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun navigateMainScreen() {
+    private fun navigateMainScreen() = intent {
         navController.navigateLosingBackStack(ChatDestinations.CHAT_LIST_SCREEN.name)
     }
 }

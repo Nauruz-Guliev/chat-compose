@@ -12,8 +12,8 @@ class UserService @Inject constructor(
     private val databaseReference: DatabaseReference
 ) {
 
-    suspend fun saveUser(user: ChatUser, uid: String): Boolean {
-        return databaseReference.child(uid).child(PROFILE_PATH).setValue(user).also {
+    suspend fun saveUser(user: ChatUser): Boolean {
+        return databaseReference.child(user.id).child(PROFILE_PATH).setValue(user).also {
             it.await()
         }.isSuccessful
     }
@@ -27,12 +27,10 @@ class UserService @Inject constructor(
         }
     }
 
-    fun updateUser(chatUser: ChatUser, userUid: String?): Boolean {
-        return userUid?.let {
-            val user = databaseReference.child(it).child(PROFILE_PATH)
-            val userUpdateTask = user.setValue(chatUser)
-            awaitTask(userUpdateTask)
-            userUpdateTask.isSuccessful
-        } ?: false
+    fun updateUser(chatUser: ChatUser): Boolean {
+        val user = databaseReference.child(chatUser.id).child(PROFILE_PATH)
+        val userUpdateTask = user.setValue(chatUser)
+        awaitTask(userUpdateTask)
+        return userUpdateTask.isSuccessful
     }
 }

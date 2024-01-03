@@ -41,9 +41,9 @@ class ProfileRepositoryImpl @Inject constructor(
                 ChatUser(
                     name = model.name,
                     email = model.email,
-                    profileImage = model.profileImage
-                ),
-                firebaseAuth.currentUser?.uid
+                    profileImage = model.profileImage,
+                    id = uid
+                )
             )
         }
     }

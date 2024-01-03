@@ -1,15 +1,13 @@
 package ru.kpfu.itis.authentication.presentation.screen.signin
 
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.usecase.SignIn
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat_api.ChatDestinations
@@ -32,11 +30,13 @@ class SignInViewModel @Inject constructor(
     fun signIn(email: String, password: String) = intent {
         postSideEffect(SignInSideEffect.ShowLoading)
         validate(email, password)
-        try {
-            signIn.invoke(email, password)
+        runCatching {
+            val user = User(email = email, password = password)
+            signIn.invoke(user)
+        }.onSuccess {
             navigateToMainScreen()
-        } catch (ex: Exception) {
-            postSideEffect(SignInSideEffect.ExceptionHappened(ex))
+        }.onFailure { exception ->
+            postSideEffect(SignInSideEffect.ExceptionHappened(exception))
         }
     }
 
@@ -49,8 +49,8 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun navigateSignUp() {
-        navController.navigate(AuthenticationDestinations.SIGNUP.name)
+    fun navigateSignUp() = intent {
+        navController.navigateSavingBackStack(AuthenticationDestinations.SIGNUP.name)
     }
 
     private fun validate(email: String, password: String) = intent {
@@ -62,11 +62,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun navigateToMainScreen() {
-        viewModelScope.launch(Dispatchers.Main) {
-            navController.navigate(ChatDestinations.CHAT_LIST_SCREEN.name) {
-                popUpTo(0)
-            }
-        }
+    private fun navigateToMainScreen() = intent {
+        navController.navigateLosingBackStack(ChatDestinations.CHAT_LIST_SCREEN.name)
     }
 }

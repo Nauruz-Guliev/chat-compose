@@ -85,7 +85,7 @@ fun ImagePickerDialog(
 
                     HeaderText(
                         text = "Search for a profile image",
-                        fontSize = 20,
+                        fontSize = 20.sp,
                         modifier = Modifier.padding(PaddingValues(vertical = 20.dp))
                     )
 

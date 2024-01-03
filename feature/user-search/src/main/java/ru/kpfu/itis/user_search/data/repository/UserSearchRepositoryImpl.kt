@@ -45,7 +45,7 @@ class UserSearchRepositoryImpl @Inject constructor(
             .mapNotNull { dataSnapshot ->
                 dataSnapshot.child(PROFILE_PATH_KEY)
                     .getValue(ChatUser::class.java)?.apply {
-                        id = dataSnapshot.key
+                        id = dataSnapshot.key ?: "UNKNOWN_ID"
                     }
             }
             .filter { it.id != currentUserId }

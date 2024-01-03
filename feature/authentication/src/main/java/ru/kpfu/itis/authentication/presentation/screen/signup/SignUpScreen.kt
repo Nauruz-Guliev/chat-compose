@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,43 +33,50 @@ import ru.kpfu.itis.core.R as CoreR
 fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    var showSignUpButton by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordRepeat by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<Throwable?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
-    HandleSideEffects(
-        viewModel = viewModel,
-        isLoading = { isLoading = it },
-        resetFieldsAction = {
-            name = ""
-            email = ""
-            passwordRepeat = ""
-            password = ""
-            viewModel.resetState()
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is SignUpSideEffect.ExceptionHappened -> {
+                isLoading = false
+                error = sideEffect.throwable
+                showDialog = true
+            }
+
+            is SignUpSideEffect.ShowLoading -> {
+                isLoading = true
+            }
+
+            is SignUpSideEffect.ValidationFailure -> {
+                isLoading = false
+            }
         }
-    )
+    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    viewModel.collectAsState().also { signUpState ->
 
-        HeaderText(CoreR.string.create_account)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        viewModel.collectAsState().apply {
+            HeaderText(CoreR.string.create_account)
 
             TextFieldWithErrorState(
                 value = name,
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = { name = it },
                 labelValue = stringResource(id = CoreR.string.name),
-                validationResult = this.value.nameValidationResult
+                validationResult = signUpState.value.nameValidationResult
             )
 
             TextFieldWithErrorState(
@@ -78,7 +84,7 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = { email = it },
                 labelValue = stringResource(id = CoreR.string.email),
-                validationResult = this.value.emailValidationResult
+                validationResult = signUpState.value.emailValidationResult
             )
 
             TextFieldWithErrorState(
@@ -86,7 +92,7 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = { password = it },
                 labelValue = stringResource(id = CoreR.string.password),
-                validationResult = this.value.passwordValidationResult,
+                validationResult = signUpState.value.passwordValidationResult,
                 isPassword = true
             )
 
@@ -95,65 +101,33 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = { passwordRepeat = it },
                 labelValue = stringResource(id = CoreR.string.password_repeat),
-                validationResult = this.value.passwordRepeatValidationResult,
+                validationResult = signUpState.value.passwordRepeatValidationResult,
                 isPassword = true
             )
-        }
 
-        Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-        ProgressButton(
-            text = stringResource(id = CoreR.string.signup),
-            isLoading = isLoading
-        ) {
-            viewModel.signUp(name, email, password, passwordRepeat)
-        }
-
-        TextButton(
-            modifier = Modifier.padding(top = 16.dp),
-            onClick = {
-                viewModel.navigateSignIn()
+            ProgressButton(
+                text = stringResource(id = CoreR.string.signup),
+                isLoading = isLoading
+            ) {
+                viewModel.signUp(name, email, password, passwordRepeat)
             }
-        ) {
-            Text(text = stringResource(id = CoreR.string.message_sign_in))
-        }
 
-        LaunchedEffect(Unit) {
-            showSignUpButton = true
-        }
-    }
-}
-
-@Composable
-fun HandleSideEffects(
-    viewModel: SignUpViewModel,
-    isLoading: (Boolean) -> Unit,
-    resetFieldsAction: () -> Unit
-) {
-    var showDialog by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<Throwable?>(null) }
-
-    viewModel.collectSideEffect { sideEffect ->
-        when (sideEffect) {
-            is SignUpSideEffect.ExceptionHappened -> {
-                isLoading(false)
-                error = sideEffect.throwable
-                showDialog = true
-            }
-            is SignUpSideEffect.ShowLoading -> {
-                isLoading(true)
-            }
-            is SignUpSideEffect.ValidationFailure -> {
-                isLoading(false)
+            TextButton(
+                modifier = Modifier.padding(top = 16.dp),
+                onClick = {
+                    viewModel.navigateSignIn()
+                }
+            ) {
+                Text(text = stringResource(id = CoreR.string.message_sign_in))
             }
         }
-    }
 
-    if (showDialog) {
         ErrorAlertDialog(
             onDismissRequest = {
                 showDialog = false
-                resetFieldsAction()
+                viewModel.resetState()
             },
             title = (error ?: Exception())::class.simpleName.toString(),
             description = error?.message ?: stringResource(id = CoreR.string.error_unknown),
