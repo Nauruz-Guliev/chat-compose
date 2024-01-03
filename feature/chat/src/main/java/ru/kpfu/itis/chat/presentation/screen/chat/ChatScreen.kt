@@ -202,7 +202,10 @@ private fun ChatItem(model: ChatMessage) {
                     .background(color = MaterialTheme.colorScheme.primary)
                     .padding(16.dp)
             ) {
-                Text(text = model.message ?: "")
+                Text(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    text = model.message ?: ""
+                )
             }
             Text(
                 text = model.time,
@@ -233,7 +236,10 @@ private fun ChatItem(model: ChatMessage) {
                     )
                     .padding(16.dp)
             ) {
-                Text(text = model.message ?: "")
+                Text(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    text = model.message ?: ""
+                )
             }
             Text(
                 text = model.time,

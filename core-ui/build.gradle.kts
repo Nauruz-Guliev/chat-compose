@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.accompanist.systemuicontroller)
     // orbit
     implementation(libs.bundles.orbit)
     // hilt

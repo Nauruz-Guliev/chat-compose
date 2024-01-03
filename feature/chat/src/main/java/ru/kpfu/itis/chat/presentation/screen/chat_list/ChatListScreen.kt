@@ -172,7 +172,7 @@ private fun UserListItem(
             ) {
                 Text(
                     fontSize = TextUnit(12f, TextUnitType.Sp),
-                    text = stringResource(id = CoreR.string.unknown_user, listModel.lastUpdated),
+                    text = stringResource(id = CoreR.string.last_updated, listModel.lastUpdated),
                 )
             }
         }

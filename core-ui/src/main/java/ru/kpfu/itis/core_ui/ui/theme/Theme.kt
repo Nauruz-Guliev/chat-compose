@@ -5,6 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -76,9 +78,17 @@ fun ChatcomposeTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+
     val colors = if (!useDarkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = md_theme_dark_onBackground
+        )
         LightColors
     } else {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent
+        )
         DarkColors
     }
 

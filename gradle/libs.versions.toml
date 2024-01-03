@@ -1,4 +1,5 @@
 [versions]
+accompanistSystemuicontroller = "0.27.0"
 agp = "8.2.0"
 androidx-compose-material-material = "1.5.4"
 datastorePreferences = "1.0.0"
@@ -34,6 +35,7 @@ firebase-perf = "20.5.1"
 [libraries]
 
 # ui
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-compose-material-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose-material-material" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

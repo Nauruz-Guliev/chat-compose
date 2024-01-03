@@ -38,27 +38,20 @@ fun SignInScreen(
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf(Throwable()) }
-    var showAlert by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is SignInSideEffect.ExceptionHappened -> {
-                isLoading = true
-                error = sideEffect.throwable
-                showAlert = true
-            }
-
-            is SignInSideEffect.ShowLoading -> {
-                isLoading = true
-            }
-
-            is SignInSideEffect.ValidationFailure -> {
                 isLoading = false
+                error = sideEffect.throwable
+                showDialog = true
             }
         }
     }
 
     viewModel.collectAsState().also { signInState ->
+        isLoading = signInState.value.isLoading
 
         Box(
             modifier = Modifier
@@ -113,12 +106,12 @@ fun SignInScreen(
 
         ErrorAlertDialog(
             onDismissRequest = {
-                showAlert = false
+                showDialog = false
                 viewModel.resetState()
             },
             title = error::class.simpleName,
-            description = error.message,
-            showDialog = showAlert
+            description = error.cause?.message,
+            showDialog = showDialog
         )
     }
 }

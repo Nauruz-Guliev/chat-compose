@@ -38,7 +38,7 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var passwordRepeat by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<Throwable?>(null) }
+    var error by remember { mutableStateOf(Throwable()) }
     var showDialog by remember { mutableStateOf(false) }
 
     viewModel.collectSideEffect { sideEffect ->
@@ -48,18 +48,11 @@ fun SignUpScreen(
                 error = sideEffect.throwable
                 showDialog = true
             }
-
-            is SignUpSideEffect.ShowLoading -> {
-                isLoading = true
-            }
-
-            is SignUpSideEffect.ValidationFailure -> {
-                isLoading = false
-            }
         }
     }
 
     viewModel.collectAsState().also { signUpState ->
+        isLoading = signUpState.value.isLoading
 
         Column(
             modifier = Modifier
@@ -129,8 +122,8 @@ fun SignUpScreen(
                 showDialog = false
                 viewModel.resetState()
             },
-            title = (error ?: Exception())::class.simpleName.toString(),
-            description = error?.message ?: stringResource(id = CoreR.string.error_unknown),
+            title = error::class.simpleName.toString(),
+            description = error.cause?.message,
             showDialog = showDialog
         )
     }

@@ -176,9 +176,9 @@ fun UserItem(
             ) {
                 Text(
                     text = if (model.isInFriendList) {
-                        stringResource(id = CoreR.string.add_to_chats)
-                    } else {
                         stringResource(id = CoreR.string.user_added)
+                    } else {
+                        stringResource(id = CoreR.string.add_to_chats)
                     },
                     textAlign = TextAlign.Center
                 )

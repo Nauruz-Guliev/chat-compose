@@ -51,7 +51,7 @@ class ChatRepositoryImpl @Inject constructor(
                     val senderId = messageEntity.sender?.userId
                     val sender = userService.getUserById(senderId)?.mapToModel()
                     messageEntity.mapToModel(sender)
-                }
+                }.sortedBy { it.time }
             }
         val remoteFlow = handleRemoteChanges(chatId)
         return combine(localFlow, remoteFlow) { l, _ -> l }
