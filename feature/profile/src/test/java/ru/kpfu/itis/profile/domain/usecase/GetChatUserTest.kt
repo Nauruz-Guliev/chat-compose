@@ -1,6 +1,7 @@
 package ru.kpfu.itis.profile.domain.usecase
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -11,6 +12,7 @@ import ru.kpfu.itis.core_testing.When
 import ru.kpfu.itis.profile.domain.repository.ProfileRepository
 
 class GetChatUserTest : BehaviorSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
 
     val repository = mockk<ProfileRepository>()
     val getChatUser = GetChatUser(repository)
@@ -33,9 +35,12 @@ class GetChatUserTest : BehaviorSpec({
         coEvery { repository.getUser() } throws exception
         When {
             val actualException = shouldThrow<Exception> {
-                getChatUser.invoke()
+                getChatUser()
             }
             Then {
+                coVerifySequence {
+                    repository.getUser()
+                }
                 actualException shouldBe exception
             }
         }

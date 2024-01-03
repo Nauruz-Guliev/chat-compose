@@ -1,8 +1,11 @@
 package ru.kpfu.itis.authentication.domain.repository
 
-interface AuthRepository<User> {
+import ru.kpfu.itis.authentication.domain.model.User
+
+interface AuthRepository {
     val currentUser: Any?
-    suspend fun signIn(email: String, password: String): User
-    suspend fun signUp(name: String, email: String, password: String): User
+
+    suspend fun signIn(user: User): User
+    suspend fun signUp(user: User): User
     suspend fun logout()
 }

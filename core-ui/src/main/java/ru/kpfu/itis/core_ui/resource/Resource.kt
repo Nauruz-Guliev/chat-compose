@@ -9,9 +9,6 @@ import androidx.compose.ui.res.stringResource
 sealed class Resource(
     @AnyRes open val id: Int
 ) {
-    /**
-     * Утилитный класс для хранения, получения и передачи строк.
-     */
     class String(
         @StringRes override var id: Int,
         private vararg val arg: Int

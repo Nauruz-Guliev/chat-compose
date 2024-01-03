@@ -12,6 +12,7 @@ import ru.kpfu.itis.core_ui.base.BaseViewModel
 import ru.kpfu.itis.core_ui.validation.EmailValidator
 import ru.kpfu.itis.core_ui.validation.NameValidator
 import ru.kpfu.itis.profile.domain.model.UpdateProfileModel
+import ru.kpfu.itis.profile.domain.usecase.ClearCachedData
 import ru.kpfu.itis.profile.domain.usecase.ClearUserId
 import ru.kpfu.itis.profile.domain.usecase.GetChatUser
 import ru.kpfu.itis.profile.domain.usecase.SignOut
@@ -26,7 +27,8 @@ class ProfileViewModel @Inject constructor(
     private val getChatUser: GetChatUser,
     private val updateUser: UpdateUser,
     private val clearUserId: ClearUserId,
-    private val signOut: SignOut
+    private val signOut: SignOut,
+    private val clearCachedData: ClearCachedData
 ) : BaseViewModel<ProfileState, ProfileSideEffect>() {
 
     override val container: Container<ProfileState, ProfileSideEffect> = container(ProfileState())
@@ -53,31 +55,23 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateProfile(
-        name: String,
-        email: String,
-    ) = intent {
+    fun updateProfile(name: String, email: String) = intent {
         validate(name, email)
         if (isValidationSuccessful(state)) {
             runCatching {
-                updateUser(
-                    UpdateProfileModel(
-                        name = name,
-                        email = email,
-                        profileImage = state.pickedProfileImage ?: state.user?.profileImage
-                    )
+                val updateProfileModel = UpdateProfileModel(
+                    name = name,
+                    email = email,
+                    profileImage = state.pickedProfileImage ?: state.user?.profileImage
                 )
+                updateUser(updateProfileModel)
             }.onFailure { exception ->
                 postSideEffect(ProfileSideEffect.ExceptionHappened(exception))
             }.onSuccess {
                 loadUser()
             }
         } else {
-            reduce {
-                state.copy(
-                    isValidationSuccessful = false
-                )
-            }
+            reduce { state.copy(isValidationSuccessful = false) }
         }
     }
 
@@ -102,10 +96,15 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun exitProfile() = intent {
-        signOut()
-        resetState()
-        clearUserId()
-        navigateSignInScreen()
+        runCatching {
+            signOut()
+            clearUserId()
+            resetState()
+            clearCachedData()
+            navigateSignInScreen()
+        }.onFailure { exception ->
+            postSideEffect(ProfileSideEffect.ExceptionHappened(exception))
+        }
     }
 
     private fun resetState() = intent {
@@ -120,6 +119,6 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun navigateSignInScreen() {
-        navController.navigateLosingBackStack(AuthenticationDestinations.SIGNIN.name)
+        navController.navigateLosingBackStack(AuthenticationDestinations.SIGNIN_SCREEN.name)
     }
 }

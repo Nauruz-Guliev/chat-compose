@@ -6,9 +6,6 @@ import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
-import ru.kpfu.itis.chat_api.ChatDestinations
-import ru.kpfu.itis.profile_api.ProfileDestinations
-import ru.kpfu.itis.user_search_api.UserSearchDestinations
 import ru.kpfu.itis.core.R as CoreR
 
 sealed class MainScreen(
@@ -18,22 +15,28 @@ sealed class MainScreen(
 ) {
 
     data object Chat : MainScreen(
-        ChatDestinations.CHAT_LIST_SCREEN.name,
+        BottomBarDestinations.CHAT_ITEM.name,
         CoreR.string.chat,
         Icons.Filled.MailOutline
     )
 
     data object Search : MainScreen(
-        UserSearchDestinations.SEARCH_SCREEN.name,
+        BottomBarDestinations.SEARCH_ITEM.name,
         CoreR.string.search,
         Icons.Filled.Search
     )
 
     data object Profile : MainScreen(
-        ProfileDestinations.PROFILE_SCREEN.name,
+        BottomBarDestinations.PROFILE_ITEM.name,
         CoreR.string.profile,
         Icons.Filled.Person
     )
+}
+
+enum class BottomBarDestinations {
+    CHAT_ITEM,
+    SEARCH_ITEM,
+    PROFILE_ITEM,
 }
 
 val items = listOf(

@@ -6,7 +6,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -22,6 +21,7 @@ import ru.kpfu.itis.chat.domain.model.ChatMessageModel
 import ru.kpfu.itis.chat.domain.model.ChatUserModel
 import ru.kpfu.itis.chat.domain.repository.ChatRepository
 import ru.kpfu.itis.chat_api.ChatReference
+import ru.kpfu.itis.chat_api.ClearChatMessagesAction
 import ru.kpfu.itis.core_data.UserService
 import ru.kpfu.itis.core_data.addListenerAsFlow
 import ru.kpfu.itis.core_data.awaitTask
@@ -42,7 +42,7 @@ class ChatRepositoryImpl @Inject constructor(
     private val chatDao: ChatMessagesDao,
     @IoDispatcher
     private val dispatcher: CoroutineDispatcher
-) : ChatRepository {
+) : ChatRepository, ClearChatMessagesAction {
 
     override fun loadChat(chatId: String): Flow<List<ChatMessageModel>> {
         val localFlow = chatDao.getCachedMessages(chatId)
@@ -59,13 +59,12 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     private fun handleRemoteChanges(chatId: String): Flow<Unit> {
-        return callbackFlow {
-            chatsDatabase.child(chatId)
-                .child(MESSAGES_PATH)
-                .addListenerAsFlow(this)
-        }.map { snapshot ->
-            saveRemoteChanges(snapshot, chatId)
-        }
+        return chatsDatabase.child(chatId)
+            .child(MESSAGES_PATH)
+            .addListenerAsFlow()
+            .map { snapshot ->
+                saveRemoteChanges(snapshot, chatId)
+            }
     }
 
     private fun saveRemoteChanges(dataSnapshot: DataSnapshot, chatId: String) {
@@ -103,4 +102,8 @@ class ChatRepositoryImpl @Inject constructor(
             val chatReference = userTask.result.getValue(ChatReference::class.java)
             userService.getUserById(chatReference?.friendId)?.mapToModel()
         }
+
+    override suspend fun clearChatMessages() {
+        chatDao.clearAllMessages()
+    }
 }

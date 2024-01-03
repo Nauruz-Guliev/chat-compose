@@ -1,9 +1,8 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
+    id(libs.plugins.dagger.hilt.get().pluginId)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -24,36 +23,24 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.material)
     implementation(libs.firebase.database.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-
     //firebase
     implementation(platform(libs.firebaseBom))
-    implementation(libs.firebaseAnalytics)
     implementation(libs.firebaseAuth)
     implementation(libs.google.services)
-    implementation(libs.modo.compose)
-    implementation(libs.androidx.navigation.compose)
-
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-
+    // datastore
     implementation(libs.androidx.datastore.preferences)
-
 }

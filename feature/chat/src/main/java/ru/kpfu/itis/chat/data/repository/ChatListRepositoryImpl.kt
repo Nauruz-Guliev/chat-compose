@@ -6,7 +6,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -18,6 +17,7 @@ import ru.kpfu.itis.chat.data.local.mapper.mapToModel
 import ru.kpfu.itis.chat.domain.model.ChatListModel
 import ru.kpfu.itis.chat.domain.repository.ChatListRepository
 import ru.kpfu.itis.chat_api.ChatReference
+import ru.kpfu.itis.chat_api.ClearChatListAction
 import ru.kpfu.itis.core_data.ChatUser
 import ru.kpfu.itis.core_data.UserService
 import ru.kpfu.itis.core_data.addListenerAsFlow
@@ -33,7 +33,7 @@ class ChatListRepositoryImpl @Inject constructor(
     @IoDispatcher
     private val dispatcher: CoroutineDispatcher,
     private val chatListDao: ChatListDao
-) : ChatListRepository {
+) : ChatListRepository, ClearChatListAction {
 
     override fun loadChatList(): Flow<List<ChatListModel>> {
         val remoteFlow = handleRemoteChanges()
@@ -45,13 +45,12 @@ class ChatListRepositoryImpl @Inject constructor(
 
     private fun handleRemoteChanges(): Flow<Unit> {
         val currentUserId = firebaseAuth.currentUser?.uid ?: throw UserNotAuthenticatedException()
-        return callbackFlow {
-            databaseReference.child(currentUserId)
-                .child("chats")
-                .addListenerAsFlow(this)
-        }.map { dataSnapshot ->
-            saveRemoteChanges(dataSnapshot)
-        }
+        return databaseReference.child(currentUserId)
+            .child("chats")
+            .addListenerAsFlow()
+            .map { dataSnapshot ->
+                saveRemoteChanges(dataSnapshot)
+            }
     }
 
     private fun saveRemoteChanges(dataSnapshot: DataSnapshot) {
@@ -77,5 +76,9 @@ class ChatListRepositoryImpl @Inject constructor(
     override fun getChatUser(userId: String?): ChatUser? {
         if (userId == null) return null
         return userService.getUserById(userId)
+    }
+
+    override suspend fun clearChatList() {
+        chatListDao.clearDatabase()
     }
 }

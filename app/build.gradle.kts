@@ -1,12 +1,10 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.kotlin.android)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.dagger.hilt.get().pluginId)
+    id(libs.plugins.google.services.get().pluginId)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
-    id("kotlin-parcelize")
-    id("com.google.firebase.firebase-perf")
 }
 
 android {
@@ -65,27 +63,19 @@ kapt {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-    implementation(libs.play.services.measurement.api)
-    implementation(libs.firebase.perf)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
     implementation(libs.kotlin.reflect)
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    // firebase
-    implementation(libs.modo.compose)
+    // google
+    implementation(libs.play.services.measurement.api)
     implementation(libs.androidx.navigation.compose)
-
+    // projects
     implementation(project(":feature:authentication"))
     implementation(project(":core-data"))
     implementation(project(":core-ui"))

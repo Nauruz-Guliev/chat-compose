@@ -7,6 +7,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.core_ui.base.BaseViewModel
+import ru.kpfu.itis.image_picker.domain.model.ImageUrlModel
 import ru.kpfu.itis.image_picker.domain.usecase.LoadImage
 import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
 import ru.kpfu.itis.image_picker.presentation.screen.mapToListModel
@@ -22,24 +23,33 @@ class ImagePickerViewModel @Inject constructor(
 
     fun searchForAnImage(query: String) = intent {
         if (query.isBlank()) return@intent
-        postSideEffect(ImagePickerSideEffect.ShowLoading)
+        toggleLoadingState()
         runCatching {
             loadImage.invoke(query)
         }.onFailure { exception ->
             postSideEffect(ImagePickerSideEffect.ExceptionHappened(exception))
         }.onSuccess { imageList ->
-            reduce {
-                if (imageList.isNotEmpty()) {
-                    state.copy(
-                        imageList = imageList.mapToListModel(),
-                        isImageFound = true
-                    )
-                } else {
-                    state.copy(
-                        isImageFound = false,
-                        searchedQuery = query
-                    )
-                }
+            toggleLoadingState()
+            handleImageLoadResult(imageList, query)
+        }
+    }
+
+    private fun toggleLoadingState() = intent {
+        reduce { state.copy(isResultLoading = !state.isResultLoading) }
+    }
+
+    private fun handleImageLoadResult(imageList: List<ImageUrlModel>, query: String) = intent {
+        reduce {
+            if (imageList.isNotEmpty()) {
+                state.copy(
+                    imageList = imageList.mapToListModel(),
+                    isImageFound = true
+                )
+            } else {
+                state.copy(
+                    isImageFound = false,
+                    searchedQuery = query
+                )
             }
         }
     }
@@ -50,7 +60,8 @@ class ImagePickerViewModel @Inject constructor(
                 imageList = emptyList(),
                 selectedImage = null,
                 isImageFound = true,
-                searchedQuery = ""
+                searchedQuery = "",
+                isResultLoading = false
             )
         }
     }

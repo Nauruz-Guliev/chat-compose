@@ -1,6 +1,7 @@
 package ru.kpfu.itis.profile.domain.usecase
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -12,6 +13,7 @@ import ru.kpfu.itis.core_testing.When
 import ru.kpfu.itis.profile.domain.repository.ProfileRepository
 
 class ClearUserIdTest : BehaviorSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
 
     val repository = mockk<ProfileRepository>()
     val clearUserId = ClearUserId(repository)
@@ -36,6 +38,9 @@ class ClearUserIdTest : BehaviorSpec({
                 clearUserId.invoke()
             }
             Then {
+                coVerifySequence {
+                    repository.clearUserId()
+                }
                 actualException shouldBe exception
             }
         }

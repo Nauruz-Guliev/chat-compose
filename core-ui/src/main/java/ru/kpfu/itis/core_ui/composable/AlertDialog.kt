@@ -132,8 +132,8 @@ fun AnimatedDialog(
 @Composable
 fun ErrorAlertDialog(
     onDismissRequest: () -> Unit,
-    title: String,
-    description: String,
+    title: String?,
+    description: String?,
     showDialog: Boolean
 ) {
     AnimatedDialog(
@@ -184,13 +184,13 @@ fun ErrorAlertDialog(
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = title,
+                    text = (title ?: Exception::class.simpleName.toString()),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = description,
+                    text = description ?: stringResource(id = R.string.error_unknown),
                 )
             }
             Column(

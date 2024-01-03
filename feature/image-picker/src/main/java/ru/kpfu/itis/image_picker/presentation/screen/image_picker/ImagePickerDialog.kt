@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +44,7 @@ import ru.kpfu.itis.core_ui.composable.ErrorText
 import ru.kpfu.itis.core_ui.composable.HeaderText
 import ru.kpfu.itis.core_ui.extension.useDebounce
 import ru.kpfu.itis.image_picker.presentation.screen.ImageUrlListModel
+import ru.kpfu.itis.core.R as CoreR
 
 private const val TEXT_FIELD_DEBOUNCE_TIME_MILLIS = 800L
 
@@ -53,13 +56,19 @@ fun ImagePickerDialog(
     viewModel: ImagePickerViewModel = hiltViewModel()
 ) {
     var imageQuery by rememberSaveable { mutableStateOf("") }
+    var errorText by rememberSaveable { mutableStateOf<String?>("") }
 
     AnimatedDialog(showDialog = isShown, onDismissRequest = onDismissRequest) {
 
         viewModel.collectSideEffect { sideEffect: ImagePickerSideEffect ->
-            handleSideEffect(sideEffect)
+            when (sideEffect) {
+                is ImagePickerSideEffect.ExceptionHappened -> {
+                    errorText = sideEffect.throwable?.message
+                }
+            }
         }
-        viewModel.collectAsState().apply {
+
+        viewModel.collectAsState().also { imagePickerState ->
 
             Card(
                 modifier = Modifier
@@ -83,8 +92,8 @@ fun ImagePickerDialog(
                     }
 
                     HeaderText(
-                        text = "Search for a profile image",
-                        fontSize = 20,
+                        text = stringResource(id = CoreR.string.picker_header),
+                        fontSize = 20.sp,
                         modifier = Modifier.padding(PaddingValues(vertical = 20.dp))
                     )
 
@@ -96,14 +105,30 @@ fun ImagePickerDialog(
                         maxLines = 1,
                         shape = RoundedCornerShape(8.dp),
                         placeholder = {
-                            Text(text = "Type in image name")
+                            Text(text = stringResource(id = CoreR.string.image_name))
                         }
                     )
 
-                    if (!this@apply.value.isImageFound) {
-                        ErrorText(text = "No image found for ${this@apply.value.searchedQuery}")
+                    if (imagePickerState.value.isImageFound) {
+                        ImageList(imagePickerState.value.imageList, viewModel)
+                    } else if (imagePickerState.value.isResultLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .padding(vertical = 8.dp),
+                            color = MaterialTheme.colorScheme.secondary,
+                            strokeWidth = 4.dp
+                        )
                     } else {
-                        ImageList(this@apply.value.imageList, viewModel)
+                        ErrorText(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
+                            text = stringResource(
+                                id = CoreR.string.error_picker_search_result,
+                                imagePickerState.value.searchedQuery
+                            )
+                        )
                     }
 
                     Row(
@@ -115,14 +140,14 @@ fun ImagePickerDialog(
                         Button(
                             onClick = {
                                 imageQuery = ""
-                                onImagePicked(this@apply.value.selectedImage?.url)
+                                onImagePicked(imagePickerState.value.selectedImage?.url)
                                 onDismissRequest()
                             },
                             modifier = Modifier
-                                .padding(16.dp)
+                                .padding(horizontal = 16.dp)
                         ) {
                             Text(
-                                text = "Confirm",
+                                text = stringResource(id = CoreR.string.pick),
                                 fontSize = 16.sp,
                             )
                         }
@@ -134,10 +159,10 @@ fun ImagePickerDialog(
                                 onDismissRequest()
                             },
                             modifier = Modifier
-                                .padding(16.dp)
+                                .padding(horizontal = 16.dp)
                         ) {
                             Text(
-                                text = "Dismiss",
+                                text = stringResource(id = CoreR.string.dismiss),
                                 fontSize = 16.sp,
                             )
                         }
@@ -148,21 +173,8 @@ fun ImagePickerDialog(
     }
 }
 
-private fun handleSideEffect(sideEffect: ImagePickerSideEffect) {
-    when (sideEffect) {
-        is ImagePickerSideEffect.ExceptionHappened -> {
-
-        }
-
-        is ImagePickerSideEffect.ShowLoading -> {
-
-        }
-    }
-}
-
-
 @Composable
-fun ImageList(
+private fun ImageList(
     images: List<ImageUrlListModel>,
     viewModel: ImagePickerViewModel
 ) {

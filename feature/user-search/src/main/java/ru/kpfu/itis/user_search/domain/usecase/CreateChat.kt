@@ -7,6 +7,6 @@ class CreateChat @Inject constructor(
     private val repository: UserSearchRepository
 ) {
     suspend operator fun invoke(friendId: String) {
-        repository.startChatting(friendId)
+        repository.createChat(friendId)
     }
 }

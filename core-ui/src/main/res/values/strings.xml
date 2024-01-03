@@ -8,11 +8,18 @@
     <string name="error_different_passwords">Passwords don\'t match</string>
     <string name="error_unknown">Unknown error occurred</string>
     <string name="error_profile_validation_error">Profile update failed.</string>
+    <string name="error_picker_search_result">No image found for %1s</string>
 
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="password_repeat">Password repeat</string>
     <string name="name">Name</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="add_to_chats">Add to chats</string>
+    <string name="find_a_user">Find a user</string>
+    <string name="user_added">User added</string>
+    <string name="picker_header">Search for a profile image</string>
+    <string name="image_name">Search for a profile image</string>
     <string name="signin">Login</string>
     <string name="signup">Register</string>
     <string name="message_sign_in">Already have an account? Sign In!</string>
@@ -26,10 +33,13 @@
     <string name="exit_account">Exit from account</string>
     <string name="edit_mode">Enter edit mode</string>
     <string name="save_profile">Save account changes</string>
+    <string name="pick">Pick</string>
+    <string name="type_something">Type something</string>
 
     <string name="change_profile_image_text">You can click on image to change it</string>
     <string name="cancel">Cancel</string>
     <string name="unknown_user">Unknown user</string>
+    <string name="last_updated">Last updated: 1%s</string>
     <string name="emoji_sad_face">🙁</string>
     <string name="message_no_chats"> You have no chats yet. \n Find a user to start conversation!</string>
 
