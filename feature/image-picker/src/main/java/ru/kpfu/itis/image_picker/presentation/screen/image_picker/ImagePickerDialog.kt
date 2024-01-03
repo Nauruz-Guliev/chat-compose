@@ -1,5 +1,6 @@
 package ru.kpfu.itis.image_picker.presentation.screen.image_picker
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -151,7 +152,7 @@ fun ImagePickerDialog(
 private fun handleSideEffect(sideEffect: ImagePickerSideEffect) {
     when (sideEffect) {
         is ImagePickerSideEffect.ExceptionHappened -> {
-
+            Log.e("ERROR", sideEffect.throwable.toString())
         }
 
         is ImagePickerSideEffect.ShowLoading -> {

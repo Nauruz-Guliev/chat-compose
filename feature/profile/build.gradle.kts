@@ -51,5 +51,6 @@ dependencies {
     implementation(project(":core-data"))
     implementation(project(":core-testing"))
     implementation(project(":feature:authentication-api"))
+    implementation(project(":feature:chat-api"))
     implementation(project(":feature:image-picker"))
 }

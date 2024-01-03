@@ -9,4 +9,6 @@ interface ProfileRepository {
     suspend fun getUser(): ChatUser?
     suspend fun clearUserId()
     suspend fun signOut()
+    suspend fun clearCachedChatList()
+    suspend fun clearCachedChatMessages()
 }

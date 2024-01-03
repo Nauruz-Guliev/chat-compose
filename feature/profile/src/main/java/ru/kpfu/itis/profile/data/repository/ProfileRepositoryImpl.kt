@@ -6,6 +6,8 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import ru.kpfu.itis.chat_api.ClearChatListAction
+import ru.kpfu.itis.chat_api.ClearChatMessagesAction
 import ru.kpfu.itis.core_data.ChatUser
 import ru.kpfu.itis.core_data.UserService
 import ru.kpfu.itis.core_data.UserStore
@@ -19,7 +21,9 @@ class ProfileRepositoryImpl @Inject constructor(
     private val userStore: UserStore,
     private val firebaseAuth: FirebaseAuth,
     @IoDispatcher
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
+    private val clearChatListAction: ClearChatListAction,
+    private val clearChatMessagesAction: ClearChatMessagesAction
 ) : ProfileRepository {
 
     override suspend fun updateProfile(
@@ -56,5 +60,13 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun signOut() = withContext(dispatcher) {
         firebaseAuth.signOut()
+    }
+
+    override suspend fun clearCachedChatList() {
+        clearChatListAction.clearChatList()
+    }
+
+    override suspend fun clearCachedChatMessages() {
+        clearChatMessagesAction.clearChatMessages()
     }
 }

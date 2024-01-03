@@ -6,7 +6,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
@@ -34,9 +33,11 @@ class UserSearchRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : UserSearchRepository {
 
-    override fun findUser(name: String): Flow<List<ChatUser>> = callbackFlow {
-        userDatabase.addListenerAsFlow(this)
-    }.map { mapFoundUsers(it, name) }.flowOn(dispatcher)
+    override fun findUser(name: String): Flow<List<ChatUser>> {
+        return userDatabase.addListenerAsFlow()
+            .map { mapFoundUsers(it, name) }
+            .flowOn(dispatcher)
+    }
 
     private fun mapFoundUsers(snapshot: DataSnapshot, name: String): List<ChatUser> {
         val currentUserId = getCurrentUserId()
@@ -63,12 +64,14 @@ class UserSearchRepositoryImpl @Inject constructor(
         return firebaseAuth.currentUser?.uid ?: throw UserNotAuthenticatedException()
     }
 
-    override fun loadExistingChats(): Flow<List<String>> = callbackFlow {
+    override fun loadExistingChats(): Flow<List<String>> {
         val currentUserId = getCurrentUserId()
-        userDatabase.child(currentUserId)
+        return userDatabase.child(currentUserId)
             .child(CHATS_PATH_KEY)
-            .addListenerAsFlow(this)
-    }.map(::mapUserIds).flowOn(dispatcher)
+            .addListenerAsFlow()
+            .map(::mapUserIds)
+            .flowOn(dispatcher)
+    }
 
     private fun mapUserIds(snapshot: DataSnapshot): List<String> {
         return snapshot.children.mapNotNull { result ->

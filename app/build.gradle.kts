@@ -4,7 +4,6 @@ plugins {
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
     id(libs.plugins.google.services.get().pluginId)
-    id(libs.plugins.google.firebase.perf.get().pluginId)
     kotlin("kapt")
 }
 

@@ -7,8 +7,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
@@ -22,20 +23,21 @@ fun <T> awaitTask(task: Task<T>): T = runBlocking {
 }
 
 /**
- * Listens for changes in realtime database and emits them to the given coroutine flow scope.
+ * Adds listener to Firebase DatabaseReference and emits received values to flow.
  */
-suspend fun DatabaseReference.addListenerAsFlow(producer: ProducerScope<DataSnapshot>) {
-    this.addValueEventListener(
-        object : ValueEventListener {
+fun DatabaseReference.addListenerAsFlow(): Flow<DataSnapshot> {
+    return callbackFlow {
+        this@addListenerAsFlow.addValueEventListener(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    trySend(snapshot)
+                }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                producer.trySend(snapshot)
+                override fun onCancelled(error: DatabaseError) {
+                    close(error.toException())
+                }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                producer.close(error.toException())
-            }
-        }
-    )
-    producer.awaitClose()
+        )
+        awaitClose()
+    }
 }
