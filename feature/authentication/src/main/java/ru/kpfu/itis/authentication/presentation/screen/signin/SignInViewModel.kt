@@ -28,14 +28,24 @@ class SignInViewModel @Inject constructor(
         container(SignInState())
 
     fun signIn(email: String, password: String) = intent {
-        postSideEffect(SignInSideEffect.ShowLoading)
-        validate(email, password)
+        reduce { state.copy(isLoading = true) }
+        validate(email, password).invokeOnCompletion {
+            if (isValidationSuccessful(state)) {
+                handleSignIn(email, password)
+            } else {
+                intent { reduce { state.copy(isLoading = false) } }
+            }
+        }
+    }
+
+    private fun handleSignIn(email: String, password: String) = intent {
         runCatching {
             val user = User(email = email, password = password)
             signIn.invoke(user)
         }.onSuccess {
             navigateToMainScreen()
         }.onFailure { exception ->
+            reduce { state.copy(isLoading = false) }
             postSideEffect(SignInSideEffect.ExceptionHappened(exception))
         }
     }

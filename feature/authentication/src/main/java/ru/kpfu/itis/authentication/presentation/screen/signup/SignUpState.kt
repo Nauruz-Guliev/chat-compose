@@ -8,4 +8,5 @@ data class SignUpState(
     var emailValidationResult: ValidationResult<Resource.String>? = null,
     var passwordValidationResult: ValidationResult<Resource.String>? = null,
     var passwordRepeatValidationResult: ValidationResult<Resource.String>? = null,
+    val isLoading: Boolean = false
 )

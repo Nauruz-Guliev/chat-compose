@@ -32,23 +32,29 @@ class SignUpViewModel @Inject constructor(
         container(SignUpState())
 
     fun signUp(name: String, email: String, password: String, passwordRepeat: String) = intent {
-        postSideEffect(SignUpSideEffect.ShowLoading)
-        validate(name, email, password, passwordRepeat)
-        if (isValidationSuccessful(state)) {
-            runCatching {
-                val user = User(
-                    name = name,
-                    password = password,
-                    email = email
-                )
-                signUp(user)
-            }.onSuccess {
-                navigateMainScreen()
-            }.onFailure { exception ->
-                postSideEffect(SignUpSideEffect.ExceptionHappened(exception))
+        reduce { state.copy(isLoading = true) }
+        validate(name, email, password, passwordRepeat).invokeOnCompletion {
+            if (isValidationSuccessful(state)) {
+                handleSignUp(name, email, password)
+            } else {
+                intent { reduce { state.copy(isLoading = false) } }
             }
-        } else {
-            postSideEffect(SignUpSideEffect.ValidationFailure)
+        }
+    }
+
+    private fun handleSignUp(name: String, email: String, password: String) = intent {
+        runCatching {
+            val user = User(
+                name = name,
+                password = password,
+                email = email
+            )
+            signUp(user)
+        }.onSuccess {
+            navigateMainScreen()
+        }.onFailure { exception ->
+            reduce { state.copy(isLoading = false) }
+            postSideEffect(SignUpSideEffect.ExceptionHappened(exception))
         }
     }
 
@@ -67,14 +73,20 @@ class SignUpViewModel @Inject constructor(
         navController.navigateSavingBackStack(AuthenticationDestinations.SIGNIN_SCREEN.name)
     }
 
-    private fun validate(name: String, email: String, password: String, passwordRepeat: String) {
-        container.stateFlow.value.apply {
-            nameValidationResult = nameValidator(name)
-            emailValidationResult = emailValidator(email)
-            passwordValidationResult = passwordValidator(password)
-            passwordRepeatValidationResult = passwordRepeatValidator(password, passwordRepeat)
+    private fun validate(name: String, email: String, password: String, passwordRepeat: String) =
+        intent {
+            reduce {
+                state.copy(
+                    nameValidationResult = nameValidator(name),
+                    emailValidationResult = emailValidator(email),
+                    passwordValidationResult = passwordValidator(password),
+                    passwordRepeatValidationResult = passwordRepeatValidator(
+                        password,
+                        passwordRepeat
+                    )
+                )
+            }
         }
-    }
 
     private fun navigateMainScreen() = intent {
         navController.navigateLosingBackStack(ChatDestinations.CHAT_LIST_SCREEN.name)
