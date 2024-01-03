@@ -17,6 +17,8 @@ import ru.kpfu.itis.core_data.addListenerAsFlow
 import ru.kpfu.itis.core_data.di.ChatsDatabase
 import ru.kpfu.itis.core_data.di.IoDispatcher
 import ru.kpfu.itis.core_data.di.UsersDatabase
+import ru.kpfu.itis.user_search.data.mapper.mapToUser
+import ru.kpfu.itis.user_search.domain.model.User
 import ru.kpfu.itis.user_search.domain.repository.UserSearchRepository
 import javax.inject.Inject
 
@@ -33,26 +35,26 @@ class UserSearchRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : UserSearchRepository {
 
-    override fun findUser(name: String): Flow<List<ChatUser>> {
+    override fun findUser(name: String): Flow<List<User>> {
         return userDatabase.addListenerAsFlow()
             .map { mapFoundUsers(it, name) }
             .flowOn(dispatcher)
     }
 
-    private fun mapFoundUsers(snapshot: DataSnapshot, name: String): List<ChatUser> {
+    private fun mapFoundUsers(snapshot: DataSnapshot, name: String): List<User> {
         val currentUserId = getCurrentUserId()
         return snapshot.children
             .mapNotNull { dataSnapshot ->
                 dataSnapshot.child(PROFILE_PATH_KEY)
                     .getValue(ChatUser::class.java)?.apply {
                         id = dataSnapshot.key ?: "UNKNOWN_ID"
-                    }
+                    }?.mapToUser()
             }
             .filter { it.id != currentUserId }
             .filter { it.name?.contains(name, ignoreCase = true) == true }
     }
 
-    override suspend fun startChatting(userId: String) {
+    override suspend fun createChat(userId: String) {
         val currentUserId = getCurrentUserId()
         val chatId = currentUserId + userId
         createChatReferenceForEachUser(userId, currentUserId, chatId)

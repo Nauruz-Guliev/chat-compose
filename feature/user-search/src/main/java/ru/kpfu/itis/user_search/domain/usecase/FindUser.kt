@@ -1,18 +1,15 @@
 package ru.kpfu.itis.user_search.domain.usecase
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import ru.kpfu.itis.core_data.ChatUser
-import ru.kpfu.itis.user_search.data.repository.UserSearchRepositoryImpl
+import ru.kpfu.itis.user_search.domain.model.User
+import ru.kpfu.itis.user_search.domain.repository.UserSearchRepository
 import javax.inject.Inject
 
 class FindUser @Inject constructor(
-    private val repositoryImpl: UserSearchRepositoryImpl
+    private val repositoryImpl: UserSearchRepository
 ) {
 
-    operator fun invoke(named: String): Flow<List<ChatUser>> {
+    operator fun invoke(named: String): Flow<List<User>> {
         return repositoryImpl.findUser(named)
-            .flowOn(Dispatchers.IO)
     }
 }

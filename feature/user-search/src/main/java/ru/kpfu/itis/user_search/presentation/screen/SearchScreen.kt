@@ -23,12 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,40 +38,66 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
+import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core_ui.extension.useDebounce
+import ru.kpfu.itis.core.R as CoreR
 
 @Composable
 fun SearchScreen(
     viewModel: UserSearchViewModel = hiltViewModel()
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        var searchValue by rememberSaveable { mutableStateOf("") }
+    var searchValue by rememberSaveable { mutableStateOf("") }
+    var error by remember { mutableStateOf(Throwable()) }
+    var showAlert by remember { mutableStateOf(false) }
 
-        searchValue.useDebounce {
-            viewModel.findUser(searchValue)
-        }
-
-        OutlinedTextField(
-            shape = RoundedCornerShape(12.dp),
-            value = searchValue,
-            onValueChange = { searchValue = it },
-            modifier = Modifier.fillMaxWidth(),
-            maxLines = 1,
-            placeholder = {
-                Text(text = "Find a user")
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is UserSearchSideEffect.ExceptionHappened -> {
+                error = sideEffect.throwable
+                showAlert = true
             }
-        )
+        }
+    }
 
-        viewModel.collectAsState().let { userSearchState ->
+    viewModel.collectAsState().also { userSearchState ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            searchValue.useDebounce {
+                viewModel.findUser(searchValue)
+            }
+
+            OutlinedTextField(
+                shape = RoundedCornerShape(12.dp),
+                value = searchValue,
+                onValueChange = { searchValue = it },
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                placeholder = {
+                    Text(text = stringResource(id = CoreR.string.find_a_user))
+                }
+            )
             UserList(userSearchState.value.users, viewModel)
         }
     }
+
+    ErrorAlertDialog(
+        onDismissRequest = {
+            showAlert = false
+            searchValue = ""
+            viewModel.resetState()
+        },
+        title = error::class.simpleName,
+        description = error.message,
+        showDialog = showAlert
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -85,7 +113,7 @@ fun UserList(
         items(users) { user ->
             Box(modifier = Modifier.animateItemPlacement()) {
                 UserItem(user) { model ->
-                    model.user.id?.let { id ->
+                    model.user.id.let { id ->
                         viewModel.createChat(id)
                     }
                 }
@@ -140,27 +168,20 @@ fun UserItem(
                     fontWeight = FontWeight.Bold,
                 )
             }
-            if (!model.isInFriendList) {
-                Button(
-                    onClick = { onItemClicked(model) },
-                    modifier = Modifier.padding(vertical = 12.dp)
-                ) {
-                    Text(
-                        text = "Add to chats",
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else {
-                Button(
-                    enabled = false,
-                    onClick = { onItemClicked(model) },
-                    modifier = Modifier.padding(vertical = 12.dp)
-                ) {
-                    Text(
-                        text = "User added",
-                        textAlign = TextAlign.Center,
-                    )
-                }
+
+            Button(
+                enabled = !model.isInFriendList,
+                onClick = { onItemClicked(model) },
+                modifier = Modifier.padding(vertical = 12.dp)
+            ) {
+                Text(
+                    text = if (model.isInFriendList) {
+                        stringResource(id = CoreR.string.add_to_chats)
+                    } else {
+                        stringResource(id = CoreR.string.user_added)
+                    },
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

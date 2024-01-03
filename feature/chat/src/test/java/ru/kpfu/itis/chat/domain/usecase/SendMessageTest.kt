@@ -1,6 +1,7 @@
 package ru.kpfu.itis.chat.domain.usecase
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -12,6 +13,7 @@ import ru.kpfu.itis.core_testing.Then
 import ru.kpfu.itis.core_testing.When
 
 class SendMessageTest : BehaviorSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
 
     val repository = mockk<ChatRepository>()
     val sendMessage = SendMessage(repository)
@@ -38,6 +40,9 @@ class SendMessageTest : BehaviorSpec({
                 sendMessage.invoke(CHAT_ID, message)
             }
             Then {
+                coVerifySequence {
+                    repository.sendMessage(CHAT_ID, message)
+                }
                 actualException shouldBe exception
             }
         }

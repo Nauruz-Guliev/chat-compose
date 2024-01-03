@@ -65,4 +65,10 @@ class UserSearchViewModel @Inject constructor(
     private fun isProfileImageValid(profileImageUrl: String?): Boolean {
         return profileImageUrl?.let { Patterns.WEB_URL.matcher(it).matches() } ?: false
     }
+
+    fun resetState() = intent {
+        reduce {
+            state.copy(users = emptyList(), existingChats = emptyList())
+        }
+    }
 }

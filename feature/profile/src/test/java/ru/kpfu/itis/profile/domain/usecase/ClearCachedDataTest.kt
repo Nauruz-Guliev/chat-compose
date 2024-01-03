@@ -5,41 +5,43 @@ import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.coVerifySequence
 import io.mockk.mockk
 import ru.kpfu.itis.core_testing.Then
 import ru.kpfu.itis.core_testing.When
 import ru.kpfu.itis.profile.domain.repository.ProfileRepository
 
-class GetChatUserTest : BehaviorSpec({
+class ClearCachedDataTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val repository = mockk<ProfileRepository>()
-    val getChatUser = GetChatUser(repository)
+    val clearCachedData = ClearCachedData(repository)
 
-    Given("should call repository when GetChatUser() called") {
-        coEvery { repository.getUser() } returns chatUser
+    Given("should call repository when clearCachedData() called") {
+        coJustRun { repository.clearCachedChatList() }
+        coJustRun { repository.clearCachedChatMessages() }
         When {
-            val actual = getChatUser.invoke()
+            clearCachedData.invoke()
             Then {
                 coVerifySequence {
-                    repository.getUser()
+                    repository.clearCachedChatList()
+                    repository.clearCachedChatMessages()
                 }
-                actual shouldBe chatUser
             }
         }
     }
 
-    Given("should throw exception when GetChatUser() called and repository throws exception") {
+    Given("should throw exception when clearCachedData() called and repository throws exception") {
         val exception = Exception()
-        coEvery { repository.getUser() } throws exception
+        coEvery { repository.clearCachedChatList() } throws exception
         When {
             val actualException = shouldThrow<Exception> {
-                getChatUser()
+                clearCachedData.invoke()
             }
             Then {
                 coVerifySequence {
-                    repository.getUser()
+                    repository.clearCachedChatList()
                 }
                 actualException shouldBe exception
             }

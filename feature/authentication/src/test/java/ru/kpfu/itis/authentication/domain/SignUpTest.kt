@@ -1,6 +1,7 @@
 package ru.kpfu.itis.authentication.domain
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -12,6 +13,7 @@ import ru.kpfu.itis.core_testing.Then
 import ru.kpfu.itis.core_testing.When
 
 class SignUpTest : BehaviorSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
 
     val repository = mockk<AuthRepository>()
     val signUp = SignUp(repository)
@@ -24,8 +26,8 @@ class SignUpTest : BehaviorSpec({
             Then {
                 coVerifySequence {
                     repository.signUp(expectedUser)
-                    result shouldBe expectedUser
                 }
+                result shouldBe expectedUser
             }
         }
     }
@@ -38,6 +40,9 @@ class SignUpTest : BehaviorSpec({
                 repository.signUp(user)
             }
             Then {
+                coVerifySequence {
+                    repository.signUp(user)
+                }
                 exception shouldBe expectedException
             }
         }
