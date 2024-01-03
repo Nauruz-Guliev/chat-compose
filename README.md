@@ -28,7 +28,7 @@
   - [X] App.
   - [X] 5 Feature (4 Api).
   - [X] 3 Core.
-- [X] Данные из Api. Используется Ktor. Загружаются картинки из [Splash Api](https://unsplash.com/developers)).
+- [X] Данные из Api. Используется Ktor. Загружаются картинки из [Splash Api](https://unsplash.com/developers).
 - [X] Авторизация с помощью Firebase Authentication.
 - [X] Compose (+ есть простые анимации).
 - [X] MVI ([Orbit MVI](https://github.com/orbit-mvi/orbit-mvi))
@@ -60,3 +60,6 @@
 - Вынести все размеры в ресурсы.
 - Не для всего есть свои компоненты (composable-функции). Можно что-то вынести, что-то переиспользовать. Сделать свою мини дизайн-систему.
 - Добавить настройки (темы, языка и др.).
+- Покрыть всё тестами и интегрировать [Jacoco](https://kotest.io/docs/framework/integrations/jacoco.html) для отслеживания покрытия.
+
+Актуальную apk можно скачать [тут](https://github.com/Nauruz-Guliev/chat-compose/releases/tag/DEMO_v0.0.1). 
