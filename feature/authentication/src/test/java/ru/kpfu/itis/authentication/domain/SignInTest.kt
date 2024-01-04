@@ -9,10 +9,10 @@ import io.mockk.coVerifySequence
 import io.mockk.mockk
 import ru.kpfu.itis.authentication.domain.repository.AuthRepository
 import ru.kpfu.itis.authentication.domain.usecase.SignIn
-import ru.kpfu.itis.core_testing.Then
-import ru.kpfu.itis.core_testing.When
+import ru.kpfu.itis.coretesting.Then
+import ru.kpfu.itis.coretesting.When
 
-class SignInTest : BehaviorSpec( {
+class SignInTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val repository = mockk<AuthRepository>()

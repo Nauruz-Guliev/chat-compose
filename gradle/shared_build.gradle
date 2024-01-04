@@ -40,6 +40,8 @@ android {
     android { packagingOptions { resources.excludes.add("META-INF/*") } }
 }
 
+apply from: "$rootDir/ktlint.gradle"
+
 kapt {
     generateStubs = true
 }

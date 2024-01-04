@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
+    alias(libs.plugins.detekt)
     kotlin("kapt")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
@@ -13,12 +14,6 @@ apply {
 android {
     tasks.withType<Test> {
         useJUnitPlatform()
-    }
-    buildTypes {
-        debug {
-            buildConfigField("String", "IMAGE_SEARCH_URL", "\"api.unsplash.com/\"")
-            buildConfigField("String", "IMAGE_API_KEY", "\"26_aU5jMAyUrefrXkWr3ilmtowksurXPOx2_gahT2Dw\"")
-        }
     }
     buildFeatures {
         buildConfig = true

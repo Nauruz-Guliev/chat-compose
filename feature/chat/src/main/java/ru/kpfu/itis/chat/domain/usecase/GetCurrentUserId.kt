@@ -6,7 +6,7 @@ import javax.inject.Inject
 class GetCurrentUserId @Inject constructor(
     private val chatRepository: ChatRepository
 ) {
-    suspend operator fun invoke(): String {
+    operator fun invoke(): String {
         return chatRepository.getCurrentUserId()
     }
 }

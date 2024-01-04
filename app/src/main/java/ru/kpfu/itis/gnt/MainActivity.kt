@@ -7,28 +7,41 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import ru.kpfu.itis.core_data.UserStore
-import ru.kpfu.itis.core_ui.ui.theme.ChatcomposeTheme
+import ru.kpfu.itis.coredata.UserStore
+import ru.kpfu.itis.coredata.di.IoDispatcher
+import ru.kpfu.itis.coredata.di.MainDispatcher
+import ru.kpfu.itis.coreui.ui.theme.ChatcomposeTheme
 import ru.kpfu.itis.navigation.MainNavHost
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var navHostController: NavHostController
+    @Inject
+    lateinit var navHostController: NavHostController
+
     @Inject
     lateinit var userStore: UserStore
+
     @Inject
     lateinit var analytics: FirebaseAnalytics
 
+    @Inject
+    @IoDispatcher
+    lateinit var ioDispatcher: CoroutineDispatcher
+
+    @Inject
+    @MainDispatcher
+    lateinit var mainDispatcher: CoroutineDispatcher
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(mainDispatcher) {
             trackAppOpenedEvent(analytics)
-            val userId = lifecycleScope.async(Dispatchers.IO) { userStore.getUserId() }.await()
+            val userId = lifecycleScope.async(ioDispatcher) { userStore.getUserId() }.await()
             setContent {
                 ChatcomposeTheme {
                     MainNavHost(

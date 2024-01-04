@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
     id(libs.plugins.dagger.hilt.get().pluginId)
+    alias(libs.plugins.detekt)
     kotlin("kapt")
 }
 

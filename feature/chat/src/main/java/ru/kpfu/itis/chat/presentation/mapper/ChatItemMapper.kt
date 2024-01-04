@@ -1,8 +1,8 @@
 package ru.kpfu.itis.chat.presentation.mapper
 
 import ru.kpfu.itis.chat.domain.model.ChatListModel
-import ru.kpfu.itis.chat.presentation.screen.chat_list.ChatItem
-import ru.kpfu.itis.core_ui.extension.convertLongToTime
+import ru.kpfu.itis.chat.presentation.screen.chatlist.ChatItem
+import ru.kpfu.itis.coreui.extension.convertLongToTime
 
 fun ChatListModel.mapToItem(): ChatItem {
     return ChatItem(

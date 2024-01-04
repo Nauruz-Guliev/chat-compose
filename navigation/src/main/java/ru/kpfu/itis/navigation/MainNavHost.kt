@@ -28,15 +28,15 @@ import ru.kpfu.itis.authentication.presentation.screen.signin.SignInScreen
 import ru.kpfu.itis.authentication.presentation.screen.signup.SignUpScreen
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat.presentation.screen.chat.ChatScreen
-import ru.kpfu.itis.chat.presentation.screen.chat_list.ChatListScreen
+import ru.kpfu.itis.chat.presentation.screen.chatlist.ChatListScreen
 import ru.kpfu.itis.chat_api.CHAT_ID_KEY
 import ru.kpfu.itis.chat_api.ChatDestinations
-import ru.kpfu.itis.core_ui.extension.containsEach
-import ru.kpfu.itis.core_ui.ui.theme.md_theme_light_inverseSurface
+import ru.kpfu.itis.coreui.extension.containsEach
+import ru.kpfu.itis.coreui.ui.theme.md_theme_light_inverseSurface
 import ru.kpfu.itis.profile.presentation.screen.ProfileScreen
 import ru.kpfu.itis.profile_api.ProfileDestinations
-import ru.kpfu.itis.user_search.presentation.screen.SearchScreen
 import ru.kpfu.itis.user_search_api.UserSearchDestinations
+import ru.kpfu.itis.usersearch.presentation.screen.SearchScreen
 
 @Composable
 fun MainNavHost(
@@ -157,7 +157,9 @@ private fun checkBottomBarVisibility(
     isBottomBarVisibleCallback: (Boolean) -> Unit
 ) {
     when (destination?.route) {
-        NavigationFeatures.AUTH.name, AuthenticationDestinations.SIGNIN_SCREEN.name, AuthenticationDestinations.SIGNUP_SCREEN.name ->
+        NavigationFeatures.AUTH.name,
+        AuthenticationDestinations.SIGNIN_SCREEN.name,
+        AuthenticationDestinations.SIGNUP_SCREEN.name ->
             isBottomBarVisibleCallback(false)
 
         else ->

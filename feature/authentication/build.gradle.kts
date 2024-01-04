@@ -3,6 +3,7 @@ plugins {
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.detekt)
     kotlin("kapt")
 }
 

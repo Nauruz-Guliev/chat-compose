@@ -17,7 +17,7 @@ import ru.kpfu.itis.chat.domain.usecase.GetMessages
 import ru.kpfu.itis.chat.domain.usecase.GetSenderProfile
 import ru.kpfu.itis.chat.domain.usecase.SendMessage
 import ru.kpfu.itis.chat.presentation.mapper.mapFromModel
-import ru.kpfu.itis.core_ui.base.BaseViewModel
+import ru.kpfu.itis.coreui.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,7 +84,8 @@ class ChatViewModel @Inject constructor(
         if (message.isBlank()) return@intent
         runCatching {
             sendMessage(
-                state.chatId, ChatMessageModel(
+                chatId = state.chatId,
+                ChatMessageModel(
                     sender = ChatUserModel(id = state.currentUserId),
                     message = message,
                     time = System.currentTimeMillis()

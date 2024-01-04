@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
-import ru.kpfu.itis.core_ui.composable.HeaderText
-import ru.kpfu.itis.core_ui.composable.ProgressButton
-import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
+import ru.kpfu.itis.coreui.composable.ErrorAlertDialog
+import ru.kpfu.itis.coreui.composable.HeaderText
+import ru.kpfu.itis.coreui.composable.ProgressButton
+import ru.kpfu.itis.coreui.composable.TextFieldWithErrorState
 import ru.kpfu.itis.core.R as CoreR
 
 @Composable
@@ -38,7 +38,7 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var passwordRepeat by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf(Throwable()) }
+    var error by remember { mutableStateOf<Throwable?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
     viewModel.collectSideEffect { sideEffect ->
@@ -122,8 +122,10 @@ fun SignUpScreen(
                 showDialog = false
                 viewModel.resetState()
             },
-            title = error::class.simpleName.toString(),
-            description = error.cause?.message,
+            title = error?.let { exception ->
+                exception::class.java.simpleName
+            } ?: stringResource(id = CoreR.string.error),
+            description = error?.cause?.message,
             showDialog = showDialog
         )
     }

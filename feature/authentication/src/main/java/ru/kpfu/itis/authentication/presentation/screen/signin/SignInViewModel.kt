@@ -11,9 +11,9 @@ import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.usecase.SignIn
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
 import ru.kpfu.itis.chat_api.ChatDestinations
-import ru.kpfu.itis.core_ui.base.BaseViewModel
-import ru.kpfu.itis.core_ui.validation.EmailValidator
-import ru.kpfu.itis.core_ui.validation.PasswordValidator
+import ru.kpfu.itis.coreui.base.BaseViewModel
+import ru.kpfu.itis.coreui.validation.EmailValidator
+import ru.kpfu.itis.coreui.validation.PasswordValidator
 import javax.inject.Inject
 
 @HiltViewModel

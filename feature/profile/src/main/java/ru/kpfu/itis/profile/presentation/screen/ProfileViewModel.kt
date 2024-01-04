@@ -8,9 +8,9 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.authentication_api.AuthenticationDestinations
-import ru.kpfu.itis.core_ui.base.BaseViewModel
-import ru.kpfu.itis.core_ui.validation.EmailValidator
-import ru.kpfu.itis.core_ui.validation.NameValidator
+import ru.kpfu.itis.coreui.base.BaseViewModel
+import ru.kpfu.itis.coreui.validation.EmailValidator
+import ru.kpfu.itis.coreui.validation.NameValidator
 import ru.kpfu.itis.profile.domain.model.UpdateProfileModel
 import ru.kpfu.itis.profile.domain.usecase.ClearCachedData
 import ru.kpfu.itis.profile.domain.usecase.ClearUserId

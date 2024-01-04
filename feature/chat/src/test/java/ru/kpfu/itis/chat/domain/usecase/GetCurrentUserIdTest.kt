@@ -8,8 +8,8 @@ import io.mockk.coEvery
 import io.mockk.coVerifySequence
 import io.mockk.mockk
 import ru.kpfu.itis.chat.domain.repository.ChatRepository
-import ru.kpfu.itis.core_testing.Then
-import ru.kpfu.itis.core_testing.When
+import ru.kpfu.itis.coretesting.Then
+import ru.kpfu.itis.coretesting.When
 
 class GetCurrentUserIdTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf

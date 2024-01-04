@@ -4,6 +4,9 @@ plugins {
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
     id(libs.plugins.google.services.get().pluginId)
+    id(libs.plugins.google.firebase.perf.get().pluginId)
+    alias(libs.plugins.detekt)
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -27,7 +30,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -71,9 +77,16 @@ dependencies {
     implementation(libs.kotlin.reflect)
     // hilt
     implementation(libs.hilt.android)
+    implementation(libs.firebase.messaging)
     kapt(libs.hilt.android.compiler)
     // google
     implementation(libs.play.services.measurement.api)
+    implementation(libs.firebase.perf) {
+        // гугл сервисы используют старую версию протобафа, которая конфликтует с firebase perf
+        exclude("com.google.firebase", "protolite-well-known-types")
+        exclude("com.google.protobuf", "protobuf-javalite")
+    }
+    //navigation
     implementation(libs.androidx.navigation.compose)
     // projects
     implementation(project(":feature:authentication"))
