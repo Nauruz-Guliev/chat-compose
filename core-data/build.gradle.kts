@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
-    id(libs.plugins.dagger.hilt.get().pluginId)
     alias(libs.plugins.detekt)
+    id(libs.plugins.dagger.hilt.get().pluginId)
     kotlin("kapt")
 }
 
@@ -36,8 +36,8 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.firebase.database.ktx)
     //firebase
-    implementation(platform(libs.firebaseBom))
-    implementation(libs.firebaseAuth)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

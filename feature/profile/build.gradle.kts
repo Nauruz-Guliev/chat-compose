@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.detekt)
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
-    alias(libs.plugins.detekt)
     kotlin("kapt")
 }
 apply {
@@ -34,15 +34,15 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.androidx.hilt.navigation.compose)
     // kotest
     testImplementation(libs.bundles.kotest)
     // mockk
     testImplementation(libs.mockk)
     // firebase
-    implementation(platform(libs.firebaseBom))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database.ktx)
-    implementation(libs.firebaseAuth)
+    implementation(libs.firebase.auth.ktx)
     // navigation
     implementation(libs.androidx.navigation.compose)
     // coil

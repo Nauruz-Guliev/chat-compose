@@ -1,12 +1,12 @@
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.detekt)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
     id(libs.plugins.google.services.get().pluginId)
     id(libs.plugins.google.firebase.perf.get().pluginId)
-    alias(libs.plugins.detekt)
-    id("com.google.firebase.crashlytics")
+    id(libs.plugins.google.firebase.crashlytics.get().pluginId)
     kotlin("kapt")
 }
 

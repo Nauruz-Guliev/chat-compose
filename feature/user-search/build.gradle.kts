@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.detekt)
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
-    alias(libs.plugins.detekt)
     kotlin("kapt")
 }
 apply {
@@ -40,9 +40,9 @@ dependencies {
     // mockk
     testImplementation(libs.mockk)
     //firebase
-    implementation(platform(libs.firebaseBom))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database.ktx)
-    implementation(libs.firebaseAuth)
+    implementation(libs.firebase.auth.ktx)
     // navigation
     implementation(libs.androidx.navigation.compose)
     // coil

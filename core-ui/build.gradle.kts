@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
-    id(libs.plugins.dagger.hilt.get().pluginId)
     alias(libs.plugins.detekt)
+    id(libs.plugins.dagger.hilt.get().pluginId)
     kotlin("kapt")
 }
 
