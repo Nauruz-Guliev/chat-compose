@@ -6,8 +6,12 @@ on:
 
 jobs:
   lint:
-    name: Lint Debug Variant
+    name: Lint  Debug Variant
     uses: ./.github/workflows/job_lint_debug.yml
+
+  detekt:
+    name: Detekt Debug Variant
+    uses: ./.github/workflows/job_detekt_debug.yml
 
   test:
     name: Test Debug Variant

@@ -142,6 +142,7 @@ fun ImagePickerDialog(
                                 imageQuery = ""
                                 onImagePicked(imagePickerState.value.selectedImage?.url)
                                 onDismissRequest()
+                                viewModel.resetState()
                             },
                             modifier = Modifier
                                 .padding(horizontal = 16.dp)

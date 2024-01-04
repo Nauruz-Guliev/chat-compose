@@ -37,7 +37,6 @@ dependencies {
     //firebase
     implementation(platform(libs.firebaseBom))
     implementation(libs.firebaseAuth)
-    implementation(libs.google.services)
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
