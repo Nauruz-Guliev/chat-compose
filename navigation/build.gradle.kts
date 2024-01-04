@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.detekt)
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
-    alias(libs.plugins.detekt)
     kotlin("kapt")
 }
 
@@ -29,7 +29,8 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.material3)
     implementation(libs.androidx.compose.material.material)
-    implementation(libs.firebaseAnalytics)
+    // firebase
+    implementation(libs.firebase.analytics)
     // mockk
     testImplementation(libs.mockk)
     implementation(libs.androidx.navigation.compose)

@@ -15,6 +15,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import ru.kpfu.itis.gnt.BuildConfig
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,6 +27,10 @@ object NetworkModule {
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTPS
+                    host = BuildConfig.IMAGE_SEARCH_URL
+                    parameters.apply {
+                        append("client_id", BuildConfig.IMAGE_API_KEY)
+                    }
                     host = "api.unsplash.com/"
                     parameters.append("client_id", "26_aU5jMAyUrefrXkWr3ilmtowksurXPOx2_gahT2Dw")
                 }
@@ -35,6 +40,12 @@ object NetworkModule {
                 level = LogLevel.ALL
             }
             install(ContentNegotiation) {
+                json(
+                    Json {
+                        prettyPrint = true
+                        ignoreUnknownKeys = true
+                    }
+                )
                 json(
                     Json {
                         prettyPrint = true

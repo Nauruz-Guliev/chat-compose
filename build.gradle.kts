@@ -22,11 +22,11 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.kotlin.jvm) apply false
-    id("io.gitlab.arturbosch.detekt") version "1.23.3" apply false
-    id("com.google.firebase.crashlytics") version "2.9.9" apply false
-    id("com.google.dagger.hilt.android") version "2.48" apply false
-    id("com.google.firebase.firebase-perf") version "1.4.2" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10" apply true
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.google.firebase.crashlytics) apply false
+    alias(libs.plugins.dagger.hilt) apply false
+    alias(libs.plugins.google.firebase.perf) apply false
+    alias(libs.plugins.kotlin.serialization) apply true
 }
 
 tasks.register("detektAll") {

@@ -1,11 +1,11 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.detekt)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
-    alias(libs.plugins.detekt)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
     kotlin("kapt")
-    id("org.jetbrains.kotlin.plugin.serialization")
 }
 apply {
     from("${rootProject.projectDir}/gradle/shared_build.gradle")
@@ -14,6 +14,16 @@ apply {
 android {
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+    buildTypes {
+        debug {
+            buildConfigField("String", "IMAGE_SEARCH_URL", "\"api.unsplash.com/\"")
+            buildConfigField(
+                "String",
+                "IMAGE_API_KEY",
+                "\"26_aU5jMAyUrefrXkWr3ilmtowksurXPOx2_gahT2Dw\""
+            )
+        }
     }
     buildFeatures {
         buildConfig = true
@@ -48,10 +58,11 @@ dependencies {
     // ktor
     implementation(libs.bundles.ktor)
     // logs (needed for ktor)
-    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation(libs.logback)
     // coil
     implementation(libs.coil)
     // projects
     implementation(project(":core-ui"))
     implementation(project(":core-testing"))
 }
+

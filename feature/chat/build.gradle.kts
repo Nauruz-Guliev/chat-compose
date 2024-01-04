@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.detekt)
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
-    alias(libs.plugins.detekt)
     kotlin("kapt")
 }
 apply {
@@ -42,10 +42,10 @@ dependencies {
     // mockk
     testImplementation(libs.mockk)
     //firebase
-    implementation(platform(libs.firebaseBom))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database.ktx)
-    implementation(libs.firebaseAnalytics)
-    implementation(libs.firebaseAuth)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth.ktx)
     implementation(libs.google.services)
     implementation(libs.androidx.navigation.compose)
     //coil
@@ -53,10 +53,10 @@ dependencies {
     // constraint
     implementation(libs.androidx.constraintlayout.compose)
     // room
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
     // projects
     implementation(project(":core-ui"))
     implementation(project(":core-data"))
