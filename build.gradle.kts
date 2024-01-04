@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 buildscript {
     dependencies {
         classpath(libs.google.services)
@@ -20,10 +22,16 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.kotlin.jvm) apply false
-    id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    id("io.gitlab.arturbosch.detekt") version "1.23.3" apply false
     id("com.google.firebase.crashlytics") version "2.9.9" apply false
     id("com.google.dagger.hilt.android") version "2.48" apply false
     id("com.google.firebase.firebase-perf") version "1.4.2" apply false
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10" apply true
+}
+
+tasks.register("detektAll") {
+    allprojects {
+        this@register.dependsOn(tasks.withType<Detekt>())
+    }
 }
 true // Needed to make the Suppress annotation work for the plugins block

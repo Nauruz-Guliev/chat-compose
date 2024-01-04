@@ -32,6 +32,7 @@ constraintCompose = "1.0.1"
 playServicesMeasurementApi = "21.5.0"
 firebase-perf = "20.5.1"
 firebase-messaging = "23.4.0"
+detekt = "1.23.3"
 
 [libraries]
 
@@ -42,11 +43,9 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 
 # hilt
@@ -117,6 +116,7 @@ kotlin-parcelize = { id = "kotlin-parcelize" }
 dagger-hilt = { id = "com.google.dagger.hilt.android" }
 google-services = { id = "com.google.gms.google-services" }
 google-firebase-perf = { id = "com.google.firebase.firebase-perf" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 [bundles]
 kotest = ["kotest-assertions", "kotest-framework", "kotest-runner"]

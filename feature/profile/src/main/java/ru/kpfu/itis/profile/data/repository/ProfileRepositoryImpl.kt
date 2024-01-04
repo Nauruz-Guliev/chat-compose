@@ -8,10 +8,10 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import ru.kpfu.itis.chat_api.ClearChatListAction
 import ru.kpfu.itis.chat_api.ClearChatMessagesAction
-import ru.kpfu.itis.core_data.ChatUser
-import ru.kpfu.itis.core_data.UserService
-import ru.kpfu.itis.core_data.UserStore
-import ru.kpfu.itis.core_data.di.IoDispatcher
+import ru.kpfu.itis.coredata.ChatUser
+import ru.kpfu.itis.coredata.UserService
+import ru.kpfu.itis.coredata.UserStore
+import ru.kpfu.itis.coredata.di.IoDispatcher
 import ru.kpfu.itis.profile.domain.model.UpdateProfileModel
 import ru.kpfu.itis.profile.domain.repository.ProfileRepository
 import javax.inject.Inject

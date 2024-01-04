@@ -35,11 +35,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kpfu.itis.core_data.ChatUser
-import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
-import ru.kpfu.itis.core_ui.composable.ErrorText
-import ru.kpfu.itis.core_ui.composable.TextFieldWithErrorState
-import ru.kpfu.itis.image_picker.presentation.screen.image_picker.ImagePickerDialog
+import ru.kpfu.itis.coredata.ChatUser
+import ru.kpfu.itis.coreui.composable.ErrorAlertDialog
+import ru.kpfu.itis.coreui.composable.ErrorText
+import ru.kpfu.itis.coreui.composable.TextFieldWithErrorState
+import ru.kpfu.itis.imagepicker.presentation.ImagePickerDialog
 import ru.kpfu.itis.core.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -199,9 +199,10 @@ fun ProfileScreen(
             )
 
             ErrorAlertDialog(
-                title = (error ?: Exception())::class.simpleName.toString(),
-                description = error?.message
-                    ?: stringResource(id = CoreR.string.error_unknown),
+                title = error?.let { exception ->
+                    exception::class.java.simpleName
+                } ?: stringResource(id = CoreR.string.error),
+                description = error?.message,
                 onDismissRequest = {
                     showErrorAlert = false
                     email = ""

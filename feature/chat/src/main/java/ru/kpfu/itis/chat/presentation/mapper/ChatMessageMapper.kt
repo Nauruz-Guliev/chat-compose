@@ -3,7 +3,7 @@ package ru.kpfu.itis.chat.presentation.mapper
 import ru.kpfu.itis.chat.domain.model.ChatMessageModel
 import ru.kpfu.itis.chat.domain.model.ChatUserModel
 import ru.kpfu.itis.chat.presentation.screen.chat.ChatMessage
-import ru.kpfu.itis.core_ui.extension.convertLongToTime
+import ru.kpfu.itis.coreui.extension.convertLongToTime
 
 fun ChatMessageModel.mapFromModel(isMyMessage: Boolean): ChatMessage {
     return ChatMessage(

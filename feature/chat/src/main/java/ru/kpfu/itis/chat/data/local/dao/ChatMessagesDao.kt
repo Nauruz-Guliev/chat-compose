@@ -20,7 +20,6 @@ interface ChatMessagesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg chat: ChatMessageEntity)
 
-
     @Query("DELETE FROM chat_message")
     suspend fun clearAllMessages()
 }

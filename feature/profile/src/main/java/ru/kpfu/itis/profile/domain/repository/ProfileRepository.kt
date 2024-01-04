@@ -1,6 +1,6 @@
 package ru.kpfu.itis.profile.domain.repository
 
-import ru.kpfu.itis.core_data.ChatUser
+import ru.kpfu.itis.coredata.ChatUser
 import ru.kpfu.itis.profile.domain.model.UpdateProfileModel
 
 interface ProfileRepository {

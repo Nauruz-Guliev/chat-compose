@@ -52,7 +52,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.kpfu.itis.core_ui.composable.ErrorAlertDialog
+import ru.kpfu.itis.coreui.composable.ErrorAlertDialog
 import ru.kpfu.itis.core.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +61,7 @@ fun ChatScreen(
     chatId: String,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
-    var error by remember { mutableStateOf(Throwable()) }
+    var error by remember { mutableStateOf<Throwable?>(null) }
     var showAlert by remember { mutableStateOf(false) }
 
     viewModel.loadMessages(chatId)
@@ -89,38 +89,40 @@ fun ChatScreen(
                 )
             }
         } else {
-            Scaffold(topBar = {
-                Row(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.primary)
-                ) {
-                    if (chatState.value.sender?.profileImage != null) {
-                        AsyncImage(
-                            contentScale = ContentScale.Crop,
-                            model = chatState.value.sender?.profileImage,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(64.dp)
-                                .padding(12.dp)
-                                .clip(RoundedCornerShape(32.dp))
-                        )
-                    } else {
-                        Image(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(12.dp)
-                                .size(40.dp)
+            Scaffold(
+                topBar = {
+                    Row(
+                        modifier = Modifier.background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        if (chatState.value.sender?.profileImage != null) {
+                            AsyncImage(
+                                contentScale = ContentScale.Crop,
+                                model = chatState.value.sender?.profileImage,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .padding(12.dp)
+                                    .clip(RoundedCornerShape(32.dp))
+                            )
+                        } else {
+                            Image(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .size(40.dp)
+                            )
+                        }
+                        TopAppBar(
+                            title = { chatState.value.sender?.name?.let { Text(it) } },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                titleContentColor = MaterialTheme.colorScheme.onPrimary
+                            )
                         )
                     }
-                    TopAppBar(
-                        title = { chatState.value.sender?.name?.let { Text(it) } },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            titleContentColor = MaterialTheme.colorScheme.onPrimary
-                        )
-                    )
                 }
-            }) {
+            ) {
 
                 ConstraintLayout(
                     Modifier
@@ -171,8 +173,10 @@ fun ChatScreen(
                     onDismissRequest = {
                         showAlert = false
                     },
-                    title = error::class.simpleName.toString(),
-                    description = error.message,
+                    title = error?.let { exception ->
+                        exception::class.java.simpleName
+                    } ?: stringResource(id = CoreR.string.error),
+                    description = error?.message,
                     showDialog = showAlert
                 )
             }
@@ -204,7 +208,7 @@ private fun ChatItem(model: ChatMessage) {
             ) {
                 Text(
                     color = MaterialTheme.colorScheme.onPrimary,
-                    text = model.message ?: ""
+                    text = model.message.orEmpty()
                 )
             }
             Text(
@@ -238,7 +242,7 @@ private fun ChatItem(model: ChatMessage) {
             ) {
                 Text(
                     color = MaterialTheme.colorScheme.onPrimary,
-                    text = model.message ?: ""
+                    text = model.message.orEmpty()
                 )
             }
             Text(
@@ -248,7 +252,6 @@ private fun ChatItem(model: ChatMessage) {
                     .align(Alignment.End)
             )
         }
-
     }
 }
 

@@ -22,12 +22,12 @@ import ru.kpfu.itis.chat.domain.model.ChatUserModel
 import ru.kpfu.itis.chat.domain.repository.ChatRepository
 import ru.kpfu.itis.chat_api.ChatReference
 import ru.kpfu.itis.chat_api.ClearChatMessagesAction
-import ru.kpfu.itis.core_data.UserService
-import ru.kpfu.itis.core_data.addListenerAsFlow
-import ru.kpfu.itis.core_data.awaitTask
-import ru.kpfu.itis.core_data.di.ChatsDatabase
-import ru.kpfu.itis.core_data.di.IoDispatcher
-import ru.kpfu.itis.core_data.di.UsersDatabase
+import ru.kpfu.itis.coredata.UserService
+import ru.kpfu.itis.coredata.addListenerAsFlow
+import ru.kpfu.itis.coredata.awaitTask
+import ru.kpfu.itis.coredata.di.ChatsDatabase
+import ru.kpfu.itis.coredata.di.IoDispatcher
+import ru.kpfu.itis.coredata.di.UsersDatabase
 import javax.inject.Inject
 
 private const val MESSAGES_PATH = "messages"

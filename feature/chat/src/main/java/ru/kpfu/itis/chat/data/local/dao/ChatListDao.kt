@@ -28,7 +28,6 @@ interface ChatListDao {
     @Query("DELETE FROM chat_user")
     suspend fun clearUsers()
 
-
     @Query("DELETE FROM chat_list")
     suspend fun clearChatList()
 

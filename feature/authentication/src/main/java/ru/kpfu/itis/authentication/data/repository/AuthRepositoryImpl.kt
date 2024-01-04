@@ -7,9 +7,9 @@ import ru.kpfu.itis.authentication.data.mapper.mapToLocalUser
 import ru.kpfu.itis.authentication.data.mapper.toChatUser
 import ru.kpfu.itis.authentication.domain.model.User
 import ru.kpfu.itis.authentication.domain.repository.AuthRepository
-import ru.kpfu.itis.core_data.UserService
-import ru.kpfu.itis.core_data.UserStore
-import ru.kpfu.itis.core_data.awaitTask
+import ru.kpfu.itis.coredata.UserService
+import ru.kpfu.itis.coredata.UserStore
+import ru.kpfu.itis.coredata.awaitTask
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -23,7 +23,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(user: User): User {
         val userSignInTask = firebaseAuth.signInWithEmailAndPassword(
-            user.email ?: "",
+            user.email.orEmpty(),
             user.password
         )
         awaitTask(userSignInTask)
@@ -34,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signUp(user: User): User {
         val userCreationTask = firebaseAuth.createUserWithEmailAndPassword(
-            user.email ?: "",
+            user.email.orEmpty(),
             user.password
         )
         awaitTask(userCreationTask)
