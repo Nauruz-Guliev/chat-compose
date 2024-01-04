@@ -22,28 +22,27 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var navHostController: NavHostController
-
     @Inject
     lateinit var userStore: UserStore
-
     @Inject
     lateinit var analytics: FirebaseAnalytics
-
     @Inject
     @IoDispatcher
     lateinit var ioDispatcher: CoroutineDispatcher
-
     @Inject
     @MainDispatcher
     lateinit var mainDispatcher: CoroutineDispatcher
+    private var permissionManager: PermissionManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        permissionManager = PermissionManager(this)
         lifecycleScope.launch(mainDispatcher) {
             trackAppOpenedEvent(analytics)
             val userId = lifecycleScope.async(ioDispatcher) { userStore.getUserId() }.await()
             setContent {
                 ChatcomposeTheme {
+                    permissionManager?.setUpNotificationPermissions()
                     MainNavHost(
                         analytics = analytics,
                         navController = navHostController,
@@ -58,4 +57,3 @@ class MainActivity : ComponentActivity() {
         analytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null)
     }
 }
-

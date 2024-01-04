@@ -9,8 +9,12 @@
     <string name="error_unknown">Unknown error occurred</string>
     <string name="error_profile_validation_error">Profile update failed.</string>
     <string name="error_picker_search_result">No image found for %1s</string>
+    <string name="error">Error</string>
+    <string name="error_permission">Permission Error</string>
+    <string name="error_permission_not_granted_message">Notification permission needed to receive notifications from firebase. Permissions can be granted in settings.</string>
 
     <string name="email">Email</string>
+    <string name="open_settings">Open settings</string>
     <string name="password">Password</string>
     <string name="password_repeat">Password repeat</string>
     <string name="name">Name</string>
@@ -37,7 +41,6 @@
     <string name="change_profile_image_text">You can click on image to change it</string>
     <string name="cancel">Cancel</string>
     <string name="unknown_user">Unknown user</string>
-    <string name="error">Error</string>
     <string name="last_updated">Last updated: %s</string>
     <string name="emoji_sad_face">🙁</string>
     <string name="message_no_chats"> You have no chats yet. \n Find a user to start conversation!</string>
