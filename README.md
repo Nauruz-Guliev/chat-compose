@@ -42,7 +42,7 @@
   - [X] Analytics (Скорее для галочки, но есть)
   - [X] Crashlytics
   - [X] Performance Monitoring
-  - [X] Cloud Messaging
+  - [ ] Cloud Messaging
 - [ ] Huawei Mobile Services
 - [X] Версионировании через toml-файл.
 - [X] Unit-тесты для use-case'ов.
