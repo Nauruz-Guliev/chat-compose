@@ -134,7 +134,9 @@ fun ErrorAlertDialog(
     onDismissRequest: () -> Unit,
     title: String?,
     description: String?,
-    showDialog: Boolean
+    buttonTitle: String = stringResource(id = R.string.cancel),
+    showDialog: Boolean,
+    onButtonClicked: () -> Unit = {}
 ) {
     AnimatedDialog(
         onDismissRequest = onDismissRequest,
@@ -199,13 +201,14 @@ fun ErrorAlertDialog(
                 Button(
                     onClick = {
                         onDismissRequest()
+                        onButtonClicked()
                     },
                     modifier = Modifier
                         .padding(16.dp)
                         .align(Alignment.End)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.cancel),
+                        text = buttonTitle,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
