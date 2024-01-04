@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  lint:
+  detekt:
     name: Detekt Debug Variant
     runs-on: ubuntu-latest
 

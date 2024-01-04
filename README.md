@@ -42,7 +42,7 @@
   - [X] Analytics (Скорее для галочки, но есть)
   - [X] Crashlytics
   - [X] Performance Monitoring
-  - [ ] Cloud Messaging
+  - [X] Cloud Messaging
 - [ ] Huawei Mobile Services
 - [X] Версионировании через toml-файл.
 - [X] Unit-тесты для use-case'ов.
@@ -60,6 +60,7 @@
 - Вынести все размеры в ресурсы.
 - Не для всего есть свои компоненты (composable-функции). Можно что-то вынести, что-то переиспользовать. Сделать свою мини дизайн-систему.
 - Добавить настройки (темы, языка и др.).
+- Отправлять уведомления с помощью Cloud Messaging при изменении данных в Firebase Realtime.
 - Покрыть всё тестами и интегрировать [Jacoco](https://kotest.io/docs/framework/integrations/jacoco.html) для отслеживания покрытия.
 
 Актуальную apk можно скачать [тут](https://github.com/Nauruz-Guliev/chat-compose/releases/tag/DEMO_v0.0.1). 

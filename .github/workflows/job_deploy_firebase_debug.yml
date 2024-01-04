@@ -10,7 +10,7 @@ on:
         default: 'Manual Debug Build'
 
 jobs:
-  lint:
+  deploy:
     name: Lint Debug Variant
     runs-on: ubuntu-latest
 
