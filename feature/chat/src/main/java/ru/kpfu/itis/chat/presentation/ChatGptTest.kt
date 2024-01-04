@@ -1,4 +1,4 @@
-package ru.kpfu.itis.gnt.presentation
+package ru.kpfu.itis.chat.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

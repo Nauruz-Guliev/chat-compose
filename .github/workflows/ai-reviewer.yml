@@ -1,4 +1,4 @@
-name: Code Review
+name: Ai Code Review
 
 permissions:
   contents: read
@@ -25,6 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         with:
-          debug: false
-          review_simple_changes: false
-          review_comment_lgtm: false
+          debug: true
+          review_simple_changes: true
+          review_comment_lgtm: true
+          openai_light_model: true
