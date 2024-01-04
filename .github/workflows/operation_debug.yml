@@ -16,3 +16,7 @@ jobs:
   test:
     name: Test Debug Variant
     uses: ./.github/workflows/job_test_debug.yml
+
+  ai_review:
+    name: Ai Reviewer Debug Variant
+    uses: ./.github/workflows/job_ai_code_review_debug.yml
