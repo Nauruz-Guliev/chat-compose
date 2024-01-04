@@ -3,7 +3,6 @@ plugins {
     id(libs.plugins.kotlin.android.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
-    id("com.google.gms.google-services")
     kotlin("kapt")
 }
 
