@@ -35,13 +35,13 @@
 - [X] Room. Кэширование.
 - [X] Firebase App Distribution. [Тык](https://github.com/Nauruz-Guliev/chat-compose/actions/workflows/job_deploy_firebase_debug.yml) чтобы попробовать.
 - [X] Запуск детекта и unit-тестов на PR в Master-ветку.
-  - [ ] Detekt
+  - [X] Detekt (Немного изменены правила)
   - [X] Unit-тесты
   - [X] Lint
 - [X] Firebase
   - [X] Analytics (Скорее для галочки, но есть)
   - [X] Crashlytics
-  - [ ] Performance Monitoring
+  - [X] Performance Monitoring
   - [ ] Cloud Messaging
 - [ ] Huawei Mobile Services
 - [X] Версионировании через toml-файл.

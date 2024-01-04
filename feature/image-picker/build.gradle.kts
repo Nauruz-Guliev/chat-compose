@@ -15,16 +15,6 @@ android {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
-    buildTypes {
-        debug {
-            buildConfigField("String", "IMAGE_SEARCH_URL", "\"api.unsplash.com/\"")
-            buildConfigField(
-                "String",
-                "IMAGE_API_KEY",
-                "\"26_aU5jMAyUrefrXkWr3ilmtowksurXPOx2_gahT2Dw\""
-            )
-        }
-    }
     buildFeatures {
         buildConfig = true
     }
